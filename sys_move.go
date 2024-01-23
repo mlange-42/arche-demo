@@ -1,13 +1,16 @@
 package main
 
 import (
+	"math"
+
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // MoveEntities system
 type MoveEntities struct {
-	filter generic.Filter2[Position, Target]
+	MaxSpeed float64
+	filter   generic.Filter2[Position, Target]
 }
 
 // Initialize the system
@@ -22,8 +25,16 @@ func (s *MoveEntities) Update(world *ecs.World) {
 		pos, targ := query.Get()
 		dx := targ.X - pos.X
 		dy := targ.Y - pos.Y
-		pos.X += 0.01 * dx
-		pos.Y += 0.01 * dy
+		len := math.Sqrt(dx*dx + dy*dy)
+		if len < 0.05 {
+			continue
+		}
+		scale := 1.0
+		if len > s.MaxSpeed {
+			scale = 1.0 / len
+		}
+		pos.X += dx * scale
+		pos.Y += dy * scale
 	}
 }
 

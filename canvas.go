@@ -11,6 +11,8 @@ type Canvas struct {
 	Height int
 	Image  *image.RGBA // The frame we actually draw on
 
+	Mouse Position
+
 	// DOM properties
 	window js.Value
 	doc    js.Value
@@ -65,6 +67,17 @@ func (c *Canvas) Set(canvas js.Value, width int, height int) {
 	c.Image = image.NewRGBA(image.Rect(0, 0, width, height))
 	c.copybuff = js.Global().Get("Uint8Array").New(width * height * 4) // Static JS buffer for copying data out to JS. Defined once and re-used to save on un-needed allocations
 
+	c.canvas.Set("onmousemove", js.FuncOf(c.onMouseMove))
+}
+
+func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
+	evt := args[0]
+	rect := c.canvas.Call("getBoundingClientRect")
+
+	c.Mouse.X = float64(evt.Get("clientX").Int() - rect.Get("left").Int())
+	c.Mouse.Y = float64(evt.Get("clientY").Int() - rect.Get("top").Int())
+
+	return nil
 }
 
 // Redraw does the actuall copy over of the image data for the 'render' call.
