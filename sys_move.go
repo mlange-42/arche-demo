@@ -10,13 +10,15 @@ import (
 
 // MoveEntities system
 type MoveEntities struct {
-	MaxSpeed     float64
-	MaxAcc       float64
-	FleeDistance float64
-	Damp         float64
-	canvas       generic.Resource[Canvas]
-	filter       generic.Filter3[Position, Velocity, Target]
-	counter      uint64
+	MaxSpeed        float64
+	MaxAcc          float64
+	MaxAccFlee      float64
+	MinFleeDistance float64
+	MaxFleeDistance float64
+	Damp            float64
+	canvas          generic.Resource[Canvas]
+	filter          generic.Filter3[Position, Velocity, Target]
+	counter         uint64
 }
 
 // Initialize the system
@@ -28,26 +30,36 @@ func (s *MoveEntities) Initialize(world *ecs.World) {
 // Update the system
 func (s *MoveEntities) Update(world *ecs.World) {
 	mouse := s.canvas.Get().Mouse
-	_ = mouse
+
+	minDist := s.MinFleeDistance
+	distRange := s.MaxFleeDistance - minDist
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		pos, vel, targ := query.Get()
+		pos, vel, trg := query.Get()
 
-		attrX, attrY, _ := s.norm(targ.X-pos.X, targ.Y-pos.Y)
+		attrX, attrY, _ := s.norm(trg.X-pos.X, trg.Y-pos.Y)
 
 		vel.X += attrX * s.MaxAcc
 		vel.Y += attrY * s.MaxAcc
 
-		velAbs := math.Sqrt(vel.X*vel.X + vel.Y*vel.Y)
+		repX, repY, repDist := s.norm(pos.X-mouse.X, pos.Y-mouse.Y)
+		repFac := math.Min(1.0-((repDist-minDist)/distRange), 1.0)
+		if repFac > 0 {
+			vel.X += repX * s.MaxAccFlee * repFac
+			vel.Y += repY * s.MaxAccFlee * repFac
+		}
+
+		velAbs := vel.X*vel.X + vel.Y*vel.Y
 		if velAbs > 1.0 {
+			velAbs := math.Sqrt(velAbs)
 			vel.X /= velAbs
 			vel.Y /= velAbs
 			velAbs = 1.0
 		}
 		if s.counter%23 == 0 {
-			vel.X += rand.NormFloat64() * velAbs * 0.1
-			vel.Y += rand.NormFloat64() * velAbs * 0.1
+			vel.X += rand.NormFloat64() * velAbs * 0.2
+			vel.Y += rand.NormFloat64() * velAbs * 0.2
 		}
 
 		vel.X *= s.Damp
