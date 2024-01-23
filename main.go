@@ -1,12 +1,10 @@
 package main
 
 import (
-	"image/color"
 	"syscall/js"
 	"time"
 
 	"github.com/llgcode/draw2d/draw2dimg"
-	"github.com/llgcode/draw2d/draw2dkit"
 	"github.com/markfarnan/go-canvas/canvas"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
@@ -44,6 +42,10 @@ func main() {
 	mod.TPS = 1000
 	ecs.AddResource(&mod.World, &cvs)
 
+	mod.AddSystem(&InitEntities{Count: 100})
+	mod.AddSystem(&MoveEntities{})
+	mod.AddUISystem(&DrawEntities{})
+
 	mod.Initialize()
 
 	cvs.Canvas.Start(60, Render)
@@ -62,18 +64,6 @@ func doEvery(d time.Duration, f func(time.Time)) {
 func Render(gc *draw2dimg.GraphicContext) bool {
 
 	mod.Update()
-
-	gc.SetFillColor(color.RGBA{0xff, 0xff, 0xff, 0xff})
-	gc.Clear()
-	// draws red 🔴 laser
-	gc.SetFillColor(color.RGBA{0xff, 0x00, 0xff, 0xff})
-	gc.SetStrokeColor(color.RGBA{0xff, 0x00, 0xff, 0xff})
-
-	gc.BeginPath()
-	//gc.ArcTo(gs.laserX, gs.laserY, gs.laserSize, gs.laserSize, 0, math.Pi*2)
-	draw2dkit.Circle(gc, 100, 100, 20)
-	gc.FillStroke()
-	gc.Close()
 
 	return true
 }
