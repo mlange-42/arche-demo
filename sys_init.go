@@ -9,25 +9,32 @@ import (
 
 // InitEntities system
 type InitEntities struct {
-	Count  int
-	canvas generic.Resource[Canvas]
+	grid generic.Resource[Grid]
 }
 
 // Initialize the system
 func (s *InitEntities) Initialize(world *ecs.World) {
-	s.canvas = generic.NewResource[Canvas](world)
+	s.grid = generic.NewResource[Grid](world)
 
-	mapper := generic.NewMap1[Position](world)
-	query := mapper.NewBatchQ(s.Count)
+	grid := s.grid.Get()
+	builder := generic.NewMap2[Position, Target](world)
 
-	canvas := s.canvas.Get()
-	w := canvas.Width
-	h := canvas.Height
-	for query.Next() {
-		pos := query.Get()
-		pos.X = rand.Float64() * float64(w)
-		pos.Y = rand.Float64() * float64(h)
+	cnt := 0
+	for y := 0; y < grid.Height; y++ {
+		for x := 0; x < grid.Width; x++ {
+			if !grid.Data[y][x] {
+				continue
+			}
+			cnt++
+			e := builder.New()
+			pos, targ := builder.Get(e)
+			pos.X = rand.Float64() * float64(grid.Width)
+			pos.Y = rand.Float64() * float64(grid.Height)
+			targ.X = float64(x)
+			targ.Y = float64(y)
+		}
 	}
+	println(cnt, "entities")
 }
 
 // Update the system
