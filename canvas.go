@@ -11,7 +11,8 @@ type Canvas struct {
 	Height int
 	Image  *image.RGBA // The frame we actually draw on
 
-	Mouse Position
+	Mouse       Position
+	MouseInside bool
 
 	// DOM properties
 	window js.Value
@@ -69,6 +70,8 @@ func (c *Canvas) Set(canvas js.Value, width int, height int) {
 	c.copybuff = js.Global().Get("Uint8Array").New(width * height * 4) // Static JS buffer for copying data out to JS. Defined once and re-used to save on un-needed allocations
 
 	c.canvas.Set("onmousemove", js.FuncOf(c.onMouseMove))
+	c.canvas.Set("onmouseleave", js.FuncOf(c.onMouseLeave))
+	c.canvas.Set("onmouseenter", js.FuncOf(c.onMouseEnter))
 }
 
 func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
@@ -78,6 +81,16 @@ func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
 	c.Mouse.X = float64(evt.Get("clientX").Int() - rect.Get("left").Int())
 	c.Mouse.Y = float64(evt.Get("clientY").Int() - rect.Get("top").Int())
 
+	return nil
+}
+
+func (c *Canvas) onMouseLeave(this js.Value, args []js.Value) interface{} {
+	c.MouseInside = false
+	return nil
+}
+
+func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {
+	c.MouseInside = true
 	return nil
 }
 

@@ -41,11 +41,13 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 		img.SetRGBA(int(pos.X), int(pos.Y), white)
 	}
 
-	// Draw mouse
-	draw.Draw(img,
-		image.Rect(int(canvas.Mouse.X-2), int(canvas.Mouse.Y-2), int(canvas.Mouse.X+2), int(canvas.Mouse.Y+2)),
-		&image.Uniform{red}, image.Point{}, draw.Src,
-	)
+	if canvas.MouseInside {
+		// Draw mouse
+		draw.Draw(img,
+			image.Rect(int(canvas.Mouse.X-2), int(canvas.Mouse.Y-2), int(canvas.Mouse.X+2), int(canvas.Mouse.Y+2)),
+			&image.Uniform{red}, image.Point{}, draw.Src,
+		)
+	}
 
 	canvas.Redraw()
 }

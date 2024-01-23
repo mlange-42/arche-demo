@@ -29,7 +29,9 @@ func (s *MoveEntities) Initialize(world *ecs.World) {
 
 // Update the system
 func (s *MoveEntities) Update(world *ecs.World) {
-	mouse := s.canvas.Get().Mouse
+	canvas := s.canvas.Get()
+	mouse := canvas.Mouse
+	mouseInside := canvas.MouseInside
 
 	minDist := s.MinFleeDistance
 	distRange := s.MaxFleeDistance - minDist
@@ -43,11 +45,13 @@ func (s *MoveEntities) Update(world *ecs.World) {
 		vel.X += attrX * s.MaxAcc
 		vel.Y += attrY * s.MaxAcc
 
-		repX, repY, repDist := s.norm(pos.X-mouse.X, pos.Y-mouse.Y)
-		repFac := math.Min(1.0-((repDist-minDist)/distRange), 1.0)
-		if repFac > 0 {
-			vel.X += repX * s.MaxAccFlee * repFac
-			vel.Y += repY * s.MaxAccFlee * repFac
+		if mouseInside {
+			repX, repY, repDist := s.norm(pos.X-mouse.X, pos.Y-mouse.Y)
+			repFac := math.Min(1.0-((repDist-minDist)/distRange), 1.0)
+			if repFac > 0 {
+				vel.X += repX * s.MaxAccFlee * repFac
+				vel.Y += repY * s.MaxAccFlee * repFac
+			}
 		}
 
 		velAbs := vel.X*vel.X + vel.Y*vel.Y
