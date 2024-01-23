@@ -17,7 +17,7 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 	s.grid = generic.NewResource[Grid](world)
 
 	grid := s.grid.Get()
-	builder := generic.NewMap2[Position, Target](world)
+	builder := generic.NewMap3[Position, Velocity, Target](world)
 
 	cnt := 0
 	for y := 0; y < grid.Height; y++ {
@@ -27,7 +27,7 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 			}
 			cnt++
 			e := builder.New()
-			pos, targ := builder.Get(e)
+			pos, _, targ := builder.Get(e)
 			pos.X = rand.Float64() * float64(grid.Width)
 			pos.Y = rand.Float64() * float64(grid.Height)
 			targ.X = float64(x)
