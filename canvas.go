@@ -26,12 +26,13 @@ type Canvas struct {
 }
 
 // NewCanvas creates a new Canvas.
-func NewCanvas(create bool) (*Canvas, error) {
+func NewCanvas(parentID string, create bool) (*Canvas, error) {
 	var c Canvas
 
 	c.window = js.Global()
 	c.doc = c.window.Get("document")
-	c.body = c.doc.Get("body")
+	//c.body = c.doc.Get("body")
+	c.body = c.doc.Call("getElementById", parentID)
 
 	// If create, make a canvas that fills the windows
 	if create {

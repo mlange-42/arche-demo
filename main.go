@@ -3,6 +3,8 @@ package main
 import (
 	"embed"
 	"image/png"
+	"math"
+	"syscall/js"
 	"time"
 
 	"github.com/mlange-42/arche-model/model"
@@ -32,9 +34,8 @@ func main() {
 	}
 	ecs.AddResource(&mod.World, &grid)
 
-	cvs, _ = NewCanvas(false)
-	//cvs.Create(int(js.Global().Get("innerWidth").Float()*0.9), int(js.Global().Get("innerHeight").Float()*0.9))
-	cvs.Create(grid.Width, grid.Height)
+	cvs, _ = NewCanvas("canvas", false)
+	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 960)), grid.Height*2)
 	ecs.AddResource(&mod.World, cvs)
 
 	mod.AddSystem(&InitEntities{})

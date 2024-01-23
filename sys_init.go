@@ -9,14 +9,18 @@ import (
 
 // InitEntities system
 type InitEntities struct {
-	grid generic.Resource[Grid]
 }
 
 // Initialize the system
 func (s *InitEntities) Initialize(world *ecs.World) {
-	s.grid = generic.NewResource[Grid](world)
+	gridRes := generic.NewResource[Grid](world)
+	grid := gridRes.Get()
+	canvasRes := generic.NewResource[Canvas](world)
+	canvas := canvasRes.Get()
 
-	grid := s.grid.Get()
+	xOffset := (canvas.Width - grid.Width) / 2
+	yOffset := (canvas.Height - grid.Height) / 2
+
 	builder := generic.NewMap3[Position, Velocity, Target](world)
 
 	cnt := 0
@@ -28,10 +32,10 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 			cnt++
 			e := builder.New()
 			pos, _, targ := builder.Get(e)
-			pos.X = rand.Float64() * float64(grid.Width)
-			pos.Y = rand.Float64() * float64(grid.Height)
-			targ.X = float64(x)
-			targ.Y = float64(y)
+			pos.X = rand.Float64() * float64(canvas.Width)
+			pos.Y = rand.Float64() * float64(canvas.Height)
+			targ.X = float64(x + xOffset)
+			targ.Y = float64(y + yOffset)
 		}
 	}
 	println(cnt, "entities")
