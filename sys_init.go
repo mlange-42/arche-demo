@@ -25,8 +25,8 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 	h := canvas.Height
 	for query.Next() {
 		pos := query.Get()
-		pos.X = rand.Float64() * w
-		pos.Y = rand.Float64() * h
+		pos.X = rand.Float64() * float64(w)
+		pos.Y = rand.Float64() * float64(h)
 	}
 }
 
