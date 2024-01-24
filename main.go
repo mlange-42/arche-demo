@@ -41,6 +41,8 @@ func main() {
 		MaxFleeDistance: 200,
 		Damp:            0.975})
 
+	mod.AddUISystem(&ManagePause{})
+
 	mod.AddUISystem(&DrawEntities{
 		DrawMouse: false,
 	})
