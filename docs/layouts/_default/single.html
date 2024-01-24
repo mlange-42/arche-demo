@@ -9,7 +9,7 @@
     </div>
     <div class="sidebar sidebar-right">
         <div class="vertical-text">Description</div>
-        {{ .Description }}
+        {{ .Description | markdownify }}
     </div>
 
     <div align="center">

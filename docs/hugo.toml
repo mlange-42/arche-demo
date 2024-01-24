@@ -5,3 +5,7 @@ title = 'Arche Demo'
 [params]
 custom_css = ["css/style.css", "css/sidebar.css"]
 custom_js = ["js/wasm_exec.js"]
+
+[mediaTypes]
+[mediaTypes.'application/wasm']
+suffixes = ['wasm']
