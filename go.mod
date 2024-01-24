@@ -1,4 +1,4 @@
-module github.com/mlange-42/arche-web
+module github.com/mlange-42/arche-demo
 
 go 1.21.6
 
