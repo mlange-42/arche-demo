@@ -1,14 +1,9 @@
 <!doctype html>
-<!--
-Copyright 2018 The Go Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
--->
 <html>
 
 <head>
 	<meta charset="utf-8">
-	<title>Go wasm</title>
+	<title>Arche Demo</title>
 	<style>
 		body {
 			height: 100%;
@@ -21,11 +16,6 @@ license that can be found in the LICENSE file.
 		}
 	</style>
 
-	<!--
-	Add the following polyfill for Microsoft Edge 17/18 support:
-	<script src="https://cdn.jsdelivr.net/npm/text-encoding@0.7.0/lib/encoding.min.js"></script>
-	(see https://caniuse.com/#feat=textencoder)
-	-->
 	<script src="./wasm_exec.js"></script>
 	<script>
 		if (!WebAssembly.instantiateStreaming) { // polyfill
