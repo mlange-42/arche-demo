@@ -17,7 +17,7 @@ type Canvas struct {
 	// DOM properties
 	window js.Value
 	doc    js.Value
-	body   js.Value
+	parent js.Value
 
 	// Canvas properties
 	canvas   js.Value
@@ -32,8 +32,7 @@ func NewCanvas(parentID string, create bool) (*Canvas, error) {
 
 	c.window = js.Global()
 	c.doc = c.window.Get("document")
-	//c.body = c.doc.Get("body")
-	c.body = c.doc.Call("getElementById", parentID)
+	c.parent = c.doc.Call("getElementById", parentID)
 
 	// If create, make a canvas that fills the windows
 	if create {
@@ -52,7 +51,7 @@ func (c *Canvas) Create(width int, height int) {
 
 	canvas.Set("height", height)
 	canvas.Set("width", width)
-	c.body.Call("appendChild", canvas)
+	c.parent.Call("appendChild", canvas)
 
 	c.Set(canvas, width, height)
 }

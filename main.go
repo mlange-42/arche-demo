@@ -39,13 +39,17 @@ func main() {
 	ecs.AddResource(&mod.World, cvs)
 
 	mod.AddSystem(&InitEntities{})
+
 	mod.AddSystem(&MoveEntities{
 		MaxSpeed: 10,
 		MaxAcc:   0.08, MaxAccFlee: 0.1,
 		MinFleeDistance: 50,
-		MaxFleeDistance: 150,
+		MaxFleeDistance: 200,
 		Damp:            0.975})
-	mod.AddUISystem(&DrawEntities{})
+
+	mod.AddUISystem(&DrawEntities{
+		DrawMouse: false,
+	})
 
 	println("Running the model")
 	mod.Run()

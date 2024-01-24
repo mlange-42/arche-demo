@@ -11,8 +11,9 @@ import (
 
 // DrawEntities system
 type DrawEntities struct {
-	canvas generic.Resource[Canvas]
-	filter generic.Filter1[Position]
+	DrawMouse bool
+	canvas    generic.Resource[Canvas]
+	filter    generic.Filter1[Position]
 }
 
 // InitializeUI the system
@@ -41,7 +42,7 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 		img.SetRGBA(int(pos.X), int(pos.Y), white)
 	}
 
-	if canvas.MouseInside {
+	if canvas.MouseInside && s.DrawMouse {
 		// Draw mouse
 		draw.Draw(img,
 			image.Rect(int(canvas.Mouse.X-2), int(canvas.Mouse.Y-2), int(canvas.Mouse.X+2), int(canvas.Mouse.Y+2)),
