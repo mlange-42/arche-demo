@@ -1,0 +1,19 @@
+{{ define "page" }}
+<article class="container">
+    <div class="sidebar sidebar-left">
+        <div class="vertical-text">More demos</div>
+        <a href="{{ .Site.Home.RelPermalink }}">Home</a><br />
+        {{ range .Site.RegularPages }}
+        <a href="{{ .RelPermalink }}">{{ or .Title .RelPermalink }}</a><br />
+        {{ end }}
+    </div>
+    <div class="sidebar sidebar-right">
+        <div class="vertical-text">Description</div>
+        {{ .Description | markdownify }}
+    </div>
+
+    <div align="center">
+        {{ .Content }}
+    </div>
+</article>
+{{ end }}
