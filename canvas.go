@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"syscall/js"
 	"time"
@@ -75,16 +74,13 @@ func (c *Canvas) Set(canvas js.Value, width int, height int) {
 	c.Image = image.NewRGBA(image.Rect(0, 0, width, height))
 	c.copybuff = js.Global().Get("Uint8Array").New(width * height * 4) // Static JS buffer for copying data out to JS. Defined once and re-used to save on un-needed allocations
 
+	c.canvas.Set("onmousemove", js.FuncOf(c.onMouseMove))
+	c.canvas.Set("onmouseleave", js.FuncOf(c.onMouseLeave))
+	c.canvas.Set("onmouseenter", js.FuncOf(c.onMouseEnter))
+	c.canvas.Set("onclick", js.FuncOf(c.onClick))
+
 	if c.isTouchDevice() {
-		c.canvas.Set("ontouchstart", js.FuncOf(c.onTouchStart))
-		c.canvas.Set("ontouchend", js.FuncOf(c.onTouchEnd))
-		c.canvas.Set("ontouchcancel", js.FuncOf(c.onTouchEnd))
-		c.canvas.Set("ontouchmove", js.FuncOf(c.onMouseMove))
-	} else {
-		c.canvas.Set("onmousemove", js.FuncOf(c.onMouseMove))
-		c.canvas.Set("onmouseleave", js.FuncOf(c.onMouseLeave))
-		c.canvas.Set("onmouseenter", js.FuncOf(c.onMouseEnter))
-		c.canvas.Set("onclick", js.FuncOf(c.onClick))
+		c.instructions.Set("innerHTML", "<s>"+c.instructions.Get("innerHTML").String()+"</s><br />Sorry, but this interactive simulation does not work with touch devices.")
 	}
 }
 
@@ -103,45 +99,21 @@ func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
 
 	c.Mouse.X = float64(evt.Get("clientX").Int() - rect.Get("left").Int())
 	c.Mouse.Y = float64(evt.Get("clientY").Int() - rect.Get("top").Int())
-
-	c.instructions.Set("innerHTML", fmt.Sprintf("--> Moved to %.1f / %.1f", c.Mouse.X, c.Mouse.Y))
 	return nil
 }
 
 func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {
 	c.MouseInside = true
-	c.instructions.Set("innerHTML", "Mouse entered")
 	return nil
 }
 
 func (c *Canvas) onMouseLeave(this js.Value, args []js.Value) interface{} {
 	c.MouseInside = false
-	c.instructions.Set("innerHTML", "Mouse left")
-	return nil
-}
-
-func (c *Canvas) onTouchStart(this js.Value, args []js.Value) interface{} {
-	c.MouseInside = true
-	c.touchStart = time.Now()
-	c.instructions.Set("innerHTML", "Touch start")
-	return nil
-}
-
-func (c *Canvas) onTouchEnd(this js.Value, args []js.Value) interface{} {
-	c.MouseInside = false
-	t := time.Now()
-	if t.Sub(c.touchStart) < time.Second {
-		c.instructions.Set("innerHTML", "Touch end --> Interpreted as click")
-		c.Paused = !c.Paused
-	} else {
-		c.instructions.Set("innerHTML", "Touch end")
-	}
 	return nil
 }
 
 func (c *Canvas) onClick(this js.Value, args []js.Value) interface{} {
 	c.Paused = !c.Paused
-	c.instructions.Set("innerHTML", "Mouse clicked")
 	return nil
 }
 
