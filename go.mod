@@ -7,6 +7,4 @@ require (
 	github.com/mlange-42/arche-model v0.6.0
 )
 
-replace github.com/mlange-42/arche-model v0.6.0 => ../arche-model
-
 require golang.org/x/exp v0.0.0-20230418202329-0354be287a23 // indirect
