@@ -5,19 +5,13 @@ import (
 	"image/png"
 	"math"
 	"syscall/js"
-	"time"
 
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
 
-var done chan struct{}
-
 var cvs *Canvas
 var mod *model.Model
-
-// This specifies how long a delay between calls to 'render'.     To get Frame Rate,   1s / renderDelay
-var renderDelay time.Duration = 20 * time.Millisecond
 
 //go:embed assets/arche-logo-text.png
 var logo embed.FS
