@@ -28,8 +28,10 @@ func main() {
 	}
 	ecs.AddResource(&mod.World, &grid)
 
+	removeLoadingScreen("loading")
+
 	cvs, _ = NewCanvas("canvas", false)
-	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 960)), grid.Height*2)
+	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 960)), 500)
 	ecs.AddResource(&mod.World, cvs)
 
 	mod.AddSystem(&InitEntities{})
@@ -49,6 +51,13 @@ func main() {
 
 	println("Running the model")
 	mod.Run()
+}
+
+func removeLoadingScreen(id string) {
+	window := js.Global()
+	doc := window.Get("document")
+	elem := doc.Call("getElementById", id)
+	elem.Call("remove")
 }
 
 func createImageResource() (Grid, error) {

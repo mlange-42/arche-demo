@@ -10,15 +10,31 @@
 			width: 100%;
 			padding: 0;
 			margin: 0;
-			background-color: #FFFFFF;
-			color: #000000;
+			background-color: #050505;
+			color: #FFFFFF;
 			font-family: Arial, Helvetica, sans-serif
+		}
+
+		.centered {
+			margin: 0;
+			position: relative;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		a {
+			color: #FFFFFF;
+		}
+
+		a:visited {
+			color: #aaaaaa;
 		}
 	</style>
 
 	<script src="./wasm_exec.js"></script>
 	<script>
-		if (!WebAssembly.instantiateStreaming) { // polyfill
+		if (!WebAssembly.instantiateStreaming) {
 			WebAssembly.instantiateStreaming = async (resp, importObject) => {
 				const source = await (await resp).arrayBuffer();
 				return await WebAssembly.instantiate(source, importObject);
@@ -35,9 +51,14 @@
 <body>
 	<div align="center">
 		<h1>Arche Demo</h1>
-		<div id="canvas"></div>
+		<div id="canvas" style="display: inline-block; border: solid white 2px; min-width: 0px; overflow: auto;">
+			<div id="loading" style="width: 960px; height: 500px; background-color:#000000; color: #ffffff;">
+				<p class="centered">Loading...</p>
+			</div>
+		</div>
 		<p>Move the mouse over the logo! Click to pause and resume!</p>
-		<p><a href="https://github.com/mlange-42/arche"><tt>github.com/mlange-42/arche</tt></a></p>
+		<p><a href="https://github.com/mlange-42/arche"><tt style="font-size: 120%">github.com/mlange-42/arche</tt></a>
+		</p>
 	</div>
 </body>
 
