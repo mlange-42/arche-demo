@@ -13,6 +13,7 @@ type Canvas struct {
 
 	Mouse       Position
 	MouseInside bool
+	Paused      bool
 
 	// DOM properties
 	window js.Value
@@ -71,6 +72,7 @@ func (c *Canvas) Set(canvas js.Value, width int, height int) {
 	c.canvas.Set("onmousemove", js.FuncOf(c.onMouseMove))
 	c.canvas.Set("onmouseleave", js.FuncOf(c.onMouseLeave))
 	c.canvas.Set("onmouseenter", js.FuncOf(c.onMouseEnter))
+	c.canvas.Set("onclick", js.FuncOf(c.onClick))
 }
 
 func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
@@ -90,6 +92,11 @@ func (c *Canvas) onMouseLeave(this js.Value, args []js.Value) interface{} {
 
 func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {
 	c.MouseInside = true
+	return nil
+}
+
+func (c *Canvas) onClick(this js.Value, args []js.Value) interface{} {
+	c.Paused = !c.Paused
 	return nil
 }
 
