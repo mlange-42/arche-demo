@@ -5,6 +5,9 @@ on:
     branches:
     - main
 
+permissions: 
+  contents: write
+
 env:
   GOOS: js
   GOARCH: wasm
@@ -30,7 +33,7 @@ jobs:
           name: public
           path: public
       - name: Deploy to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v2
+        uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: gh-pages
           build_dir: public
