@@ -1,6 +1,6 @@
 ---
 title: Home
-wasm: main
+wasm: home
 description: |
     Test description.
 
