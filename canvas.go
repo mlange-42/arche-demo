@@ -3,6 +3,7 @@ package main
 import (
 	"image"
 	"syscall/js"
+	"time"
 )
 
 // Canvas resource
@@ -14,6 +15,8 @@ type Canvas struct {
 	Mouse       Position
 	MouseInside bool
 	Paused      bool
+
+	touchStart time.Time
 
 	// DOM properties
 	window js.Value
@@ -73,6 +76,11 @@ func (c *Canvas) Set(canvas js.Value, width int, height int) {
 	c.canvas.Set("onmouseleave", js.FuncOf(c.onMouseLeave))
 	c.canvas.Set("onmouseenter", js.FuncOf(c.onMouseEnter))
 	c.canvas.Set("onclick", js.FuncOf(c.onClick))
+
+	c.canvas.Set("ontouchstart", js.FuncOf(c.onMouseEnter))
+	c.canvas.Set("ontouchend", js.FuncOf(c.onMouseLeave))
+	c.canvas.Set("ontouchcancel", js.FuncOf(c.onMouseLeave))
+	c.canvas.Set("ontouchmove", js.FuncOf(c.onMouseMove))
 }
 
 func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
@@ -85,13 +93,28 @@ func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
 	return nil
 }
 
+func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {
+	c.MouseInside = true
+	return nil
+}
+
 func (c *Canvas) onMouseLeave(this js.Value, args []js.Value) interface{} {
 	c.MouseInside = false
 	return nil
 }
 
-func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {
+func (c *Canvas) onTouchStart(this js.Value, args []js.Value) interface{} {
 	c.MouseInside = true
+	c.touchStart = time.Now()
+	return nil
+}
+
+func (c *Canvas) onTouchEnd(this js.Value, args []js.Value) interface{} {
+	c.MouseInside = false
+	t := time.Now()
+	if t.Sub(c.touchStart) < time.Second {
+		c.Paused = !c.Paused
+	}
 	return nil
 }
 
