@@ -19,9 +19,10 @@ type Canvas struct {
 	touchStart time.Time
 
 	// DOM properties
-	window js.Value
-	doc    js.Value
-	parent js.Value
+	window       js.Value
+	doc          js.Value
+	parent       js.Value
+	instructions js.Value
 
 	// Canvas properties
 	canvas   js.Value
@@ -37,6 +38,7 @@ func NewCanvas(parentID string, create bool) (*Canvas, error) {
 	c.window = js.Global()
 	c.doc = c.window.Get("document")
 	c.parent = c.doc.Call("getElementById", parentID)
+	c.instructions = c.doc.Call("getElementById", "instructions")
 
 	// If create, make a canvas that fills the windows
 	if create {
@@ -77,10 +79,18 @@ func (c *Canvas) Set(canvas js.Value, width int, height int) {
 	c.canvas.Set("onmouseenter", js.FuncOf(c.onMouseEnter))
 	c.canvas.Set("onclick", js.FuncOf(c.onClick))
 
-	c.canvas.Set("ontouchstart", js.FuncOf(c.onMouseEnter))
-	c.canvas.Set("ontouchend", js.FuncOf(c.onMouseLeave))
-	c.canvas.Set("ontouchcancel", js.FuncOf(c.onMouseLeave))
-	c.canvas.Set("ontouchmove", js.FuncOf(c.onMouseMove))
+	if c.isTouchDevice() {
+		c.instructions.Set("innerHTML", "<s>"+c.instructions.Get("innerHTML").String()+"</s><br />Sorry, but this interactive simulation does not work with touch devices.")
+	}
+}
+
+func (c *Canvas) isTouchDevice() bool {
+	nav := c.window.Get("navigator")
+	mxPts := nav.Get("maxTouchPoints")
+	msMxPts := nav.Get("msMaxTouchPoints")
+	return c.window.Call("hasOwnProperty", "ontouchstart").Bool() ||
+		(!mxPts.IsUndefined() && mxPts.Int() > 0) ||
+		(!msMxPts.IsUndefined() && msMxPts.Int() > 0)
 }
 
 func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
@@ -89,7 +99,6 @@ func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
 
 	c.Mouse.X = float64(evt.Get("clientX").Int() - rect.Get("left").Int())
 	c.Mouse.Y = float64(evt.Get("clientY").Int() - rect.Get("top").Int())
-
 	return nil
 }
 
@@ -100,21 +109,6 @@ func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {
 
 func (c *Canvas) onMouseLeave(this js.Value, args []js.Value) interface{} {
 	c.MouseInside = false
-	return nil
-}
-
-func (c *Canvas) onTouchStart(this js.Value, args []js.Value) interface{} {
-	c.MouseInside = true
-	c.touchStart = time.Now()
-	return nil
-}
-
-func (c *Canvas) onTouchEnd(this js.Value, args []js.Value) interface{} {
-	c.MouseInside = false
-	t := time.Now()
-	if t.Sub(c.touchStart) < time.Second {
-		c.Paused = !c.Paused
-	}
 	return nil
 }
 
