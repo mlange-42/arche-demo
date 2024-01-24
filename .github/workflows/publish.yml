@@ -1,0 +1,38 @@
+name: Publish
+
+on:
+  push:
+    branches:
+    - main
+
+env:
+  GOOS: js
+  GOARCH: wasm
+
+jobs:
+
+  build:
+    name: GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.21.x'
+      - name: Install dependencies
+        run: go get .
+      - name: Build WebAssembly
+        run: go build -o public/main.wasm
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: public
+          path: public
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
