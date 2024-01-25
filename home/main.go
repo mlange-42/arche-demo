@@ -6,14 +6,15 @@ import (
 	"math"
 	"syscall/js"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
 
-var cvs *Canvas
+var cvs *common.Canvas
 var mod *model.Model
 
-//go:embed assets/arche-logo-text.png
+//go:embed arche-logo-text.png
 var logo embed.FS
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
 
 	removeLoadingScreen("loading")
 
-	cvs, _ = NewCanvas("canvas-container", false)
+	cvs, _ = common.NewCanvas("canvas-container", false)
 	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
 	ecs.AddResource(&mod.World, cvs)
 
@@ -61,7 +62,7 @@ func removeLoadingScreen(id string) {
 }
 
 func createImageResource() (Grid, error) {
-	f, err := logo.Open("assets/arche-logo-text.png")
+	f, err := logo.Open("arche-logo-text.png")
 	if err != nil {
 		return Grid{}, err
 	}

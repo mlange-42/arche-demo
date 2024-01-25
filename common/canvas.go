@@ -1,4 +1,4 @@
-package main
+package common
 
 import (
 	"image"
@@ -6,13 +6,19 @@ import (
 	"time"
 )
 
+// Mouse coordinates
+type Mouse struct {
+	X float64
+	Y float64
+}
+
 // Canvas resource
 type Canvas struct {
 	Width  int
 	Height int
 	Image  *image.RGBA // The frame we actually draw on
 
-	Mouse       Position
+	Mouse       Mouse
 	MouseInside bool
 	Paused      bool
 
