@@ -33,6 +33,11 @@ type ActForage struct {
 	Start int64
 }
 
+// ActReturn activity component.
+type ActReturn struct {
+	Target Position
+}
+
 // Random256 contains an uint8 value for scheduling things in intervals, but randomized over entities.
 type Random256 struct {
 	Value uint8

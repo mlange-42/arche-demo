@@ -15,3 +15,9 @@ func rotate(x, y, angle float64) (float64, float64) {
 	cos := math.Cos(angle)
 	return cos*x - sin*y, sin*x + cos*y
 }
+
+func distanceSq(x1, y1, x2, y2 float64) float64 {
+	dx := x1 - x2
+	dy := y1 - y2
+	return dx*dx + dy*dy
+}

@@ -44,6 +44,7 @@ func main() {
 	mod.AddSystem(&SysForaging{
 		MaxForagingTime: 300,
 	})
+	mod.AddSystem(&SysReturning{})
 
 	mod.AddUISystem(&DrawHives{})
 
