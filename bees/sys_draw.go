@@ -24,7 +24,7 @@ func (s *DrawHives) InitializeUI(world *ecs.World) {
 	s.patches = generic.NewResource[Patches](world)
 	s.hiveFilter = *generic.NewFilter1[Position]().With(generic.T[Hive]())
 	s.patchFilter = *generic.NewFilter1[FlowerPatch]()
-	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[Scout]())
+	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[HomeHive]())
 }
 
 // UpdateUI the system

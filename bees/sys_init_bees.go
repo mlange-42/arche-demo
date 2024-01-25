@@ -14,7 +14,7 @@ type InitBees struct {
 
 // Initialize the system
 func (s *InitBees) Initialize(world *ecs.World) {
-	builder := generic.NewMap5[Position, Direction, HomeHive, Scout, Random256](world, generic.T[HomeHive]())
+	builder := generic.NewMap5[Position, Direction, HomeHive, ActScout, Random256](world, generic.T[HomeHive]())
 	posMap := generic.NewMap1[Position](world)
 
 	hives := make([]ecs.Entity, 0, 100)

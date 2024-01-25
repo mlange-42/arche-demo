@@ -37,9 +37,12 @@ func main() {
 	mod.AddSystem(&InitPatches{Count: 100})
 	mod.AddSystem(&InitBees{CountPerHive: 100})
 
-	mod.AddSystem(&Scouting{
+	mod.AddSystem(&SysScouting{
 		MaxRotation:  90,
 		MaxScoutTime: 300,
+	})
+	mod.AddSystem(&SysForaging{
+		MaxForagingTime: 300,
 	})
 
 	mod.AddUISystem(&DrawHives{})

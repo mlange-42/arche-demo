@@ -9,28 +9,47 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// Scouting system
-type Scouting struct {
+// SysScouting system
+type SysScouting struct {
 	MaxRotation  float64
 	MaxScoutTime int64
 	canvas       generic.Resource[Image]
 	patches      generic.Resource[Patches]
 	params       generic.Resource[Params]
 	time         generic.Resource[resource.Tick]
-	filter       generic.Filter4[Position, Direction, Scout, Random256]
+	filter       generic.Filter4[Position, Direction, ActScout, Random256]
+
+	exchangeForage generic.Exchange
+	exchangeReturn generic.Exchange
+	forageMap      generic.Map1[ActForage]
+
+	toForage []ecs.Entity
+	toReturn []ecs.Entity
 }
 
 // Initialize the system
-func (s *Scouting) Initialize(world *ecs.World) {
+func (s *SysScouting) Initialize(world *ecs.World) {
 	s.canvas = generic.NewResource[Image](world)
 	s.patches = generic.NewResource[Patches](world)
 	s.params = generic.NewResource[Params](world)
 	s.time = generic.NewResource[resource.Tick](world)
-	s.filter = *generic.NewFilter4[Position, Direction, Scout, Random256]()
+
+	s.filter = *generic.NewFilter4[Position, Direction, ActScout, Random256]()
+
+	s.exchangeForage = *generic.NewExchange(world).
+		Adds(generic.T[ActForage]()).
+		Removes(generic.T[ActScout]())
+	s.exchangeReturn = *generic.NewExchange(world).
+		Removes(generic.T[ActScout]())
+
+	s.forageMap = generic.NewMap1[ActForage](world)
+
+	s.toForage = make([]ecs.Entity, 0, 64)
+	s.toReturn = make([]ecs.Entity, 0, 64)
 }
 
 // Update the system
-func (s *Scouting) Update(world *ecs.World) {
+func (s *SysScouting) Update(world *ecs.World) {
 	canvas := s.canvas.Get()
 	patches := s.patches.Get()
 
@@ -45,16 +64,20 @@ func (s *Scouting) Update(world *ecs.World) {
 	for query.Next() {
 		pos, dir, scout, r256 := query.Get()
 
+		// Drawing random numbers is costly, so we do it only every 4 ticks.
+		// We also check to end scouting here, as this is not necessary every tick.
 		if tick%4 == int64(r256.Value)%4 {
 			dir.X, dir.Y = rotate(dir.X, dir.Y, rand.Float64()*2*maxAng-maxAng)
 
 			cx, cy := patches.ToCell(pos.X, pos.Y)
 			patch := patches.Patches[cx][cy]
 			if !patch.IsZero() {
-				// forage
+				s.toForage = append(s.toForage, query.Entity())
+				continue
 			}
-			if scout.Start+s.MaxScoutTime > tick {
-				// return to hive
+			if tick > scout.Start+s.MaxScoutTime {
+				s.toReturn = append(s.toReturn, query.Entity())
+				continue
 			}
 		}
 
@@ -70,7 +93,20 @@ func (s *Scouting) Update(world *ecs.World) {
 			pos.Y += dir.Y * maxSpeed * 2
 		}
 	}
+
+	for _, e := range s.toForage {
+		s.exchangeForage.Exchange(e)
+		forage := s.forageMap.Get(e)
+		forage.Start = tick
+	}
+
+	for _, e := range s.toReturn {
+		s.exchangeReturn.Exchange(e)
+	}
+
+	s.toForage = s.toForage[:0]
+	s.toReturn = s.toReturn[:0]
 }
 
 // Finalize the system
-func (s *Scouting) Finalize(world *ecs.World) {}
+func (s *SysScouting) Finalize(world *ecs.World) {}

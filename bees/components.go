@@ -23,8 +23,13 @@ type HomeHive struct {
 	ecs.Relation
 }
 
-// Scout component.
-type Scout struct {
+// ActScout component.
+type ActScout struct {
+	Start int64
+}
+
+// ActForage activity component.
+type ActForage struct {
 	Start int64
 }
 
