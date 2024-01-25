@@ -50,9 +50,7 @@ func main() {
 
 	mod.AddUISystem(&ManagePause{})
 
-	mod.AddUISystem(&DrawEntities{
-		DrawMouse: false,
-	})
+	mod.AddUISystem(&DrawEntities{})
 
 	println("Running the model")
 	mod.Run()
@@ -92,11 +90,4 @@ func createImageResource() (Grid, error) {
 		Width:  w,
 		Height: h,
 	}, nil
-}
-
-// Grid resource
-type Grid struct {
-	Data   [][]bool
-	Width  int
-	Height int
 }

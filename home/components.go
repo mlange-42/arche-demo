@@ -17,3 +17,10 @@ type Target struct {
 	X float64
 	Y float64
 }
+
+// Grid resource
+type Grid struct {
+	Data   [][]bool
+	Width  int
+	Height int
+}
