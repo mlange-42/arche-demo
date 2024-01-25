@@ -18,7 +18,7 @@ func main() {
 	mod.FPS = 60
 	mod.TPS = 60
 
-	removeLoadingScreen("loading")
+	common.RemoveElementByID("loading")
 
 	grav := box2d.MakeB2Vec2(0.0, 50.0)
 	world := box2d.MakeB2World(grav)
@@ -29,7 +29,9 @@ func main() {
 
 	cvs, _ = common.NewCanvas("canvas-container", false)
 	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
-	ecs.AddResource(&mod.World, cvs)
+
+	image := Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
+	ecs.AddResource(&mod.World, &image)
 
 	listener := MouseListener{}
 	cvs.MouseListener = &listener
@@ -51,11 +53,4 @@ func main() {
 
 	println("Running the model")
 	mod.Run()
-}
-
-func removeLoadingScreen(id string) {
-	window := js.Global()
-	doc := window.Get("document")
-	elem := doc.Call("getElementById", id)
-	elem.Call("remove")
 }

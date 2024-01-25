@@ -1,5 +1,7 @@
 package main
 
+import "image"
+
 // Position component
 type Position struct {
 	X float64
@@ -23,4 +25,12 @@ type Grid struct {
 	Data   [][]bool
 	Width  int
 	Height int
+}
+
+// Image resource
+type Image struct {
+	Image  *image.RGBA
+	Width  int
+	Height int
+	Redraw func()
 }
