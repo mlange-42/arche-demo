@@ -29,6 +29,7 @@ jobs:
         run: |
           go build -o test/home.wasm ./home
           go build -o test/box2d.wasm ./box2d
+          go build -o test/bees.wasm ./bees
 
   test:
     name: Run tests

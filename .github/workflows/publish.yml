@@ -30,6 +30,7 @@ jobs:
         run: |
           go build -o docs/static/wasm/home.wasm ./home
           go build -o docs/static/wasm/box2d.wasm ./box2d
+          go build -o docs/static/wasm/bees.wasm ./bees
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
