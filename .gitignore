@@ -2,3 +2,5 @@
 *.pprof
 *.exe
 *.wasm
+*.lock
+/docs/public/

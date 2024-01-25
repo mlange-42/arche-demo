@@ -5,33 +5,28 @@
 	<meta charset="utf-8">
 	<title>Arche Demo</title>
 	<style>
-		body {
-			height: 100%;
-			width: 100%;
-			padding: 0;
-			margin: 0;
-			background-color: #050505;
-			color: #FFFFFF;
-			font-family: Arial, Helvetica, sans-serif
+		#canvas-container {
+			display: inline-block;
+			border: solid white 2px;
+			min-width: 0px;
+			max-width: 95%;
+			overflow: auto;
 		}
 
-		.centered {
-			margin: 0;
-			position: relative;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
+		#loading {
+			width: 880px;
+			height: 480px;
+			background-color: #000000;
+			color: #ffffff;
 		}
 
-		a {
-			color: #FFFFFF;
-		}
-
-		a:visited {
-			color: #aaaaaa;
+		#canvas {
+			max-width: 100%;
 		}
 	</style>
 
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="sidebar.css">
 	<script src="./wasm_exec.js"></script>
 	<script>
 		if (!WebAssembly.instantiateStreaming) {
@@ -49,10 +44,22 @@
 </head>
 
 <body>
+	<div class="sidebar sidebar-left">
+		<div class="vertical-text">More demos</div>
+		<a href="index.html">Home</a><br />
+		<a>Link 1</a><br />
+		<a>Link 2</a>
+	</div>
+	<div class="sidebar sidebar-right">
+		<div class="vertical-text">Description</div>
+		<p>A simple simulation with 30.000 entities.</p>
+		<p>Each entity has a target pixel in the logo. It accelerates towards this target, as well as away from the
+			mouse pointer in case it is closeby.</p>
+	</div>
 	<div align="center">
 		<h1>Arche Demo</h1>
-		<div id="canvas" style="display: inline-block; border: solid white 2px; min-width: 0px; overflow: auto;">
-			<div id="loading" style="width: 960px; height: 500px; background-color:#000000; color: #ffffff;">
+		<div id="canvas-container">
+			<div id="loading">
 				<p class="centered">Loading...</p>
 			</div>
 		</div>

@@ -26,16 +26,22 @@ jobs:
       - name: Install dependencies
         run: go get .
       - name: Build WebAssembly
-        run: go build -o public/main.wasm
+        run: go build -o docs/static/wasm/home.wasm
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.121.0'
+      - name: Build Site
+        run: hugo -s docs
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
           name: public
-          path: public
+          path: docs/public
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: gh-pages
-          build_dir: public
+          build_dir: docs/public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

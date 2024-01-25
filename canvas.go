@@ -57,6 +57,7 @@ func (c *Canvas) Create(width int, height int) {
 
 	canvas.Set("height", height)
 	canvas.Set("width", width)
+	canvas.Set("id", "canvas")
 	c.parent.Call("appendChild", canvas)
 
 	c.Set(canvas, width, height)
@@ -94,12 +95,18 @@ func (c *Canvas) isTouchDevice() bool {
 }
 
 func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
-	evt := args[0]
+	c.Mouse.X, c.Mouse.Y = c.getMousePosition(args[0])
+	return nil
+}
+
+func (c *Canvas) getMousePosition(evt js.Value) (float64, float64) {
 	rect := c.canvas.Call("getBoundingClientRect")
 
-	c.Mouse.X = float64(evt.Get("clientX").Int() - rect.Get("left").Int())
-	c.Mouse.Y = float64(evt.Get("clientY").Int() - rect.Get("top").Int())
-	return nil
+	scaleX := c.canvas.Get("width").Float() / rect.Get("width").Float()
+	scaleY := c.canvas.Get("height").Float() / rect.Get("height").Float()
+
+	return (float64(evt.Get("clientX").Int() - rect.Get("left").Int())) * scaleX,
+		(float64(evt.Get("clientY").Int() - rect.Get("top").Int())) * scaleY
 }
 
 func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {

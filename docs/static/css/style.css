@@ -1,0 +1,48 @@
+body {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: #050505;
+    color: #FFFFFF;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+p {
+    margin: 0px 0px 16px 0px;
+}
+
+a {
+    color: #FFFFFF;
+}
+
+a:visited {
+    color: #aaaaaa;
+}
+
+.centered {
+    margin: 0;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#canvas-container {
+    display: inline-block;
+    border: solid white 2px;
+    min-width: 0px;
+    max-width: 90%;
+    overflow: auto;
+}
+
+#canvas {
+    max-width: 100%;
+}
+
+#loading {
+    width: 880px;
+    height: 480px;
+    background-color: #000000;
+    color: #ffffff;
+}

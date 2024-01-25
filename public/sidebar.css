@@ -1,0 +1,48 @@
+.sidebar {
+    height: 100%;
+    width: 220px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    background-color: #000;
+    transition: 0.5s;
+}
+
+.sidebar-left {
+    left: -240px;
+    padding: 60px 36px 0px 20px;
+    border-right: solid 2px white;
+}
+
+.sidebar-left:hover {
+    left: 0;
+}
+
+.sidebar-right {
+    right: -240px;
+    padding: 60px 20px 0px 36px;
+    border-left: solid 2px white;
+}
+
+.sidebar-right:hover {
+    right: 0;
+}
+
+.vertical-text {
+    /*writing-mode: vertical-lr;
+    text-orientation: upright;*/
+    position: absolute;
+    margin: 0px 5px 0px 5px;
+    vertical-align: top;
+    top: 60px;
+}
+
+.sidebar-left .vertical-text {
+    writing-mode: sideways-lr;
+    right: 0px;
+}
+
+.sidebar-right .vertical-text {
+    writing-mode: sideways-rl;
+    left: 0px;
+}

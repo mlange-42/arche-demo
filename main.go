@@ -30,8 +30,8 @@ func main() {
 
 	removeLoadingScreen("loading")
 
-	cvs, _ = NewCanvas("canvas", false)
-	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 960)), 500)
+	cvs, _ = NewCanvas("canvas-container", false)
+	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
 	ecs.AddResource(&mod.World, cvs)
 
 	mod.AddSystem(&InitEntities{})
