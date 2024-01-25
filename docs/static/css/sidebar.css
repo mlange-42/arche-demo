@@ -14,7 +14,8 @@
     border-right: solid 2px white;
 }
 
-.sidebar-left:hover {
+.sidebar-left:hover,
+.sidebar-left:active {
     left: 0;
 }
 
@@ -24,7 +25,8 @@
     border-left: solid 2px white;
 }
 
-.sidebar-right:hover {
+.sidebar-right:hover,
+.sidebar-right:active {
     right: 0;
 }
 
