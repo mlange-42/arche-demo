@@ -15,7 +15,8 @@
 }
 
 .sidebar-left:hover,
-.sidebar-left:active {
+.sidebar-left:active,
+.sidebar-left:focus {
     left: 0;
 }
 
@@ -26,7 +27,8 @@
 }
 
 .sidebar-right:hover,
-.sidebar-right:active {
+.sidebar-right:active,
+.sidebar-right:focus {
     right: 0;
 }
 
