@@ -4,7 +4,6 @@ import (
 	"math"
 	"math/rand"
 
-	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -17,22 +16,22 @@ type MoveEntities struct {
 	MinFleeDistance float64
 	MaxFleeDistance float64
 	Damp            float64
-	canvas          generic.Resource[common.Canvas]
+	mouse           generic.Resource[MouseListener]
 	filter          generic.Filter3[Position, Velocity, Target]
 	counter         uint64
 }
 
 // Initialize the system
 func (s *MoveEntities) Initialize(world *ecs.World) {
-	s.canvas = generic.NewResource[common.Canvas](world)
+	s.mouse = generic.NewResource[MouseListener](world)
 	s.filter = *generic.NewFilter3[Position, Velocity, Target]()
 }
 
 // Update the system
 func (s *MoveEntities) Update(world *ecs.World) {
-	canvas := s.canvas.Get()
-	mouse := canvas.Mouse
-	mouseInside := canvas.MouseInside
+	listener := s.mouse.Get()
+	mouse := listener.Mouse
+	mouseInside := listener.MouseInside
 
 	minDist := s.MinFleeDistance
 	distRange := s.MaxFleeDistance - minDist

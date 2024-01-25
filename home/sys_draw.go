@@ -26,7 +26,6 @@ func (s *DrawEntities) InitializeUI(world *ecs.World) {
 // UpdateUI the system
 func (s *DrawEntities) UpdateUI(world *ecs.World) {
 	black := color.RGBA{0, 0, 0, 255}
-	red := color.RGBA{255, 0, 0, 255}
 	white := color.RGBA{255, 255, 255, 255}
 
 	canvas := s.canvas.Get()
@@ -41,14 +40,6 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 		pos := query.Get()
 
 		img.SetRGBA(int(pos.X), int(pos.Y), white)
-	}
-
-	if canvas.MouseInside && s.DrawMouse {
-		// Draw mouse
-		draw.Draw(img,
-			image.Rect(int(canvas.Mouse.X-2), int(canvas.Mouse.Y-2), int(canvas.Mouse.X+2), int(canvas.Mouse.Y+2)),
-			&image.Uniform{red}, image.Point{}, draw.Src,
-		)
 	}
 
 	canvas.Redraw()

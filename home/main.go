@@ -35,6 +35,10 @@ func main() {
 	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
 	ecs.AddResource(&mod.World, cvs)
 
+	listener := MouseListener{}
+	cvs.MouseListener = &listener
+	ecs.AddResource(&mod.World, &listener)
+
 	mod.AddSystem(&InitEntities{})
 
 	mod.AddSystem(&MoveEntities{

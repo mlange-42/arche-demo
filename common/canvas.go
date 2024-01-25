@@ -6,21 +6,13 @@ import (
 	"time"
 )
 
-// Mouse coordinates
-type Mouse struct {
-	X float64
-	Y float64
-}
-
 // Canvas resource
 type Canvas struct {
 	Width  int
 	Height int
 	Image  *image.RGBA // The frame we actually draw on
 
-	Mouse       Mouse
-	MouseInside bool
-	Paused      bool
+	MouseListener MouseListener
 
 	touchStart time.Time
 
@@ -101,32 +93,42 @@ func (c *Canvas) isTouchDevice() bool {
 }
 
 func (c *Canvas) onMouseMove(this js.Value, args []js.Value) interface{} {
-	c.Mouse.X, c.Mouse.Y = c.getMousePosition(args[0])
+	if c.MouseListener != nil {
+		c.MouseListener.MouseMove(c.getMousePosition(args[0]))
+	}
 	return nil
 }
 
-func (c *Canvas) getMousePosition(evt js.Value) (float64, float64) {
+func (c *Canvas) getMousePosition(evt js.Value) MousePointer {
 	rect := c.canvas.Call("getBoundingClientRect")
 
 	scaleX := c.canvas.Get("width").Float() / rect.Get("width").Float()
 	scaleY := c.canvas.Get("height").Float() / rect.Get("height").Float()
 
-	return (float64(evt.Get("clientX").Int() - rect.Get("left").Int())) * scaleX,
-		(float64(evt.Get("clientY").Int() - rect.Get("top").Int())) * scaleY
+	return MousePointer{
+		X: (float64(evt.Get("clientX").Int() - rect.Get("left").Int())) * scaleX,
+		Y: (float64(evt.Get("clientY").Int() - rect.Get("top").Int())) * scaleY,
+	}
 }
 
 func (c *Canvas) onMouseEnter(this js.Value, args []js.Value) interface{} {
-	c.MouseInside = true
+	if c.MouseListener != nil {
+		c.MouseListener.MouseEnter(c.getMousePosition(args[0]))
+	}
 	return nil
 }
 
 func (c *Canvas) onMouseLeave(this js.Value, args []js.Value) interface{} {
-	c.MouseInside = false
+	if c.MouseListener != nil {
+		c.MouseListener.MouseLeave(c.getMousePosition(args[0]))
+	}
 	return nil
 }
 
 func (c *Canvas) onClick(this js.Value, args []js.Value) interface{} {
-	c.Paused = !c.Paused
+	if c.MouseListener != nil {
+		c.MouseListener.MouseClick(c.getMousePosition(args[0]))
+	}
 	return nil
 }
 
