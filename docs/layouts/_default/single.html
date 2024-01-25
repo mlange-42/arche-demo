@@ -2,10 +2,12 @@
 <article class="container">
     <div tabindex="0" class="sidebar sidebar-left">
         <div class="vertical-text">More demos</div>
-        <a href="{{ .Site.Home.RelPermalink }}">Home</a><br />
-        {{ range .Site.RegularPages }}
-        <a href="{{ .RelPermalink }}">{{ or .Title .RelPermalink }}</a><br />
-        {{ end }}
+        <div>
+            <a href="{{ .Site.Home.RelPermalink }}">Home</a><br />
+            {{ range .Site.RegularPages }}
+            <a href="{{ .RelPermalink }}">{{ or .Title .RelPermalink }}</a><br />
+            {{ end }}
+        </div>
     </div>
     <div tabindex="0" class="sidebar sidebar-right">
         <div class="vertical-text">Description</div>
