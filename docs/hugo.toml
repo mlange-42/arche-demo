@@ -6,6 +6,7 @@ title = 'Arche Demo'
 custom_css = ["css/style.css", "css/sidebar.css"]
 custom_js = ["js/wasm_exec.js"]
 
-[mediaTypes]
-[mediaTypes.'application/wasm']
-suffixes = ['wasm']
+about = """{{< u >}}About{{< /u >}}  
+[Arche](https://github.com/mlange-42/arche) is an archetype-based
+Entity Component System (ECS) for Go.
+"""
