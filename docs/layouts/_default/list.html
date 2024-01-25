@@ -12,8 +12,15 @@
     <div tabindex="0" class="sidebar sidebar-right">
         <div class="vertical-text">Description</div>
         <div>
-            {{ .Description | markdownify }}
+            <p>{{ .Description | markdownify }}</p>
         </div>
+        {{ if .Page.Param "wasm" }}
+        <div>
+            <a href="{{ .Site.Params.repository }}/tree/main/{{ .Page.Params.wasm }}/">
+                <i class="fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this example
+            </a>
+        </div>
+        {{- end }}
         <div class="about">{{ .Site.Params.about | markdownify }}</div>
     </div>
 
