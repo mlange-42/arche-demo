@@ -15,6 +15,7 @@
     {{- end }}
 
     {{ if .Page.Param "wasm" }}
+    {{ $url := ( printf "%swasm/%s.wasm" .Site.BaseURL .Page.Params.wasm ) }}
     <script>
         if (!WebAssembly.instantiateStreaming) {
             WebAssembly.instantiateStreaming = async (resp, importObject) => {
@@ -24,7 +25,7 @@
         }
 
         const go = new Go();
-        WebAssembly.instantiateStreaming(fetch('/wasm/{{ .Page.Param "wasm" }}.wasm'), go.importObject).then(res => {
+        WebAssembly.instantiateStreaming(fetch({{ $url }}), go.importObject).then(res => {
             go.run(res.instance)
         })
     </script>
