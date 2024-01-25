@@ -31,9 +31,19 @@ func main() {
 	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
 	ecs.AddResource(&mod.World, cvs)
 
+	listener := MouseListener{}
+	cvs.MouseListener = &listener
+	ecs.AddResource(&mod.World, &listener)
+
 	mod.AddSystem(&InitEntities{Count: 100})
+	mod.AddSystem(&Box2DForces{
+		MinFleeDistance: 50,
+		MaxFleeDistance: 200,
+		ForceScale:      10,
+	})
 	mod.AddSystem(&Box2DPhysics{})
 
+	mod.AddUISystem(&ManagePause{})
 	mod.AddUISystem(&DrawEntities{})
 
 	println("Running the model")
