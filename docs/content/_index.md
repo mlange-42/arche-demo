@@ -9,8 +9,6 @@ description: |
     in case it is within a certain distance.
 ---
 
-# Arche Demo
-
 {{< rawhtml >}}
 <style>
     #loading {
@@ -25,6 +23,6 @@ description: |
     </div>
 </div>
 <p id="instructions">Move the mouse over the logo! Click to pause and resume!</p>
-<p><a href="https://github.com/mlange-42/arche"><tt style="font-size: 120%">github.com/mlange-42/arche</tt></a>
+<p><tt style="font-size: 120%">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a></tt>
 </p>
 {{< /rawhtml >}}

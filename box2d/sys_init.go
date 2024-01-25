@@ -11,7 +11,8 @@ import (
 
 // InitEntities system
 type InitEntities struct {
-	Count int
+	Count       int
+	Restitution float64
 }
 
 // Initialize the system
@@ -57,7 +58,7 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 		fd.Shape = &shape
 		fd.Density = 20.0
 		fd.Friction = 1.0
-		fd.Restitution = 0.95
+		fd.Restitution = s.Restitution
 		body.CreateFixtureFromDef(&fd)
 
 		bodyComp.Body = body
