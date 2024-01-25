@@ -1,5 +1,5 @@
-// A basic HTTP server.
-// By default, it serves ./public (. being the working directory) on port 8080.
+// A basic HTTP server for testing web sites.
+// By default, it serves the working directory on port 8080.
 package main
 
 import (
@@ -10,7 +10,7 @@ import (
 
 var (
 	listen = flag.String("listen", ":8080", "listen address")
-	dir    = flag.String("dir", "./public", "directory to serve")
+	dir    = flag.String("dir", ".", "directory to serve")
 )
 
 func main() {

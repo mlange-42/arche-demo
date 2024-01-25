@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: go get .
       - name: Build WebAssembly
-        run: go build -o public/main.wasm
+        run: go build -o test/home.wasm ./home
 
   test:
     name: Run tests
