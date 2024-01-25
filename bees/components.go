@@ -12,9 +12,25 @@ type Position struct {
 	Y float64
 }
 
+// Direction component.
+type Direction struct {
+	X float64
+	Y float64
+}
+
 // HomeHive component.
 type HomeHive struct {
 	ecs.Relation
+}
+
+// Scout component.
+type Scout struct {
+	Start int64
+}
+
+// Random256 contains an uint8 value for scheduling things in intervals, but randomized over entities.
+type Random256 struct {
+	Value uint8
 }
 
 // Hive component.
@@ -32,6 +48,11 @@ type Image struct {
 	Width  int
 	Height int
 	Redraw func()
+}
+
+// Params resource
+type Params struct {
+	MaxBeeSpeed float64
 }
 
 // Patches resource holding the dimensions of the landscape grid.

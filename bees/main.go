@@ -19,6 +19,11 @@ func main() {
 
 	common.RemoveElementByID("loading")
 
+	params := Params{
+		MaxBeeSpeed: 0.5,
+	}
+	ecs.AddResource(&mod.World, &params)
+
 	cvs, _ = common.NewCanvas("canvas-container", false)
 	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
 
@@ -30,6 +35,12 @@ func main() {
 
 	mod.AddSystem(&InitHives{Count: 10})
 	mod.AddSystem(&InitPatches{Count: 100})
+	mod.AddSystem(&InitBees{CountPerHive: 100})
+
+	mod.AddSystem(&Scouting{
+		MaxRotation:  90,
+		MaxScoutTime: 300,
+	})
 
 	mod.AddUISystem(&DrawHives{})
 

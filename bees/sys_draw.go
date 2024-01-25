@@ -15,6 +15,7 @@ type DrawHives struct {
 	patches     generic.Resource[Patches]
 	hiveFilter  generic.Filter1[Position]
 	patchFilter generic.Filter1[FlowerPatch]
+	scoutFilter generic.Filter1[Position]
 }
 
 // InitializeUI the system
@@ -23,6 +24,7 @@ func (s *DrawHives) InitializeUI(world *ecs.World) {
 	s.patches = generic.NewResource[Patches](world)
 	s.hiveFilter = *generic.NewFilter1[Position]().With(generic.T[Hive]())
 	s.patchFilter = *generic.NewFilter1[FlowerPatch]()
+	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[Scout]())
 }
 
 // UpdateUI the system
@@ -30,6 +32,7 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 	black := image.Uniform{color.RGBA{0, 0, 0, 255}}
 	blue := image.Uniform{color.RGBA{0, 0, 250, 255}}
 	green := image.Uniform{color.RGBA{0, 120, 0, 255}}
+	white := color.RGBA{255, 255, 255, 255}
 
 	canvas := s.canvas.Get()
 	img := canvas.Image
@@ -54,6 +57,14 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 		pos := queryH.Get()
 
 		draw.Draw(img, image.Rect(int(pos.X-2), int(pos.Y-2), int(pos.X+2), int(pos.Y+2)), &blue, image.Point{}, draw.Src)
+	}
+
+	// Draw scouts
+	queryS := s.scoutFilter.Query(world)
+	for queryS.Next() {
+		pos := queryS.Get()
+
+		img.SetRGBA(int(pos.X), int(pos.Y), white)
 	}
 
 	canvas.Redraw()
