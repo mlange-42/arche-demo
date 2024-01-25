@@ -25,6 +25,14 @@ func main() {
 	image := Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
+	patches := NewPatches(image.Width, image.Height, 10)
+	ecs.AddResource(&mod.World, &patches)
+
+	mod.AddSystem(&InitHives{Count: 10})
+	mod.AddSystem(&InitPatches{Count: 100})
+
+	mod.AddUISystem(&DrawHives{})
+
 	println("Running the model")
 	mod.Run()
 }
