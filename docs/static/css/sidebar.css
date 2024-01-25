@@ -45,11 +45,12 @@
 }
 
 .sidebar-left .vertical-text {
-    writing-mode: sideways-lr;
+    writing-mode: vertical-lr;
+    rotate: 180deg;
     right: 0px;
 }
 
 .sidebar-right .vertical-text {
-    writing-mode: sideways-rl;
+    writing-mode: vertical-rl;
     left: 0px;
 }
