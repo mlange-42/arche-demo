@@ -1,16 +1,18 @@
 .sidebar {
     height: 100%;
-    width: 220px;
+    width: 270px;
     position: fixed;
     z-index: 1;
     top: 0;
     background-color: #000;
     transition: 0.5s;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-left {
     left: -240px;
-    padding: 60px 36px 0px 20px;
+    padding: 60px 36px 20px 20px;
     border-right: solid 2px white;
 }
 
@@ -22,7 +24,7 @@
 
 .sidebar-right {
     right: -240px;
-    padding: 60px 20px 0px 36px;
+    padding: 60px 20px 20px 36px;
     border-left: solid 2px white;
 }
 
@@ -32,12 +34,13 @@
     right: 0;
 }
 
+.sidebar .about {
+    margin-top: auto;
+}
+
 .vertical-text {
-    /*writing-mode: vertical-lr;
-    text-orientation: upright;*/
     position: absolute;
     margin: 0px 5px 0px 5px;
-    vertical-align: top;
     top: 60px;
 }
 

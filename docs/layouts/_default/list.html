@@ -9,7 +9,10 @@
     </div>
     <div tabindex="0" class="sidebar sidebar-right">
         <div class="vertical-text">Description</div>
-        {{ .Description | markdownify }}
+        <div>
+            {{ .Description | markdownify }}
+        </div>
+        <div class="about">{{ .Site.Params.about | markdownify }}</div>
     </div>
 
     <div align="center">
