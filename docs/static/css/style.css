@@ -27,3 +27,22 @@ a:visited {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+#canvas-container {
+    display: inline-block;
+    border: solid white 2px;
+    min-width: 0px;
+    max-width: 90%;
+    overflow: auto;
+}
+
+#canvas {
+    max-width: 100%;
+}
+
+#loading {
+    width: 880px;
+    height: 480px;
+    background-color: #000000;
+    color: #ffffff;
+}

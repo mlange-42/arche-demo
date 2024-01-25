@@ -2,32 +2,19 @@
 title: Home
 wasm: home
 description: |
-    Test description.
-
-    With multiple lines and a [Markdown link](https://test.com).
+    A simple simulation with 30.000 entities.
+    
+    Each entity has a target pixel in the logo.
+    It accelerates towards this target, as well as away from the mouse pointer in case it is closeby.
 ---
 
 # Arche Demo
 
 {{< rawhtml >}}
 <style>
-    #canvas-container {
-        display: inline-block;
-        border: solid white 2px;
-        min-width: 0px;
-        max-width: 95%;
-        overflow: auto;
-    }
-
     #loading {
         width: 880px;
         height: 480px;
-        background-color: #000000;
-        color: #ffffff;
-    }
-
-    #canvas {
-        max-width: 100%;
     }
 </style>
 
