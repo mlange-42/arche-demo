@@ -8,8 +8,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// Box2DForces system
-type Box2DForces struct {
+// Physics system
+type Physics struct {
 	MinFleeDistance float64
 	MaxFleeDistance float64
 	ForceScale      float64
@@ -18,13 +18,13 @@ type Box2DForces struct {
 }
 
 // Initialize the system
-func (s *Box2DForces) Initialize(world *ecs.World) {
+func (s *Physics) Initialize(world *ecs.World) {
 	s.mouse = generic.NewResource[MouseListener](world)
 	s.filter = *generic.NewFilter1[Body]()
 }
 
 // Update the system
-func (s *Box2DForces) Update(world *ecs.World) {
+func (s *Physics) Update(world *ecs.World) {
 	listener := s.mouse.Get()
 	mouse := listener.Mouse
 
@@ -51,9 +51,9 @@ func (s *Box2DForces) Update(world *ecs.World) {
 }
 
 // Finalize the system
-func (s *Box2DForces) Finalize(world *ecs.World) {}
+func (s *Physics) Finalize(world *ecs.World) {}
 
-func (s *Box2DForces) norm(dx, dy float64) (float64, float64, float64) {
+func (s *Physics) norm(dx, dy float64) (float64, float64, float64) {
 	len := math.Sqrt(dx*dx + dy*dy)
 	if len == 0 {
 		return 0, 0, 0

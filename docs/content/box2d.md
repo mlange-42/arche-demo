@@ -6,8 +6,6 @@ description: |
     a 2D physics engine for games.
 ---
 
-# Arche Demo - Box2D
-
 {{< rawhtml >}}
 <style>
     #loading {
@@ -22,6 +20,6 @@ description: |
     </div>
 </div>
 <p id="instructions">Move the mouse over the canvas! Click to pause and resume!</p>
-<p><a href="https://github.com/mlange-42/arche"><tt style="font-size: 120%">github.com/mlange-42/arche</tt></a>
+<p class="tt">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a>
 </p>
 {{< /rawhtml >}}

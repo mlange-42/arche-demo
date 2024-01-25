@@ -25,6 +25,12 @@ a:visited {
     color: #aaaaaa;
 }
 
+.tt {
+    font-family: 'Lucida Console', monospace;
+    font-size: 90%;
+    color: #aaaaaa;
+}
+
 .centered {
     margin: 0;
     position: relative;

@@ -35,8 +35,11 @@ func main() {
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 
-	mod.AddSystem(&InitEntities{Count: 100})
-	mod.AddSystem(&Box2DForces{
+	mod.AddSystem(&InitEntities{
+		Count:       100,
+		Restitution: 0.8,
+	})
+	mod.AddSystem(&Physics{
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		ForceScale:      10,

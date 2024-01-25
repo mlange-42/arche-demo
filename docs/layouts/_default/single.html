@@ -16,8 +16,8 @@
         </div>
         {{ if .Page.Param "wasm" }}
         <div>
-            <a href="{{ .Site.Params.repository }}/tree/main/{{ .Page.Params.wasm }}/">
-                <i class="fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this example
+            <a href="{{ .Site.Params.repository }}/tree/main/{{ .Page.Params.wasm }}/" target="_blank">
+                <i class=" fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this example
             </a>
         </div>
         {{- end }}
@@ -25,6 +25,7 @@
     </div>
 
     <div align="center">
+        <h1>Arche Demo &ndash; {{ .Page.Title }}</h1>
         {{ .Content }}
     </div>
 </article>
