@@ -63,13 +63,14 @@ func main() {
 		MaxCollect:      0.002,
 	})
 	mod.AddSystem(&SysReturning{
-		MaxRotation: 45,
+		MaxRotation:  45,
+		FleeDistance: 80,
 	})
 	mod.AddSystem(&SysWaggleDance{
 		MaxDanceDuration: 120,
 	})
 	mod.AddSystem(&SysFleeing{
-		FleeDistance: 60,
+		FleeDistance: 50,
 	})
 
 	mod.AddUISystem(&ManagePause{})

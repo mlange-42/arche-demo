@@ -11,10 +11,12 @@ import (
 
 // SysReturning system
 type SysReturning struct {
-	MaxRotation float64
+	MaxRotation  float64
+	FleeDistance float64
 
 	params         generic.Resource[Params]
 	time           generic.Resource[resource.Tick]
+	mouse          generic.Resource[MouseListener]
 	filter         generic.Filter4[Position, Direction, ActReturn, Random256]
 	exchangeArrive generic.Exchange
 	exchangeWaggle generic.Exchange
@@ -27,6 +29,7 @@ type SysReturning struct {
 func (s *SysReturning) Initialize(world *ecs.World) {
 	s.params = generic.NewResource[Params](world)
 	s.time = generic.NewResource[resource.Tick](world)
+	s.mouse = generic.NewResource[MouseListener](world)
 	s.filter = *generic.NewFilter4[Position, Direction, ActReturn, Random256]()
 
 	s.exchangeArrive = *generic.NewExchange(world).
@@ -48,13 +51,27 @@ func (s *SysReturning) Update(world *ecs.World) {
 	maxSpeed := s.params.Get().MaxBeeSpeed
 	maxAng := (s.MaxRotation * math.Pi / 180.0) / 2
 
+	listener := s.mouse.Get()
+	mouse := listener.Mouse
+	mouseInside := listener.MouseInside
+
+	fleeDistSq := s.FleeDistance * s.FleeDistance
+
 	query := s.filter.Query(world)
 	for query.Next() {
 		pos, dir, ret, r256 := query.Get()
 
+		speed := 1.0
 		if tick%4 == int64(r256.Value)%4 {
-			dx := ret.Target.X - pos.X
-			dy := ret.Target.Y - pos.Y
+			var dx, dy float64
+			if mouseInside && distanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
+				dx = pos.X - mouse.X
+				dy = pos.Y - mouse.Y
+				speed = 1.5
+			} else {
+				dx = ret.Target.X - pos.X
+				dy = ret.Target.Y - pos.Y
+			}
 
 			dir.X, dir.Y, _ = norm(dx, dy)
 			dir.X, dir.Y = rotate(dir.X, dir.Y, rand.Float64()*2*maxAng-maxAng)
@@ -65,8 +82,8 @@ func (s *SysReturning) Update(world *ecs.World) {
 			}
 		}
 
-		pos.X += dir.X * maxSpeed
-		pos.Y += dir.Y * maxSpeed
+		pos.X += dir.X * speed * maxSpeed
+		pos.Y += dir.Y * speed * maxSpeed
 	}
 
 	for _, e := range s.toArrive {
