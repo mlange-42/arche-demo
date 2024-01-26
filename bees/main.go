@@ -30,6 +30,10 @@ func main() {
 	image := Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
+	listener := MouseListener{}
+	cvs.MouseListener = &listener
+	ecs.AddResource(&mod.World, &listener)
+
 	patches := NewPatches(image.Width, image.Height, 10)
 	ecs.AddResource(&mod.World, &patches)
 
@@ -59,12 +63,17 @@ func main() {
 		MaxCollect:      0.002,
 	})
 	mod.AddSystem(&SysReturning{
-		MaxRotation: 45,
+		MaxRotation:  45,
+		FleeDistance: 80,
 	})
 	mod.AddSystem(&SysWaggleDance{
 		MaxDanceDuration: 120,
 	})
+	mod.AddSystem(&SysFleeing{
+		FleeDistance: 50,
+	})
 
+	mod.AddUISystem(&ManagePause{})
 	mod.AddUISystem(&DrawHives{})
 
 	println("Running the model")
