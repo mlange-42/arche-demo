@@ -3,6 +3,8 @@ title: Bee Hives
 wasm: bees
 description: |
     TODO.
+
+    another paragraph
 ---
 
 {{< rawhtml >}}
