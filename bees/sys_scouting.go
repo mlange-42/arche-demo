@@ -24,7 +24,7 @@ type SysScouting struct {
 	posMap         generic.Map1[Position]
 	homeMap        generic.Map[HomeHive]
 	forageMap      generic.Map1[ActForage]
-	returnMap      generic.Map1[ActReturn]
+	returnMap      generic.Map2[Position, ActReturn]
 
 	toForage []ecs.Entity
 	toReturn []ecs.Entity
@@ -49,7 +49,7 @@ func (s *SysScouting) Initialize(world *ecs.World) {
 	s.posMap = generic.NewMap1[Position](world)
 	s.homeMap = generic.NewMap[HomeHive](world)
 	s.forageMap = generic.NewMap1[ActForage](world)
-	s.returnMap = generic.NewMap1[ActReturn](world)
+	s.returnMap = generic.NewMap2[Position, ActReturn](world)
 
 	s.toForage = make([]ecs.Entity, 0, 64)
 	s.toReturn = make([]ecs.Entity, 0, 64)
@@ -109,10 +109,12 @@ func (s *SysScouting) Update(world *ecs.World) {
 
 	for _, e := range s.toReturn {
 		s.exchangeReturn.Exchange(e)
-		ret := s.returnMap.Get(e)
+		pos, ret := s.returnMap.Get(e)
 		home := s.homeMap.GetRelation(e)
 		hPos := s.posMap.Get(home)
 		ret.Target = *hPos
+		ret.Source = *pos
+		ret.Load = 0
 	}
 
 	s.toForage = s.toForage[:0]

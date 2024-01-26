@@ -31,11 +31,14 @@ type ActScout struct {
 // ActForage activity component.
 type ActForage struct {
 	Start int64
+	Load  float64
 }
 
 // ActReturn activity component.
 type ActReturn struct {
 	Target Position
+	Source Position
+	Load   float64
 }
 
 // Random256 contains an uint8 value for scheduling things in intervals, but randomized over entities.
@@ -48,8 +51,9 @@ type Hive struct{}
 
 // FlowerPatch component
 type FlowerPatch struct {
-	X int
-	Y int
+	X         int
+	Y         int
+	Resources float64
 }
 
 // Image resource.

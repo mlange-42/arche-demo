@@ -34,7 +34,10 @@ func main() {
 	ecs.AddResource(&mod.World, &patches)
 
 	mod.AddSystem(&InitHives{Count: 10})
-	mod.AddSystem(&InitPatches{Count: 25})
+	mod.AddSystem(&ManagePatches{
+		Count:           25,
+		InitialResource: 10,
+	})
 	mod.AddSystem(&InitBees{CountPerHive: 100})
 
 	mod.AddSystem(&SysScouting{
@@ -43,6 +46,7 @@ func main() {
 	})
 	mod.AddSystem(&SysForaging{
 		MaxForagingTime: 120,
+		MaxCollect:      1.0,
 	})
 	mod.AddSystem(&SysReturning{})
 

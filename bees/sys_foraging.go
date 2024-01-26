@@ -9,15 +9,17 @@ import (
 // SysForaging system
 type SysForaging struct {
 	MaxForagingTime int64
+	MaxCollect      float64
 	patches         generic.Resource[Patches]
 	time            generic.Resource[resource.Tick]
-	filter          generic.Filter1[ActForage]
+	filter          generic.Filter2[Position, ActForage]
 
 	exchangeReturn generic.Exchange
 
 	posMap    generic.Map1[Position]
 	homeMap   generic.Map[HomeHive]
-	returnMap generic.Map1[ActReturn]
+	returnMap generic.Map2[Position, ActReturn]
+	patchMap  generic.Map[FlowerPatch]
 
 	toReturn []ecs.Entity
 }
@@ -27,7 +29,7 @@ func (s *SysForaging) Initialize(world *ecs.World) {
 	s.patches = generic.NewResource[Patches](world)
 	s.time = generic.NewResource[resource.Tick](world)
 
-	s.filter = *generic.NewFilter1[ActForage]()
+	s.filter = *generic.NewFilter2[Position, ActForage]()
 
 	s.exchangeReturn = *generic.NewExchange(world).
 		Adds(generic.T[ActReturn]()).
@@ -35,18 +37,40 @@ func (s *SysForaging) Initialize(world *ecs.World) {
 
 	s.posMap = generic.NewMap1[Position](world)
 	s.homeMap = generic.NewMap[HomeHive](world)
-	s.returnMap = generic.NewMap1[ActReturn](world)
+	s.patchMap = generic.NewMap[FlowerPatch](world)
+	s.returnMap = generic.NewMap2[Position, ActReturn](world)
 
 	s.toReturn = make([]ecs.Entity, 0, 64)
 }
 
 // Update the system
 func (s *SysForaging) Update(world *ecs.World) {
+	patches := s.patches.Get()
 	tick := s.time.Get().Tick
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		forage := query.Get()
+		pos, forage := query.Get()
+
+		if forage.Load <= 0 {
+			x, y := patches.ToCell(pos.X, pos.Y)
+			patchEntity := patches.Patches[x][y]
+			if patchEntity.IsZero() {
+				s.toReturn = append(s.toReturn, query.Entity())
+				continue
+			}
+			patch := s.patchMap.Get(patchEntity)
+			if patch.Resources <= 0 {
+				s.toReturn = append(s.toReturn, query.Entity())
+				continue
+			}
+			forage.Load = patch.Resources
+			if patch.Resources > s.MaxCollect {
+				patch.Resources -= s.MaxCollect
+			} else {
+				patch.Resources = 0
+			}
+		}
 
 		if tick > forage.Start+s.MaxForagingTime {
 			s.toReturn = append(s.toReturn, query.Entity())
@@ -56,10 +80,12 @@ func (s *SysForaging) Update(world *ecs.World) {
 
 	for _, e := range s.toReturn {
 		s.exchangeReturn.Exchange(e)
-		ret := s.returnMap.Get(e)
+		pos, ret := s.returnMap.Get(e)
 		home := s.homeMap.GetRelation(e)
 		hPos := s.posMap.Get(home)
+
 		ret.Target = *hPos
+		ret.Source = *pos
 	}
 
 	s.toReturn = s.toReturn[:0]
