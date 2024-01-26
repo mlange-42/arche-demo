@@ -33,12 +33,14 @@ func main() {
 	patches := NewPatches(image.Width, image.Height, 10)
 	ecs.AddResource(&mod.World, &patches)
 
-	mod.AddSystem(&InitHives{Count: 10})
+	mod.AddSystem(&InitHives{Count: 5})
+	mod.AddSystem(&InitBees{CountPerHive: 1000})
+
 	mod.AddSystem(&ManagePatches{
-		Count:           25,
+		Count:           100,
 		InitialResource: 10,
 	})
-	mod.AddSystem(&InitBees{CountPerHive: 100})
+	mod.AddSystem(&SysHiveDecisions{})
 
 	mod.AddSystem(&SysScouting{
 		MaxRotation:  90,

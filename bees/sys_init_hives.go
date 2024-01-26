@@ -19,14 +19,15 @@ func (s *InitHives) Initialize(world *ecs.World) {
 	w := float64(canvas.Width)
 	h := float64(canvas.Height)
 
-	builder := generic.NewMap2[Position, Hive](world)
+	builder := generic.NewMap3[Position, Hive, Random256](world)
 
 	query := builder.NewBatchQ(s.Count)
 	for query.Next() {
-		pos, _ := query.Get()
+		pos, _, r256 := query.Get()
 
 		pos.X = rand.Float64()*w*0.8 + w*0.1
 		pos.Y = rand.Float64()*h*0.8 + h*0.1
+		r256.Value = uint8(rand.Int31n(256))
 	}
 }
 

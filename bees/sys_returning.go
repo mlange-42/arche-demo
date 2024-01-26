@@ -22,6 +22,7 @@ func (s *SysReturning) Initialize(world *ecs.World) {
 	s.filter = *generic.NewFilter4[Position, Direction, ActReturn, Random256]().With(generic.T[ActReturn]())
 
 	s.exchangeArrive = *generic.NewExchange(world).
+		Adds(generic.T[ActInHive]()).
 		Removes(generic.T[ActReturn]())
 
 	s.toArrive = make([]ecs.Entity, 0, 64)

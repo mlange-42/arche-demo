@@ -41,6 +41,9 @@ type ActReturn struct {
 	Load   float64
 }
 
+// ActInHive activity component.
+type ActInHive struct{}
+
 // Random256 contains an uint8 value for scheduling things in intervals, but randomized over entities.
 type Random256 struct {
 	Value uint8
