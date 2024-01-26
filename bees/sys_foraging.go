@@ -89,7 +89,9 @@ func (s *SysForaging) Update(world *ecs.World) {
 		hPos := s.posMap.Get(home)
 
 		ret.Target = *hPos
-		ret.Source = *pos
+
+		sx, sy := patches.ToCellCenter(pos.X, pos.Y)
+		ret.Source = Position{X: sx, Y: sy}
 		ret.Load = load
 	}
 

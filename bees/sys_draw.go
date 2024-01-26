@@ -16,6 +16,7 @@ type DrawHives struct {
 	hiveFilter  generic.Filter1[Position]
 	patchFilter generic.Filter1[FlowerPatch]
 
+	followFilter generic.Filter1[Position]
 	scoutFilter  generic.Filter1[Position]
 	forageFilter generic.Filter1[Position]
 	returnFilter generic.Filter1[Position]
@@ -30,6 +31,7 @@ func (s *DrawHives) InitializeUI(world *ecs.World) {
 	s.hiveFilter = *generic.NewFilter1[Position]().With(generic.T[Hive]())
 	s.patchFilter = *generic.NewFilter1[FlowerPatch]()
 
+	s.followFilter = *generic.NewFilter1[Position]().With(generic.T[ActFollow]())
 	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[ActScout]())
 	s.forageFilter = *generic.NewFilter1[Position]().With(generic.T[ActForage]())
 	s.returnFilter = *generic.NewFilter1[Position]().With(generic.T[ActReturn]())
@@ -41,8 +43,8 @@ func (s *DrawHives) InitializeUI(world *ecs.World) {
 func (s *DrawHives) UpdateUI(world *ecs.World) {
 	black := image.Uniform{color.RGBA{0, 0, 0, 255}}
 	blue := image.Uniform{color.RGBA{0, 0, 250, 255}}
-	green := image.Uniform{color.RGBA{0, 120, 0, 255}}
 
+	followCol := color.RGBA{255, 255, 255, 255}
 	scoutCol := color.RGBA{255, 255, 100, 255}
 	forageCol := color.RGBA{255, 0, 255, 255}
 	returnCol := color.RGBA{0, 255, 255, 255}
@@ -59,11 +61,12 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 	// Draw flower patches
 	queryP := s.patchFilter.Query(world)
 	for queryP.Next() {
-		pos := queryP.Get()
+		patch := queryP.Get()
 
-		x := pos.X * cs
-		y := pos.Y * cs
-		draw.Draw(img, image.Rect(x, y, x+cs, y+cs), &green, image.Point{}, draw.Src)
+		x := patch.X * cs
+		y := patch.Y * cs
+		col := image.Uniform{color.RGBA{0, 30 + uint8(patch.Resources*120), 0, 255}}
+		draw.Draw(img, image.Rect(x, y, x+cs, y+cs), &col, image.Point{}, draw.Src)
 	}
 
 	// Draw hives
@@ -74,6 +77,11 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 		draw.Draw(img, image.Rect(int(pos.X-2), int(pos.Y-2), int(pos.X+2), int(pos.Y+2)), &blue, image.Point{}, draw.Src)
 	}
 
+	queryFollow := s.followFilter.Query(world)
+	for queryFollow.Next() {
+		pos := queryFollow.Get()
+		img.SetRGBA(int(pos.X), int(pos.Y), followCol)
+	}
 	queryScouts := s.scoutFilter.Query(world)
 	for queryScouts.Next() {
 		pos := queryScouts.Get()

@@ -2,6 +2,7 @@ package main
 
 import (
 	"image"
+	"math"
 
 	"github.com/mlange-42/arche/ecs"
 )
@@ -26,6 +27,11 @@ type HomeHive struct {
 // ActScout component.
 type ActScout struct {
 	Start int64
+}
+
+// ActFollow component.
+type ActFollow struct {
+	Target Position
 }
 
 // ActForage activity component.
@@ -112,5 +118,14 @@ func NewPatches(width, height int, cellSize int) Patches {
 
 // ToCell converts world coordinates to integer patch coordinates.
 func (p *Patches) ToCell(x, y float64) (int, int) {
-	return int(x / float64(p.CellSize)), int(y / float64(p.CellSize))
+	cs := float64(p.CellSize)
+	return int(x / cs), int(y / cs)
+}
+
+// ToCellCenter returns the world coordinates of the center of the cell
+// the given point is in.
+func (p *Patches) ToCellCenter(x, y float64) (float64, float64) {
+	cs := float64(p.CellSize)
+	return (math.Floor(x/cs) + 0.5) * cs,
+		(math.Floor(y/cs) + 0.5) * cs
 }

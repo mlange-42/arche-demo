@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"math/rand"
 
 	"github.com/mlange-42/arche-model/resource"
@@ -10,6 +11,8 @@ import (
 
 // SysReturning system
 type SysReturning struct {
+	MaxRotation float64
+
 	params         generic.Resource[Params]
 	time           generic.Resource[resource.Tick]
 	filter         generic.Filter4[Position, Direction, ActReturn, Random256]
@@ -24,7 +27,7 @@ type SysReturning struct {
 func (s *SysReturning) Initialize(world *ecs.World) {
 	s.params = generic.NewResource[Params](world)
 	s.time = generic.NewResource[resource.Tick](world)
-	s.filter = *generic.NewFilter4[Position, Direction, ActReturn, Random256]().With(generic.T[ActReturn]())
+	s.filter = *generic.NewFilter4[Position, Direction, ActReturn, Random256]()
 
 	s.exchangeArrive = *generic.NewExchange(world).
 		Adds(generic.T[ActInHive]()).
@@ -43,6 +46,7 @@ func (s *SysReturning) Initialize(world *ecs.World) {
 func (s *SysReturning) Update(world *ecs.World) {
 	tick := s.time.Get().Tick
 	maxSpeed := s.params.Get().MaxBeeSpeed
+	maxAng := (s.MaxRotation * math.Pi / 180.0) / 2
 
 	query := s.filter.Query(world)
 	for query.Next() {
@@ -53,6 +57,7 @@ func (s *SysReturning) Update(world *ecs.World) {
 			dy := ret.Target.Y - pos.Y
 
 			dir.X, dir.Y, _ = norm(dx, dy)
+			dir.X, dir.Y = rotate(dir.X, dir.Y, rand.Float64()*2*maxAng-maxAng)
 
 			if dx*dx+dy*dy < 4 {
 				s.toArrive = append(s.toArrive, query.Entity())
