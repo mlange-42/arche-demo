@@ -5,20 +5,19 @@ import (
 	"image/color"
 	"image/draw"
 
-	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // DrawEntities system
 type DrawEntities struct {
-	canvas generic.Resource[common.Canvas]
+	canvas generic.Resource[Image]
 	filter generic.Filter1[Position]
 }
 
 // InitializeUI the system
 func (s *DrawEntities) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[common.Canvas](world)
+	s.canvas = generic.NewResource[Image](world)
 	s.filter = *generic.NewFilter1[Position]()
 }
 

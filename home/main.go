@@ -29,11 +29,13 @@ func main() {
 	}
 	ecs.AddResource(&mod.World, &grid)
 
-	removeLoadingScreen("loading")
+	common.RemoveElementByID("loading")
 
 	cvs, _ = common.NewCanvas("canvas-container", false)
 	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
-	ecs.AddResource(&mod.World, cvs)
+
+	image := Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
+	ecs.AddResource(&mod.World, &image)
 
 	listener := MouseListener{}
 	cvs.MouseListener = &listener
@@ -54,13 +56,6 @@ func main() {
 
 	println("Running the model")
 	mod.Run()
-}
-
-func removeLoadingScreen(id string) {
-	window := js.Global()
-	doc := window.Get("document")
-	elem := doc.Call("getElementById", id)
-	elem.Call("remove")
 }
 
 func createImageResource() (Grid, error) {

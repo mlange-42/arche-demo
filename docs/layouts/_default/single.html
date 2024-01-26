@@ -12,7 +12,7 @@
     <div tabindex="0" class="sidebar sidebar-right">
         <div class="vertical-text">Description</div>
         <div>
-            <p>{{ .Description | markdownify }}</p>
+            {{ .Description | markdownify }}
         </div>
         {{ if .Page.Param "wasm" }}
         <div>

@@ -3,7 +3,6 @@ package main
 import (
 	"math/rand"
 
-	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -16,7 +15,7 @@ type InitEntities struct {
 func (s *InitEntities) Initialize(world *ecs.World) {
 	gridRes := generic.NewResource[Grid](world)
 	grid := gridRes.Get()
-	canvasRes := generic.NewResource[common.Canvas](world)
+	canvasRes := generic.NewResource[Image](world)
 	canvas := canvasRes.Get()
 
 	xOffset := (canvas.Width - grid.Width) / 2
