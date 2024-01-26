@@ -20,6 +20,7 @@ type SysForaging struct {
 	homeMap   generic.Map[HomeHive]
 	returnMap generic.Map2[Position, ActReturn]
 	patchMap  generic.Map[FlowerPatch]
+	forageMap generic.Map1[ActForage]
 
 	toReturn []ecs.Entity
 }
@@ -39,6 +40,7 @@ func (s *SysForaging) Initialize(world *ecs.World) {
 	s.homeMap = generic.NewMap[HomeHive](world)
 	s.patchMap = generic.NewMap[FlowerPatch](world)
 	s.returnMap = generic.NewMap2[Position, ActReturn](world)
+	s.forageMap = generic.NewMap1[ActForage](world)
 
 	s.toReturn = make([]ecs.Entity, 0, 64)
 }
@@ -79,6 +81,8 @@ func (s *SysForaging) Update(world *ecs.World) {
 	}
 
 	for _, e := range s.toReturn {
+		load := s.forageMap.Get(e).Load
+
 		s.exchangeReturn.Exchange(e)
 		pos, ret := s.returnMap.Get(e)
 		home := s.homeMap.GetRelation(e)
@@ -86,6 +90,7 @@ func (s *SysForaging) Update(world *ecs.World) {
 
 		ret.Target = *hPos
 		ret.Source = *pos
+		ret.Load = load
 	}
 
 	s.toReturn = s.toReturn[:0]

@@ -15,7 +15,12 @@ type DrawHives struct {
 	patches     generic.Resource[Patches]
 	hiveFilter  generic.Filter1[Position]
 	patchFilter generic.Filter1[FlowerPatch]
-	scoutFilter generic.Filter1[Position]
+
+	scoutFilter  generic.Filter1[Position]
+	forageFilter generic.Filter1[Position]
+	returnFilter generic.Filter1[Position]
+	inHiveFilter generic.Filter1[Position]
+	waggleFilter generic.Filter1[Position]
 }
 
 // InitializeUI the system
@@ -24,7 +29,12 @@ func (s *DrawHives) InitializeUI(world *ecs.World) {
 	s.patches = generic.NewResource[Patches](world)
 	s.hiveFilter = *generic.NewFilter1[Position]().With(generic.T[Hive]())
 	s.patchFilter = *generic.NewFilter1[FlowerPatch]()
-	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[HomeHive]())
+
+	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[ActScout]())
+	s.forageFilter = *generic.NewFilter1[Position]().With(generic.T[ActForage]())
+	s.returnFilter = *generic.NewFilter1[Position]().With(generic.T[ActReturn]())
+	s.inHiveFilter = *generic.NewFilter1[Position]().With(generic.T[ActInHive]())
+	s.waggleFilter = *generic.NewFilter1[Position]().With(generic.T[ActWaggleDance]())
 }
 
 // UpdateUI the system
@@ -32,7 +42,12 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 	black := image.Uniform{color.RGBA{0, 0, 0, 255}}
 	blue := image.Uniform{color.RGBA{0, 0, 250, 255}}
 	green := image.Uniform{color.RGBA{0, 120, 0, 255}}
-	white := color.RGBA{255, 255, 255, 255}
+
+	scoutCol := color.RGBA{255, 255, 100, 255}
+	forageCol := color.RGBA{255, 0, 255, 255}
+	returnCol := color.RGBA{0, 255, 255, 255}
+	inHiveCol := color.RGBA{100, 100, 255, 255}
+	waggleCol := color.RGBA{255, 50, 50, 255}
 
 	canvas := s.canvas.Get()
 	img := canvas.Image
@@ -59,12 +74,30 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 		draw.Draw(img, image.Rect(int(pos.X-2), int(pos.Y-2), int(pos.X+2), int(pos.Y+2)), &blue, image.Point{}, draw.Src)
 	}
 
-	// Draw scouts
-	queryS := s.scoutFilter.Query(world)
-	for queryS.Next() {
-		pos := queryS.Get()
-
-		img.SetRGBA(int(pos.X), int(pos.Y), white)
+	queryScouts := s.scoutFilter.Query(world)
+	for queryScouts.Next() {
+		pos := queryScouts.Get()
+		img.SetRGBA(int(pos.X), int(pos.Y), scoutCol)
+	}
+	queryForage := s.forageFilter.Query(world)
+	for queryForage.Next() {
+		pos := queryForage.Get()
+		img.SetRGBA(int(pos.X), int(pos.Y), forageCol)
+	}
+	queryReturn := s.returnFilter.Query(world)
+	for queryReturn.Next() {
+		pos := queryReturn.Get()
+		img.SetRGBA(int(pos.X), int(pos.Y), returnCol)
+	}
+	queryInHive := s.inHiveFilter.Query(world)
+	for queryInHive.Next() {
+		pos := queryInHive.Get()
+		img.SetRGBA(int(pos.X), int(pos.Y), inHiveCol)
+	}
+	queryWaggle := s.waggleFilter.Query(world)
+	for queryWaggle.Next() {
+		pos := queryWaggle.Get()
+		img.SetRGBA(int(pos.X), int(pos.Y), waggleCol)
 	}
 
 	canvas.Redraw()

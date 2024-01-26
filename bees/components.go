@@ -44,6 +44,14 @@ type ActReturn struct {
 // ActInHive activity component.
 type ActInHive struct{}
 
+// ActWaggleDance activity component.
+type ActWaggleDance struct {
+	End     int64
+	Target  Position
+	Load    float64
+	Benefit float64
+}
+
 // Random256 contains an uint8 value for scheduling things in intervals, but randomized over entities.
 type Random256 struct {
 	Value uint8

@@ -9,13 +9,12 @@ import (
 
 // ManagePatches system
 type ManagePatches struct {
+	Count int
+
 	patchFilter  generic.Filter1[FlowerPatch]
 	patchBuilder generic.Map1[FlowerPatch]
 	patchesRes   generic.Resource[Patches]
 	patchMap     generic.Map[FlowerPatch]
-
-	Count           int
-	InitialResource float64
 
 	toRemove []ecs.Entity
 }
@@ -80,7 +79,7 @@ func (s *ManagePatches) createRandomPatches(count int) {
 				patches.Patches[x][y] = e
 				patch.X = x
 				patch.Y = y
-				patch.Resources = s.InitialResource
+				patch.Resources = 1.0
 				break
 			}
 		}

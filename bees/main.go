@@ -37,8 +37,7 @@ func main() {
 	mod.AddSystem(&InitBees{CountPerHive: 1000})
 
 	mod.AddSystem(&ManagePatches{
-		Count:           100,
-		InitialResource: 10,
+		Count: 100,
 	})
 	mod.AddSystem(&SysHiveDecisions{})
 
@@ -48,9 +47,12 @@ func main() {
 	})
 	mod.AddSystem(&SysForaging{
 		MaxForagingTime: 120,
-		MaxCollect:      1.0,
+		MaxCollect:      0.025,
 	})
 	mod.AddSystem(&SysReturning{})
+	mod.AddSystem(&SysWaggleDance{
+		MaxDanceDuration: 120,
+	})
 
 	mod.AddUISystem(&DrawHives{})
 

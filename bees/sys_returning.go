@@ -1,6 +1,8 @@
 package main
 
 import (
+	"math/rand"
+
 	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -12,6 +14,9 @@ type SysReturning struct {
 	time           generic.Resource[resource.Tick]
 	filter         generic.Filter4[Position, Direction, ActReturn, Random256]
 	exchangeArrive generic.Exchange
+	exchangeWaggle generic.Exchange
+	returnMap      generic.Map1[ActReturn]
+	waggleMap      generic.Map1[ActWaggleDance]
 	toArrive       []ecs.Entity
 }
 
@@ -24,6 +29,12 @@ func (s *SysReturning) Initialize(world *ecs.World) {
 	s.exchangeArrive = *generic.NewExchange(world).
 		Adds(generic.T[ActInHive]()).
 		Removes(generic.T[ActReturn]())
+	s.exchangeWaggle = *generic.NewExchange(world).
+		Adds(generic.T[ActWaggleDance]()).
+		Removes(generic.T[ActReturn]())
+
+	s.returnMap = generic.NewMap1[ActReturn](world)
+	s.waggleMap = generic.NewMap1[ActWaggleDance](world)
 
 	s.toArrive = make([]ecs.Entity, 0, 64)
 }
@@ -54,7 +65,22 @@ func (s *SysReturning) Update(world *ecs.World) {
 	}
 
 	for _, e := range s.toArrive {
-		s.exchangeArrive.Exchange(e)
+		ret := s.returnMap.Get(e)
+		if ret.Load <= 0 || rand.Float64() >= ret.Load {
+			s.exchangeArrive.Exchange(e)
+			continue
+		}
+		trg := ret.Source
+		dist := distance(trg.X, trg.Y, ret.Target.X, ret.Target.Y)
+		load := ret.Load
+		bene := ret.Load / (dist + 1.0)
+
+		s.exchangeWaggle.Exchange(e)
+		wag := s.waggleMap.Get(e)
+		wag.End = -1
+		wag.Target = trg
+		wag.Load = load
+		wag.Benefit = bene
 	}
 
 	s.toArrive = s.toArrive[:0]
