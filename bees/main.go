@@ -33,11 +33,11 @@ func main() {
 	patches := NewPatches(image.Width, image.Height, 10)
 	ecs.AddResource(&mod.World, &patches)
 
-	mod.AddSystem(&InitHives{Count: 3})
+	mod.AddSystem(&InitHives{Count: 5})
 	mod.AddSystem(&InitBees{CountPerHive: 1000})
 
 	mod.AddSystem(&ManagePatches{
-		Count: 25,
+		Count: 50,
 	})
 	mod.AddSystem(&SysHiveDecisions{
 		ReleaseInterval:  8,

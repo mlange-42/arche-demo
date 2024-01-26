@@ -45,8 +45,8 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 	blue := image.Uniform{color.RGBA{0, 0, 250, 255}}
 
 	followCol := color.RGBA{255, 255, 255, 255}
-	scoutCol := color.RGBA{255, 255, 100, 255}
-	forageCol := color.RGBA{255, 0, 255, 255}
+	scoutCol := color.RGBA{255, 255, 20, 255}
+	forageCol := color.RGBA{255, 255, 255, 255}
 	returnCol := color.RGBA{0, 255, 255, 255}
 	inHiveCol := color.RGBA{100, 100, 255, 255}
 	waggleCol := color.RGBA{255, 50, 50, 255}
