@@ -8,6 +8,18 @@ type Position struct {
 	Y float64
 }
 
+// Coord component
+type Coord struct {
+	X int
+	Y int
+}
+
+// Edge component
+type Edge struct {
+	From ecs.Entity
+	To   ecs.Entity
+}
+
 // Node component
 type Node struct {
 	NumEdges int
@@ -15,8 +27,9 @@ type Node struct {
 	OutEdges [8]ecs.Entity
 }
 
-// Edge component
-type Edge struct {
-	From ecs.Entity
-	To   ecs.Entity
+// Add adds a pair of edges to the node.
+func (n *Node) Add(in, out ecs.Entity) {
+	n.InEdges[n.NumEdges] = in
+	n.OutEdges[n.NumEdges] = out
+	n.NumEdges++
 }
