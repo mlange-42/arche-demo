@@ -31,23 +31,23 @@ type Patches struct {
 
 // Colors for bee activities, as a resource
 type Colors struct {
-	FollowCol color.RGBA
-	ScoutCol  color.RGBA
-	ForageCol color.RGBA
-	ReturnCol color.RGBA
-	InHiveCol color.RGBA
-	WaggleCol color.RGBA
+	Scout  color.RGBA
+	Forage color.RGBA
+	Return color.RGBA
+	Waggle color.RGBA
+	InHive color.RGBA
+	Follow color.RGBA
 }
 
 // NewColors returns default bee activity colors.
 func NewColors() Colors {
 	return Colors{
-		FollowCol: color.RGBA{255, 255, 255, 255},
-		ScoutCol:  color.RGBA{255, 255, 20, 255},
-		ForageCol: color.RGBA{255, 255, 255, 255},
-		ReturnCol: color.RGBA{0, 255, 255, 255},
-		InHiveCol: color.RGBA{100, 100, 255, 255},
-		WaggleCol: color.RGBA{255, 50, 50, 255},
+		Scout:  color.RGBA{255, 255, 20, 255},
+		Forage: color.RGBA{160, 160, 160, 160},
+		Return: color.RGBA{0, 255, 255, 255},
+		Waggle: color.RGBA{255, 50, 50, 255},
+		InHive: color.RGBA{80, 80, 80, 255},
+		Follow: color.RGBA{255, 255, 255, 255},
 	}
 }
 

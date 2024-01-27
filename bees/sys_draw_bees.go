@@ -41,33 +41,35 @@ func (s *DrawBees) UpdateUI(world *ecs.World) {
 	queryFollow := s.followFilter.Query(world)
 	for queryFollow.Next() {
 		pos := queryFollow.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), cols.FollowCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.Follow)
 	}
 	queryScouts := s.scoutFilter.Query(world)
 	for queryScouts.Next() {
 		pos := queryScouts.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), cols.ScoutCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.Scout)
 	}
 	queryForage := s.forageFilter.Query(world)
 	for queryForage.Next() {
 		pos := queryForage.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), cols.ForageCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.Forage)
 	}
 	queryReturn := s.returnFilter.Query(world)
 	for queryReturn.Next() {
 		pos := queryReturn.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), cols.ReturnCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.Return)
 	}
-	queryInHive := s.inHiveFilter.Query(world)
-	for queryInHive.Next() {
-		pos := queryInHive.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), cols.InHiveCol)
-	}
-	queryWaggle := s.waggleFilter.Query(world)
-	for queryWaggle.Next() {
-		pos := queryWaggle.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), cols.WaggleCol)
-	}
+	/*
+		queryInHive := s.inHiveFilter.Query(world)
+		for queryInHive.Next() {
+			pos := queryInHive.Get()
+			img.SetRGBA(int(pos.X), int(pos.Y), cols.InHive)
+		}
+		queryWaggle := s.waggleFilter.Query(world)
+		for queryWaggle.Next() {
+			pos := queryWaggle.Get()
+			img.SetRGBA(int(pos.X), int(pos.Y), cols.Waggle)
+		}
+	*/
 
 	canvas.Redraw()
 }
