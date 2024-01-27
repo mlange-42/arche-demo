@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -12,12 +13,12 @@ import (
 // SysRepaint is a simple system that paints an [Image] resource to a [common.Canvas]
 // and clears the image afterwards.
 type SysRepaint struct {
-	canvas generic.Resource[Image]
+	canvas generic.Resource[common.Image]
 }
 
 // InitializeUI the system
 func (s *SysRepaint) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[Image](world)
+	s.canvas = generic.NewResource[common.Image](world)
 }
 
 // UpdateUI the system

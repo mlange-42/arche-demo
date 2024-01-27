@@ -1,20 +1,11 @@
 package bees
 
 import (
-	"image"
 	"image/color"
 	"math"
 
 	"github.com/mlange-42/arche/ecs"
 )
-
-// Image resource for drawing. Will be shown on an HTML5 canvas.
-type Image struct {
-	Image  *image.RGBA
-	Width  int
-	Height int
-	Redraw func()
-}
 
 // Params resource for parameters that are used by multiple systems.
 type Params struct {

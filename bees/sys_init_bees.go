@@ -3,6 +3,7 @@ package bees
 import (
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -33,7 +34,7 @@ func (s *InitBees) Initialize(world *ecs.World) {
 			pos.X = hivePos.X
 			pos.Y = hivePos.Y
 
-			dir.X, dir.Y, _ = norm(rand.NormFloat64(), rand.NormFloat64())
+			dir.X, dir.Y, _ = common.Norm(rand.NormFloat64(), rand.NormFloat64())
 
 			r256.Value = uint8(rand.Int31n(256))
 		}

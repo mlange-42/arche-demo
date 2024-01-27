@@ -5,19 +5,20 @@ import (
 	"image/color"
 	"image/draw"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // DrawEntities is a system that draws entities as white pixels on an [Image] resource.
 type DrawEntities struct {
-	canvas generic.Resource[Image]
+	canvas generic.Resource[common.Image]
 	filter generic.Filter1[Position]
 }
 
 // InitializeUI the system
 func (s *DrawEntities) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[Image](world)
+	s.canvas = generic.NewResource[common.Image](world)
 	s.filter = *generic.NewFilter1[Position]()
 }
 

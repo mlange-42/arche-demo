@@ -8,7 +8,7 @@ import (
 	"github.com/mlange-42/arche/ecs"
 )
 
-var cvs *common.Canvas
+var cvs common.Canvas
 var mod *model.Model
 
 func main() {
@@ -25,11 +25,11 @@ func main() {
 
 	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
-	image := b2d.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
+	image := common.Image{Image: cvs.Image(), Width: cvs.Width(), Height: cvs.Height(), Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
 	listener := common.PauseMouseListener{}
-	cvs.MouseListener = &listener
+	cvs.SetListener(&listener)
 	ecs.AddResource(&mod.World, &listener)
 
 	images, err := b2d.NewImages()
