@@ -13,6 +13,13 @@ import (
 type DrawHives struct {
 	canvas     generic.Resource[Image]
 	hiveFilter generic.Filter1[Position]
+
+	scoutFilter  generic.Filter0
+	followFilter generic.Filter0
+	forageFilter generic.Filter0
+	returnFilter generic.Filter0
+	waggleFilter generic.Filter0
+	idleFilter   generic.Filter0
 }
 
 // InitializeUI the system

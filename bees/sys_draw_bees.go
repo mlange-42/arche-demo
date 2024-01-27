@@ -1,8 +1,6 @@
 package main
 
 import (
-	"image/color"
-
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -10,6 +8,7 @@ import (
 // DrawBees system
 type DrawBees struct {
 	canvas generic.Resource[Image]
+	colors generic.Resource[Colors]
 
 	followFilter generic.Filter1[Position]
 	scoutFilter  generic.Filter1[Position]
@@ -22,6 +21,7 @@ type DrawBees struct {
 // InitializeUI the system
 func (s *DrawBees) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[Image](world)
+	s.colors = generic.NewResource[Colors](world)
 
 	s.followFilter = *generic.NewFilter1[Position]().With(generic.T[ActFollow]())
 	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[ActScout]())
@@ -33,12 +33,7 @@ func (s *DrawBees) InitializeUI(world *ecs.World) {
 
 // UpdateUI the system
 func (s *DrawBees) UpdateUI(world *ecs.World) {
-	followCol := color.RGBA{255, 255, 255, 255}
-	scoutCol := color.RGBA{255, 255, 20, 255}
-	forageCol := color.RGBA{255, 255, 255, 255}
-	returnCol := color.RGBA{0, 255, 255, 255}
-	inHiveCol := color.RGBA{100, 100, 255, 255}
-	waggleCol := color.RGBA{255, 50, 50, 255}
+	cols := s.colors.Get()
 
 	canvas := s.canvas.Get()
 	img := canvas.Image
@@ -46,32 +41,32 @@ func (s *DrawBees) UpdateUI(world *ecs.World) {
 	queryFollow := s.followFilter.Query(world)
 	for queryFollow.Next() {
 		pos := queryFollow.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), followCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.FollowCol)
 	}
 	queryScouts := s.scoutFilter.Query(world)
 	for queryScouts.Next() {
 		pos := queryScouts.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), scoutCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.ScoutCol)
 	}
 	queryForage := s.forageFilter.Query(world)
 	for queryForage.Next() {
 		pos := queryForage.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), forageCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.ForageCol)
 	}
 	queryReturn := s.returnFilter.Query(world)
 	for queryReturn.Next() {
 		pos := queryReturn.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), returnCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.ReturnCol)
 	}
 	queryInHive := s.inHiveFilter.Query(world)
 	for queryInHive.Next() {
 		pos := queryInHive.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), inHiveCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.InHiveCol)
 	}
 	queryWaggle := s.waggleFilter.Query(world)
 	for queryWaggle.Next() {
 		pos := queryWaggle.Get()
-		img.SetRGBA(int(pos.X), int(pos.Y), waggleCol)
+		img.SetRGBA(int(pos.X), int(pos.Y), cols.WaggleCol)
 	}
 
 	canvas.Redraw()

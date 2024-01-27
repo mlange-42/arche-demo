@@ -37,6 +37,9 @@ func main() {
 	patches := NewPatches(image.Width, image.Height, 10)
 	ecs.AddResource(&mod.World, &patches)
 
+	colors := NewColors()
+	ecs.AddResource(&mod.World, &colors)
+
 	mod.AddSystem(&InitHives{Count: 5})
 	mod.AddSystem(&InitBees{CountPerHive: 1000})
 
