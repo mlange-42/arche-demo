@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"image"
@@ -16,20 +16,12 @@ type Image struct {
 	Redraw func()
 }
 
-// Params resource
+// Params resource for parameters that are used by multiple systems.
 type Params struct {
 	MaxBeeSpeed float64
 }
 
-// Patches resource holding the dimensions of the landscape grid.
-type Patches struct {
-	Rows     int
-	Cols     int
-	CellSize int
-	Patches  [][]ecs.Entity
-}
-
-// Colors for bee activities, as a resource
+// Colors resource, holding colors for drawing bee activities.
 type Colors struct {
 	Scout  color.RGBA
 	Forage color.RGBA
@@ -49,6 +41,14 @@ func NewColors() Colors {
 		InHive: color.RGBA{80, 80, 80, 255},
 		Follow: color.RGBA{255, 255, 255, 255},
 	}
+}
+
+// Patches resource holding a grid of potential flower patches.
+type Patches struct {
+	Rows     int
+	Cols     int
+	CellSize int
+	Patches  [][]ecs.Entity
 }
 
 // NewPatches creates a new Patches resource from world dimensions and grid cell size.

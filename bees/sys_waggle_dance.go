@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"github.com/mlange-42/arche-model/resource"
@@ -6,7 +6,10 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysWaggleDance system
+// SysWaggleDance is a system that handles bees doing a waggle dance at the hive ([ActWaggleDance]).
+//
+// Switches activity to [ActInHive] after a certain time of dancing.
+// Duration of dancing depends on the resource load the bee brought back.
 type SysWaggleDance struct {
 	MinDanceDuration int64
 	MaxDanceDuration int64

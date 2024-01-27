@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"github.com/mlange-42/arche-model/resource"
@@ -6,7 +6,9 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysForaging system
+// SysForaging is a system that handles resource extraction of foraging bees ([ActForage]) from patches.
+//
+// Switches activity to [ActReturn] after a certain foraging time.
 type SysForaging struct {
 	MaxForagingTime int64
 	MaxCollect      float64

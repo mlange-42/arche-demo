@@ -1,4 +1,4 @@
-// A basic HTTP server for testing web sites.
+// A basic HTTP server for testing the web site.
 // By default, it serves the working directory on port 8080.
 package main
 

@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"math"
@@ -9,7 +9,10 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysFollowing system
+// SysFollowing is a system that handles the movement of bees that currently fly to a patch
+// that was indicated by them by a waggle dance ([ActFollow]).
+//
+// Switches activity to [ActForage] or [ActReturn] on arrival.
 type SysFollowing struct {
 	MaxRotation      float64
 	ScoutProbability float64

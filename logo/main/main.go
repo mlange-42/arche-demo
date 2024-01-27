@@ -29,7 +29,7 @@ func main() {
 	image := logo.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
-	listener := logo.MouseListener{}
+	listener := common.PauseMouseListener{}
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 

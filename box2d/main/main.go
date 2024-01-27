@@ -28,7 +28,7 @@ func main() {
 	image := b2d.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
-	listener := b2d.MouseListener{}
+	listener := common.PauseMouseListener{}
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 

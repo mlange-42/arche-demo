@@ -4,6 +4,7 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -24,14 +25,14 @@ type MoveEntities struct {
 	MaxFleeDistance float64
 	// Dampening of entity movement.
 	Damp    float64
-	mouse   generic.Resource[MouseListener]
+	mouse   generic.Resource[common.PauseMouseListener]
 	filter  generic.Filter3[Position, Velocity, Target]
 	counter uint64
 }
 
 // Initialize the system
 func (s *MoveEntities) Initialize(world *ecs.World) {
-	s.mouse = generic.NewResource[MouseListener](world)
+	s.mouse = generic.NewResource[common.PauseMouseListener](world)
 	s.filter = *generic.NewFilter3[Position, Velocity, Target]()
 }
 

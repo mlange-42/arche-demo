@@ -1,11 +1,11 @@
-package main
+package bees
 
 import (
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawBees system
+// DrawBees is a system for drawing bees as colored pixels.
 type DrawBees struct {
 	canvas generic.Resource[Image]
 	colors generic.Resource[Colors]

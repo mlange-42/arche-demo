@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"math"
@@ -9,7 +9,9 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysScouting system
+// SysScouting is a system that handles movement of scouting bees ([ActScout]).
+//
+// Switches activity to [ActReturn] after a certain time of scouting.
 type SysScouting struct {
 	MaxRotation  float64
 	MaxScoutTime int64

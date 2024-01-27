@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"image/color"
@@ -10,7 +10,7 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawHives system
+// DrawHives is a system for drawing hives as pie charts over the activities of related bees.
 type DrawHives struct {
 	canvas     generic.Resource[Image]
 	hiveFilter generic.Filter1[Position]
