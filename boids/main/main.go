@@ -24,8 +24,11 @@ func main() {
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 
+	mod.AddSystem(&boids.InitGrid{
+		CellSize: 40,
+	})
 	mod.AddSystem(&boids.InitEntities{
-		Count: 250,
+		Count: 2500,
 	})
 
 	mod.AddSystem(&boids.MoveEntities{})
