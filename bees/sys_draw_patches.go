@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/draw"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -12,14 +13,14 @@ import (
 // DrawPatches is a system for drawing flower patches as squares with fading green color
 // as they become depleted.
 type DrawPatches struct {
-	canvas      generic.Resource[Image]
+	canvas      generic.Resource[common.Image]
 	patches     generic.Resource[Patches]
 	patchFilter generic.Filter1[FlowerPatch]
 }
 
 // InitializeUI the system
 func (s *DrawPatches) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[Image](world)
+	s.canvas = generic.NewResource[common.Image](world)
 	s.patches = generic.NewResource[Patches](world)
 	s.patchFilter = *generic.NewFilter1[FlowerPatch]()
 }

@@ -3,6 +3,7 @@ package bees
 import (
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -15,7 +16,7 @@ type InitHives struct {
 
 // Initialize the system
 func (s *InitHives) Initialize(world *ecs.World) {
-	canvasRes := generic.NewResource[Image](world)
+	canvasRes := generic.NewResource[common.Image](world)
 	canvas := canvasRes.Get()
 	w := float64(canvas.Width)
 	h := float64(canvas.Height)

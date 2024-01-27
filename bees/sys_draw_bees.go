@@ -1,13 +1,14 @@
 package bees
 
 import (
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // DrawBees is a system for drawing bees as colored pixels.
 type DrawBees struct {
-	canvas generic.Resource[Image]
+	canvas generic.Resource[common.Image]
 	colors generic.Resource[Colors]
 
 	followFilter generic.Filter1[Position]
@@ -20,7 +21,7 @@ type DrawBees struct {
 
 // InitializeUI the system
 func (s *DrawBees) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[Image](world)
+	s.canvas = generic.NewResource[common.Image](world)
 	s.colors = generic.NewResource[Colors](world)
 
 	s.followFilter = *generic.NewFilter1[Position]().With(generic.T[ActFollow]())

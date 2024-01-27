@@ -17,13 +17,6 @@ func main() {
 	mod.FPS = 60
 	mod.TPS = 60
 
-	grid, err := createImageResource()
-	if err != nil {
-		println("unable to load image: ", err.Error())
-		panic(err)
-	}
-	ecs.AddResource(&mod.World, &grid)
-
 	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
 	image := common.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}

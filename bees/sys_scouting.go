@@ -4,6 +4,7 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -15,7 +16,7 @@ import (
 type SysScouting struct {
 	MaxRotation  float64
 	MaxScoutTime int64
-	canvas       generic.Resource[Image]
+	canvas       generic.Resource[common.Image]
 	patches      generic.Resource[Patches]
 	params       generic.Resource[Params]
 	time         generic.Resource[resource.Tick]
@@ -34,7 +35,7 @@ type SysScouting struct {
 
 // Initialize the system
 func (s *SysScouting) Initialize(world *ecs.World) {
-	s.canvas = generic.NewResource[Image](world)
+	s.canvas = generic.NewResource[common.Image](world)
 	s.patches = generic.NewResource[Patches](world)
 	s.params = generic.NewResource[Params](world)
 	s.time = generic.NewResource[resource.Tick](world)

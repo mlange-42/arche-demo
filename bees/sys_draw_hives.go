@@ -6,13 +6,14 @@ import (
 
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dimg"
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // DrawHives is a system for drawing hives as pie charts over the activities of related bees.
 type DrawHives struct {
-	canvas     generic.Resource[Image]
+	canvas     generic.Resource[common.Image]
 	hiveFilter generic.Filter1[Position]
 
 	activities [6]ecs.ID
@@ -23,7 +24,7 @@ type DrawHives struct {
 
 // InitializeUI the system
 func (s *DrawHives) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[Image](world)
+	s.canvas = generic.NewResource[common.Image](world)
 	s.hiveFilter = *generic.NewFilter1[Position]().With(generic.T[Hive]())
 
 	cols := ecs.GetResource[Colors](world)

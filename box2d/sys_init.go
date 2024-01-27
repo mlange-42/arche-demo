@@ -4,6 +4,7 @@ import (
 	"math/rand"
 
 	"github.com/ByteArena/box2d"
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -18,7 +19,7 @@ type InitEntities struct {
 func (s *InitEntities) Initialize(world *ecs.World) {
 	worldRes := generic.NewResource[BoxWorld](world)
 	w := worldRes.Get().World
-	canvasRes := generic.NewResource[Image](world)
+	canvasRes := generic.NewResource[common.Image](world)
 	canvas := canvasRes.Get()
 
 	bd := box2d.MakeB2BodyDef()

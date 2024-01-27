@@ -10,14 +10,6 @@ import (
 //go:embed circle.png
 var circle embed.FS
 
-// Image resource for drawing. Will be shown on an HTML5 canvas.
-type Image struct {
-	Image  *image.RGBA
-	Width  int
-	Height int
-	Redraw func()
-}
-
 // Images resource, containing images for use in drawing Box2D bodies.
 type Images struct {
 	Circle *image.RGBA
