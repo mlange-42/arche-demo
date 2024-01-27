@@ -1,4 +1,4 @@
-package main
+package logo
 
 import (
 	"math/rand"
@@ -7,7 +7,11 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitEntities system
+// InitEntities is a system to initialize entities by creating one
+// for each white pixel of the Arche [Logo], obtained via resource [Grid].
+//
+// Each entity has it's associated pixel as [Target] position,
+// and is places in a random location on the output [Image] area.
 type InitEntities struct {
 }
 

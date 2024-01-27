@@ -1,12 +1,15 @@
-package main
+package logo
 
 import "github.com/mlange-42/arche-demo/common"
 
-// MouseListener implementation
+// MouseListener implementation.
 type MouseListener struct {
-	Mouse       common.MousePointer
+	// The current mouse position.
+	Mouse common.MousePointer
+	// Whether the mouse is inside the canvas.
 	MouseInside bool
-	Paused      bool
+	// Whether the simulation should be paused.
+	Paused bool
 }
 
 // MouseClick event

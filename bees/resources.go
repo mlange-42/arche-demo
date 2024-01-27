@@ -8,7 +8,7 @@ import (
 	"github.com/mlange-42/arche/ecs"
 )
 
-// Image resource.
+// Image resource for drawing. Will be shown on an HTML5 canvas.
 type Image struct {
 	Image  *image.RGBA
 	Width  int

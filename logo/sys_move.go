@@ -1,4 +1,4 @@
-package main
+package logo
 
 import (
 	"math"
@@ -8,17 +8,25 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// MoveEntities system
+// MoveEntities is a system that moves entities around.
+// Entities accelerate towards their [Target] position,
+// as well as away from the mouse if it is within a certain distance.
 type MoveEntities struct {
-	MaxSpeed        float64
-	MaxAcc          float64
-	MaxAccFlee      float64
+	// Maximum speed of an entity.
+	MaxSpeed float64
+	// Maximum acceleration of an entity.
+	MaxAcc float64
+	// Maximum acceleration of an entity when fleeing.
+	MaxAccFlee float64
+	// Minimum flee distance, with maximum fleeing acceleration.
 	MinFleeDistance float64
+	// Maximum fleeing distance. Beyond that distance, entities don't flee.
 	MaxFleeDistance float64
-	Damp            float64
-	mouse           generic.Resource[MouseListener]
-	filter          generic.Filter3[Position, Velocity, Target]
-	counter         uint64
+	// Dampening of entity movement.
+	Damp    float64
+	mouse   generic.Resource[MouseListener]
+	filter  generic.Filter3[Position, Velocity, Target]
+	counter uint64
 }
 
 // Initialize the system

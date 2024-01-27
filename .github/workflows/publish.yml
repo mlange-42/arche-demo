@@ -31,9 +31,9 @@ jobs:
 
       - name: Build WebAssembly
         run: |
-          go build -o docs/static/wasm/home.wasm ./home
-          go build -o docs/static/wasm/box2d.wasm ./box2d
-          go build -o docs/static/wasm/bees.wasm ./bees
+          go build -o docs/static/wasm/logo.wasm ./logo/main
+          go build -o docs/static/wasm/box2d.wasm ./box2d/main
+          go build -o docs/static/wasm/bees.wasm ./bees/main
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
