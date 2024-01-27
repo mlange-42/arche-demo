@@ -76,7 +76,10 @@ func main() {
 	})
 
 	mod.AddUISystem(&ManagePause{})
+	mod.AddUISystem(&DrawPatches{})
 	mod.AddUISystem(&DrawHives{})
+	mod.AddUISystem(&DrawBees{})
+	mod.AddUISystem(&SysRepaint{})
 
 	println("Running the model")
 	mod.Run()
