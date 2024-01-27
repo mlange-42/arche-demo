@@ -32,7 +32,6 @@ func main() {
 	mod.AddUISystem(&ants.ManagePause{})
 
 	mod.AddUISystem(&ants.DrawGrid{})
-	mod.AddUISystem(&ants.SysRepaint{})
 
 	println("Running the model")
 	mod.Run()
