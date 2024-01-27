@@ -12,23 +12,23 @@ type MouseListener struct {
 	Paused bool
 }
 
-// MouseClick event
+// MouseClick event.
 func (l *MouseListener) MouseClick(p common.MousePointer) {
 	l.Paused = !l.Paused
 }
 
-// MouseMove event
+// MouseMove event.
 func (l *MouseListener) MouseMove(p common.MousePointer) {
 	l.Mouse = p
 }
 
-// MouseEnter event
+// MouseEnter event.
 func (l *MouseListener) MouseEnter(p common.MousePointer) {
 	l.Mouse = p
 	l.MouseInside = true
 }
 
-// MouseLeave event
+// MouseLeave event.
 func (l *MouseListener) MouseLeave(p common.MousePointer) {
 	l.MouseInside = false
 }

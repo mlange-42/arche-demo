@@ -1,14 +1,11 @@
 package main
 
 import (
-	"embed"
-	"image"
-	"image/draw"
-	"image/png"
 	"math"
 	"syscall/js"
 
 	"github.com/ByteArena/box2d"
+	b2d "github.com/mlange-42/arche-demo/box2d"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
@@ -16,9 +13,6 @@ import (
 
 var cvs *common.Canvas
 var mod *model.Model
-
-//go:embed circle.png
-var circle embed.FS
 
 func main() {
 	mod = model.New()
@@ -29,7 +23,7 @@ func main() {
 
 	grav := box2d.MakeB2Vec2(0.0, 50.0)
 	world := box2d.MakeB2World(grav)
-	boxWorld := BoxWorld{
+	boxWorld := b2d.BoxWorld{
 		World: &world,
 	}
 	ecs.AddResource(&mod.World, &boxWorld)
@@ -37,54 +31,34 @@ func main() {
 	cvs, _ = common.NewCanvas("canvas-container", false)
 	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
 
-	image := Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
+	image := b2d.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
-	listener := MouseListener{}
+	listener := b2d.MouseListener{}
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 
-	images, err := createImagesResource()
+	images, err := b2d.NewImages()
 	if err != nil {
 		println("unable to load image: ", err.Error())
 		panic(err)
 	}
 	ecs.AddResource(&mod.World, &images)
 
-	mod.AddSystem(&InitEntities{
+	mod.AddSystem(&b2d.InitEntities{
 		Count:       80,
 		Restitution: 0.8,
 	})
-	mod.AddSystem(&Physics{
+	mod.AddSystem(&b2d.Physics{
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		ForceScale:      10,
 	})
-	mod.AddSystem(&Box2DPhysics{})
+	mod.AddSystem(&b2d.B2Physics{})
 
-	mod.AddUISystem(&ManagePause{})
-	mod.AddUISystem(&DrawEntities{})
+	mod.AddUISystem(&b2d.ManagePause{})
+	mod.AddUISystem(&b2d.DrawEntities{})
 
 	println("Running the model")
 	mod.Run()
-}
-
-func createImagesResource() (Images, error) {
-	f, err := circle.Open("circle.png")
-	if err != nil {
-		return Images{}, err
-	}
-	defer f.Close()
-	src, err := png.Decode(f)
-	if err != nil {
-		return Images{}, err
-	}
-
-	b := src.Bounds()
-	img := image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
-	draw.Draw(img, img.Bounds(), src, b.Min, draw.Src)
-
-	return Images{
-		Circle: img,
-	}, nil
 }

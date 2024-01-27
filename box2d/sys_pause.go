@@ -1,4 +1,4 @@
-package main
+package box2d
 
 import (
 	"github.com/mlange-42/arche-model/model"
@@ -6,7 +6,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// ManagePause system
+// ManagePause is a simple system that transfers the pause state
+// from the [MouseListener] resource to the model's [model.Systems].
 type ManagePause struct {
 	systems generic.Resource[model.Systems]
 	mouse   generic.Resource[MouseListener]
