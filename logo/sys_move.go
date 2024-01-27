@@ -49,13 +49,13 @@ func (s *MoveEntities) Update(world *ecs.World) {
 	for query.Next() {
 		pos, vel, trg := query.Get()
 
-		attrX, attrY, _ := s.norm(trg.X-pos.X, trg.Y-pos.Y)
+		attrX, attrY, _ := common.Norm(trg.X-pos.X, trg.Y-pos.Y)
 
 		vel.X += attrX * s.MaxAcc
 		vel.Y += attrY * s.MaxAcc
 
 		if mouseInside {
-			repX, repY, repDist := s.norm(pos.X-mouse.X, pos.Y-mouse.Y)
+			repX, repY, repDist := common.Norm(pos.X-mouse.X, pos.Y-mouse.Y)
 			repFac := math.Min(1.0-((repDist-minDist)/distRange), 1.0)
 			if repFac > 0 {
 				vel.X += repX * s.MaxAccFlee * repFac
@@ -83,14 +83,6 @@ func (s *MoveEntities) Update(world *ecs.World) {
 
 		s.counter++
 	}
-}
-
-func (s *MoveEntities) norm(dx, dy float64) (float64, float64, float64) {
-	len := math.Sqrt(dx*dx + dy*dy)
-	if len == 0 {
-		return 0, 0, 0
-	}
-	return dx / len, dy / len, len
 }
 
 // Finalize the system

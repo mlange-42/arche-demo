@@ -69,7 +69,7 @@ func (s *SysReturning) Update(world *ecs.World) {
 		speed := 1.0
 		if tick%4 == int64(r256.Value)%4 {
 			var dx, dy float64
-			if mouseInside && distanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
+			if mouseInside && common.DistanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
 				dx = pos.X - mouse.X
 				dy = pos.Y - mouse.Y
 				speed = 1.5
@@ -78,8 +78,8 @@ func (s *SysReturning) Update(world *ecs.World) {
 				dy = ret.Target.Y - pos.Y
 			}
 
-			dir.X, dir.Y, _ = norm(dx, dy)
-			dir.X, dir.Y = rotate(dir.X, dir.Y, rand.Float64()*2*maxAng-maxAng)
+			dir.X, dir.Y, _ = common.Norm(dx, dy)
+			dir.X, dir.Y = common.Rotate(dir.X, dir.Y, rand.Float64()*2*maxAng-maxAng)
 
 			if dx*dx+dy*dy < 4 {
 				s.toArrive = append(s.toArrive, query.Entity())
@@ -98,7 +98,7 @@ func (s *SysReturning) Update(world *ecs.World) {
 			continue
 		}
 		trg := ret.Source
-		dist := distance(trg.X, trg.Y, ret.Target.X, ret.Target.Y)
+		dist := common.Distance(trg.X, trg.Y, ret.Target.X, ret.Target.Y)
 		load := ret.Load
 		bene := ret.Load / (dist + 1.0)
 

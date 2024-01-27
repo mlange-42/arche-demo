@@ -75,7 +75,7 @@ func (s *SysFleeing) fleeForage(world *ecs.World, mouse common.MousePointer, tic
 	query := s.forageFilter.Query(world)
 	for query.Next() {
 		pos, r256 := query.Get()
-		if modTick == int64(r256.Value)%8 && distanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
+		if modTick == int64(r256.Value)%8 && common.DistanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
 			s.toFlee = append(s.toFlee, query.Entity())
 		}
 	}
@@ -90,7 +90,7 @@ func (s *SysFleeing) fleeScout(world *ecs.World, mouse common.MousePointer, tick
 	query := s.scoutFilter.Query(world)
 	for query.Next() {
 		pos, r256 := query.Get()
-		if modTick == int64(r256.Value)%8 && distanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
+		if modTick == int64(r256.Value)%8 && common.DistanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
 			s.toFlee = append(s.toFlee, query.Entity())
 		}
 	}
@@ -105,7 +105,7 @@ func (s *SysFleeing) fleeFollow(world *ecs.World, mouse common.MousePointer, tic
 	query := s.followFilter.Query(world)
 	for query.Next() {
 		pos, r256 := query.Get()
-		if modTick == int64(r256.Value)%8 && distanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
+		if modTick == int64(r256.Value)%8 && common.DistanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
 			s.toFlee = append(s.toFlee, query.Entity())
 		}
 	}

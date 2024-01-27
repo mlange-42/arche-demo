@@ -1,10 +1,8 @@
 package main
 
 import (
-	"image/png"
-
+	"github.com/mlange-42/arche-demo/boids"
 	"github.com/mlange-42/arche-demo/common"
-	"github.com/mlange-42/arche-demo/logo"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
@@ -26,48 +24,16 @@ func main() {
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 
-	mod.AddSystem(&logo.InitEntities{})
+	mod.AddSystem(&boids.InitEntities{
+		Count: 250,
+	})
 
-	mod.AddSystem(&logo.MoveEntities{
-		MaxSpeed: 10,
-		MaxAcc:   0.08, MaxAccFlee: 0.1,
-		MinFleeDistance: 50,
-		MaxFleeDistance: 200,
-		Damp:            0.975})
+	mod.AddSystem(&boids.MoveEntities{})
 
-	mod.AddUISystem(&logo.ManagePause{})
+	mod.AddUISystem(&boids.ManagePause{})
 
-	mod.AddUISystem(&logo.DrawEntities{})
+	mod.AddUISystem(&boids.DrawEntities{})
 
 	println("Running the model")
 	mod.Run()
-}
-
-func createImageResource() (logo.Grid, error) {
-	f, err := logo.Logo.Open("arche-logo-text.png")
-	if err != nil {
-		return logo.Grid{}, err
-	}
-	defer f.Close()
-	img, err := png.Decode(f)
-	if err != nil {
-		return logo.Grid{}, err
-	}
-	w := img.Bounds().Dx()
-	h := img.Bounds().Dy()
-	data := make([][]bool, h)
-
-	for i := 0; i < h; i++ {
-		data[i] = make([]bool, w)
-		for j := 0; j < w; j++ {
-			r, _, _, _ := img.At(j, i).RGBA()
-			data[i][j] = r > 32000
-		}
-	}
-
-	return logo.Grid{
-		Data:   data,
-		Width:  w,
-		Height: h,
-	}, nil
 }

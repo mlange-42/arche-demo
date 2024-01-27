@@ -4,6 +4,7 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -81,8 +82,8 @@ func (s *SysFollowing) Update(world *ecs.World) {
 			dx := trg.X - pos.X
 			dy := trg.Y - pos.Y
 
-			dir.X, dir.Y, _ = norm(dx, dy)
-			dir.X, dir.Y = rotate(dir.X, dir.Y, rand.Float64()*2*maxAng-maxAng)
+			dir.X, dir.Y, _ = common.Norm(dx, dy)
+			dir.X, dir.Y = common.Rotate(dir.X, dir.Y, rand.Float64()*2*maxAng-maxAng)
 
 			if dx*dx+dy*dy < rad {
 				s.toArrive = append(s.toArrive, query.Entity())

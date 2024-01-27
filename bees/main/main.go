@@ -22,7 +22,7 @@ func main() {
 
 	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
-	image := bees.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
+	image := common.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
 	listener := common.PauseMouseListener{}

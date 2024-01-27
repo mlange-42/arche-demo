@@ -41,7 +41,7 @@ func (s *Physics) Update(world *ecs.World) {
 	for query.Next() {
 		body := query.Get()
 		pos := body.Body.GetPosition()
-		repX, repY, repDist := s.norm(pos.X-mouse.X, pos.Y-mouse.Y)
+		repX, repY, repDist := common.Norm(pos.X-mouse.X, pos.Y-mouse.Y)
 		repFac := math.Min(1.0-((repDist-minDist)/distRange), 1.0) * body.Body.M_mass
 		if repFac > 0 {
 			body.Body.ApplyLinearImpulseToCenter(
