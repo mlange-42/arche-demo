@@ -1,4 +1,4 @@
-package main
+package box2d
 
 import (
 	"image"
@@ -11,7 +11,7 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawEntities system
+// DrawEntities is a system to draw Box2D bodies on an [Image] resource.
 type DrawEntities struct {
 	canvas generic.Resource[Image]
 	images generic.Resource[Images]

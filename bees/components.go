@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"github.com/mlange-42/arche/ecs"
@@ -16,20 +16,21 @@ type Direction struct {
 	Y float64
 }
 
-// HomeHive component.
+// HomeHive component. This is an [ecs.Relation] component,
+// associating each bee with it's home hive.
 type HomeHive struct {
 	ecs.Relation
 }
 
-// Random256 contains an uint8 value for scheduling things in intervals, but randomized over entities.
+// Random256 component, contains an uint8 value for scheduling things in intervals, but randomized over entities.
 type Random256 struct {
 	Value uint8
 }
 
-// Hive component.
+// Hive component, as a label for bee hives.
 type Hive struct{}
 
-// FlowerPatch component
+// FlowerPatch component.
 type FlowerPatch struct {
 	X         int
 	Y         int

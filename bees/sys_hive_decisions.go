@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"math/rand"
@@ -8,7 +8,10 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysHiveDecisions system
+// SysHiveDecisions is a system that performs bee decisions in the hive.
+//
+// Particularly, it decides whether bees go for scouting,
+// or whether they follow a waggle dance, and which one.
 type SysHiveDecisions struct {
 	ReleaseInterval  int64
 	ReleaseCount     int

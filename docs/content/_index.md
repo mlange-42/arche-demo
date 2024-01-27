@@ -1,6 +1,6 @@
 ---
 title: Home
-wasm: home
+wasm: logo
 description: |
     A simple simulation with 30.000 entities.
     

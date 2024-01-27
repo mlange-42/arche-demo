@@ -1,21 +1,16 @@
 package main
 
 import (
-	"embed"
 	"image/png"
-	"math"
-	"syscall/js"
 
 	"github.com/mlange-42/arche-demo/common"
+	"github.com/mlange-42/arche-demo/logo"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
 
 var cvs *common.Canvas
 var mod *model.Model
-
-//go:embed arche-logo-text.png
-var logo embed.FS
 
 func main() {
 	mod = model.New()
@@ -29,44 +24,41 @@ func main() {
 	}
 	ecs.AddResource(&mod.World, &grid)
 
-	common.RemoveElementByID("loading")
+	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
-	cvs, _ = common.NewCanvas("canvas-container", false)
-	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
-
-	image := Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
+	image := logo.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
-	listener := MouseListener{}
+	listener := common.PauseMouseListener{}
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 
-	mod.AddSystem(&InitEntities{})
+	mod.AddSystem(&logo.InitEntities{})
 
-	mod.AddSystem(&MoveEntities{
+	mod.AddSystem(&logo.MoveEntities{
 		MaxSpeed: 10,
 		MaxAcc:   0.08, MaxAccFlee: 0.1,
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		Damp:            0.975})
 
-	mod.AddUISystem(&ManagePause{})
+	mod.AddUISystem(&logo.ManagePause{})
 
-	mod.AddUISystem(&DrawEntities{})
+	mod.AddUISystem(&logo.DrawEntities{})
 
 	println("Running the model")
 	mod.Run()
 }
 
-func createImageResource() (Grid, error) {
-	f, err := logo.Open("arche-logo-text.png")
+func createImageResource() (logo.Grid, error) {
+	f, err := logo.Logo.Open("arche-logo-text.png")
 	if err != nil {
-		return Grid{}, err
+		return logo.Grid{}, err
 	}
 	defer f.Close()
 	img, err := png.Decode(f)
 	if err != nil {
-		return Grid{}, err
+		return logo.Grid{}, err
 	}
 	w := img.Bounds().Dx()
 	h := img.Bounds().Dy()
@@ -80,7 +72,7 @@ func createImageResource() (Grid, error) {
 		}
 	}
 
-	return Grid{
+	return logo.Grid{
 		Data:   data,
 		Width:  w,
 		Height: h,

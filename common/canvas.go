@@ -30,7 +30,7 @@ type Canvas struct {
 }
 
 // NewCanvas creates a new Canvas.
-func NewCanvas(parentID string, create bool) (*Canvas, error) {
+func NewCanvas(parentID string, width, height int, removeChildren bool) (*Canvas, error) {
 	var c Canvas
 
 	c.window = js.Global()
@@ -38,17 +38,18 @@ func NewCanvas(parentID string, create bool) (*Canvas, error) {
 	c.parent = c.doc.Call("getElementById", parentID)
 	c.instructions = c.doc.Call("getElementById", "instructions")
 
-	// If create, make a canvas that fills the windows
-	if create {
-		c.Create(int(c.window.Get("innerWidth").Int()), int(c.window.Get("innerHeight").Int()))
-	}
+	c.create(width, height, removeChildren)
 
 	return &c, nil
 }
 
-// Create a new Canvas in the DOM, and append it to the Body.
+// create a new Canvas in the DOM, and append it to the Body.
 // This also calls Set to create relevant shadow Buffer etc
-func (c *Canvas) Create(width int, height int) {
+func (c *Canvas) create(width int, height int, removeChildren bool) {
+	// Remove other children
+	if removeChildren {
+		c.parent.Set("innerHTML", "")
+	}
 
 	// Make the Canvas
 	canvas := c.doc.Call("createElement", "canvas")
@@ -58,11 +59,11 @@ func (c *Canvas) Create(width int, height int) {
 	canvas.Set("id", "canvas")
 	c.parent.Call("appendChild", canvas)
 
-	c.Set(canvas, width, height)
+	c.set(canvas, width, height)
 }
 
-// Set up with an existing Canvas element which was obtained from JS
-func (c *Canvas) Set(canvas js.Value, width int, height int) {
+// set up with an existing Canvas element which was obtained from JS
+func (c *Canvas) set(canvas js.Value, width int, height int) {
 	c.canvas = canvas
 	c.Height = height
 	c.Width = width

@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"image"
@@ -9,7 +9,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawPatches system
+// DrawPatches is a system for drawing flower patches as squares with fading green color
+// as they become depleted.
 type DrawPatches struct {
 	canvas      generic.Resource[Image]
 	patches     generic.Resource[Patches]

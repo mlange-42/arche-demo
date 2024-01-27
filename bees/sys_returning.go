@@ -1,15 +1,19 @@
-package main
+package bees
 
 import (
 	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysReturning system
+// SysReturning is a system that handles movement of bees returning to their hive ([ActReturn]).
+//
+// Switches activity to [ActInHive] or [ActWaggleDance] on arrival.
+// The probability of dancing depends on the resource load the bee brought back.
 type SysReturning struct {
 	MaxRotation         float64
 	FleeDistance        float64
@@ -17,7 +21,7 @@ type SysReturning struct {
 
 	params         generic.Resource[Params]
 	time           generic.Resource[resource.Tick]
-	mouse          generic.Resource[MouseListener]
+	mouse          generic.Resource[common.PauseMouseListener]
 	filter         generic.Filter4[Position, Direction, ActReturn, Random256]
 	exchangeArrive generic.Exchange
 	exchangeWaggle generic.Exchange
@@ -30,7 +34,7 @@ type SysReturning struct {
 func (s *SysReturning) Initialize(world *ecs.World) {
 	s.params = generic.NewResource[Params](world)
 	s.time = generic.NewResource[resource.Tick](world)
-	s.mouse = generic.NewResource[MouseListener](world)
+	s.mouse = generic.NewResource[common.PauseMouseListener](world)
 	s.filter = *generic.NewFilter4[Position, Direction, ActReturn, Random256]()
 
 	s.exchangeArrive = *generic.NewExchange(world).

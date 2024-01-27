@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"github.com/mlange-42/arche-demo/common"
@@ -7,11 +7,13 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysFleeing system
+// SysFleeing is a system that makes bees switch to the [ActReturn] activity
+// when the mouse is near. Affects activities [ActScout], [ActFollow] and [ActForage].
+// Actual fleeing is implemented in system [SysReturning].
 type SysFleeing struct {
 	FleeDistance float64
 	time         generic.Resource[resource.Tick]
-	mouse        generic.Resource[MouseListener]
+	mouse        generic.Resource[common.PauseMouseListener]
 
 	returnMap generic.Map1[ActReturn]
 	posMap    generic.Map1[Position]
@@ -32,7 +34,7 @@ type SysFleeing struct {
 // Initialize the system
 func (s *SysFleeing) Initialize(world *ecs.World) {
 	s.time = generic.NewResource[resource.Tick](world)
-	s.mouse = generic.NewResource[MouseListener](world)
+	s.mouse = generic.NewResource[common.PauseMouseListener](world)
 
 	s.returnMap = generic.NewMap1[ActReturn](world)
 	s.posMap = generic.NewMap1[Position](world)

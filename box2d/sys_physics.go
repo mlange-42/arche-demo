@@ -1,25 +1,27 @@
-package main
+package box2d
 
 import (
 	"math"
 
 	"github.com/ByteArena/box2d"
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
-// Physics system
+// Physics is a system that applies an impulse to all Box2D bodies
+// that are within a certain distance to the mouse.
 type Physics struct {
 	MinFleeDistance float64
 	MaxFleeDistance float64
 	ForceScale      float64
-	mouse           generic.Resource[MouseListener]
+	mouse           generic.Resource[common.PauseMouseListener]
 	filter          generic.Filter1[Body]
 }
 
 // Initialize the system
 func (s *Physics) Initialize(world *ecs.World) {
-	s.mouse = generic.NewResource[MouseListener](world)
+	s.mouse = generic.NewResource[common.PauseMouseListener](world)
 	s.filter = *generic.NewFilter1[Body]()
 }
 
@@ -52,11 +54,3 @@ func (s *Physics) Update(world *ecs.World) {
 
 // Finalize the system
 func (s *Physics) Finalize(world *ecs.World) {}
-
-func (s *Physics) norm(dx, dy float64) (float64, float64, float64) {
-	len := math.Sqrt(dx*dx + dy*dy)
-	if len == 0 {
-		return 0, 0, 0
-	}
-	return dx / len, dy / len, len
-}

@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"math/rand"
@@ -7,8 +7,11 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// ManagePatches system
+// ManagePatches is a system that creates a number of randomly placed flower patches.
+// Further, it removes patches that are depleted, and creates new patches if the
+// number of patches falls below Count.
 type ManagePatches struct {
+	// Target number of patches.
 	Count int
 
 	patchFilter  generic.Filter1[FlowerPatch]

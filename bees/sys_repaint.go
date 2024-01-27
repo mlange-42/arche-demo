@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"image"
@@ -9,7 +9,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysRepaint system
+// SysRepaint is a simple system that paints an [Image] resource to a [common.Canvas]
+// and clears the image afterwards.
 type SysRepaint struct {
 	canvas generic.Resource[Image]
 }

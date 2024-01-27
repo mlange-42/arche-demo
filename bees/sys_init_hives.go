@@ -1,4 +1,4 @@
-package main
+package bees
 
 import (
 	"math/rand"
@@ -7,8 +7,9 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitHives system
+// InitHives is a system that creates a number of randomly places hives.
 type InitHives struct {
+	// Target number of hives.
 	Count int
 }
 

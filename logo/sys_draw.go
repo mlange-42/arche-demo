@@ -1,4 +1,4 @@
-package main
+package logo
 
 import (
 	"image"
@@ -9,7 +9,7 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawEntities system
+// DrawEntities is a system that draws entities as white pixels on an [Image] resource.
 type DrawEntities struct {
 	canvas generic.Resource[Image]
 	filter generic.Filter1[Position]

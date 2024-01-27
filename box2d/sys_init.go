@@ -1,4 +1,4 @@
-package main
+package box2d
 
 import (
 	"math/rand"
@@ -8,7 +8,7 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitEntities system
+// InitEntities is a system to create Box2D bodies and associated ECS entities.
 type InitEntities struct {
 	Count       int
 	Restitution float64
