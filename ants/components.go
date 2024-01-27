@@ -8,12 +8,6 @@ type Position struct {
 	Y float64
 }
 
-// Coord component
-type Coord struct {
-	X int
-	Y int
-}
-
 // Edge component
 type Edge struct {
 	From ecs.Entity
@@ -32,4 +26,10 @@ func (n *Node) Add(in, out ecs.Entity) {
 	n.InEdges[n.NumEdges] = in
 	n.OutEdges[n.NumEdges] = out
 	n.NumEdges++
+}
+
+// Trace component
+type Trace struct {
+	FromNest     float64
+	FromResource float64
 }

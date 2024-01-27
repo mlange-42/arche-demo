@@ -29,8 +29,11 @@ func main() {
 
 	mod.AddSystem(&ants.InitGrid{})
 
-	mod.AddUISystem(&ants.ManagePause{})
+	mod.AddSystem(&ants.SysDecay{
+		Persistence: 0.99,
+	})
 
+	mod.AddUISystem(&ants.ManagePause{})
 	mod.AddUISystem(&ants.DrawGrid{})
 
 	println("Running the model")

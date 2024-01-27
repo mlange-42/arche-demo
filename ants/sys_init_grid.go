@@ -5,6 +5,12 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
+// coord helper struct
+type coord struct {
+	X int
+	Y int
+}
+
 // InitGrid is a system create a network on a grid.
 type InitGrid struct{}
 
@@ -27,7 +33,7 @@ func (s *InitGrid) Initialize(world *ecs.World) {
 		cnt++
 	}
 
-	dirs := []Coord{
+	dirs := []coord{
 		{1, 0},
 		{1, 1},
 		{0, 1},
