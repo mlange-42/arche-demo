@@ -2,8 +2,6 @@ package main
 
 import (
 	"image/png"
-	"math"
-	"syscall/js"
 
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/logo"
@@ -26,10 +24,7 @@ func main() {
 	}
 	ecs.AddResource(&mod.World, &grid)
 
-	common.RemoveElementByID("loading")
-
-	cvs, _ = common.NewCanvas("canvas-container", false)
-	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
+	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
 	image := logo.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)

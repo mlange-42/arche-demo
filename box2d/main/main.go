@@ -1,9 +1,6 @@
 package main
 
 import (
-	"math"
-	"syscall/js"
-
 	"github.com/ByteArena/box2d"
 	b2d "github.com/mlange-42/arche-demo/box2d"
 	"github.com/mlange-42/arche-demo/common"
@@ -19,8 +16,6 @@ func main() {
 	mod.FPS = 30
 	mod.TPS = 60
 
-	common.RemoveElementByID("loading")
-
 	grav := box2d.MakeB2Vec2(0.0, 50.0)
 	world := box2d.MakeB2World(grav)
 	boxWorld := b2d.BoxWorld{
@@ -28,8 +23,7 @@ func main() {
 	}
 	ecs.AddResource(&mod.World, &boxWorld)
 
-	cvs, _ = common.NewCanvas("canvas-container", false)
-	cvs.Create(int(math.Min(js.Global().Get("innerWidth").Float(), 880)), 480)
+	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
 	image := b2d.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
