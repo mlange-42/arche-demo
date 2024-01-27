@@ -24,3 +24,8 @@ type Image struct {
 	Height int
 	Redraw func()
 }
+
+// Images resource
+type Images struct {
+	Circle *image.RGBA
+}

@@ -1,6 +1,10 @@
 package main
 
 import (
+	"embed"
+	"image"
+	"image/draw"
+	"image/png"
 	"math"
 	"syscall/js"
 
@@ -13,9 +17,12 @@ import (
 var cvs *common.Canvas
 var mod *model.Model
 
+//go:embed circle.png
+var circle embed.FS
+
 func main() {
 	mod = model.New()
-	mod.FPS = 60
+	mod.FPS = 30
 	mod.TPS = 60
 
 	common.RemoveElementByID("loading")
@@ -37,8 +44,15 @@ func main() {
 	cvs.MouseListener = &listener
 	ecs.AddResource(&mod.World, &listener)
 
+	images, err := createImagesResource()
+	if err != nil {
+		println("unable to load image: ", err.Error())
+		panic(err)
+	}
+	ecs.AddResource(&mod.World, &images)
+
 	mod.AddSystem(&InitEntities{
-		Count:       50,
+		Count:       80,
 		Restitution: 0.8,
 	})
 	mod.AddSystem(&Physics{
@@ -53,4 +67,24 @@ func main() {
 
 	println("Running the model")
 	mod.Run()
+}
+
+func createImagesResource() (Images, error) {
+	f, err := circle.Open("circle.png")
+	if err != nil {
+		return Images{}, err
+	}
+	defer f.Close()
+	src, err := png.Decode(f)
+	if err != nil {
+		return Images{}, err
+	}
+
+	b := src.Bounds()
+	img := image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
+	draw.Draw(img, img.Bounds(), src, b.Min, draw.Src)
+
+	return Images{
+		Circle: img,
+	}, nil
 }
