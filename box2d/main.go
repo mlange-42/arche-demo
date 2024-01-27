@@ -38,7 +38,7 @@ func main() {
 	ecs.AddResource(&mod.World, &listener)
 
 	mod.AddSystem(&InitEntities{
-		Count:       100,
+		Count:       50,
 		Restitution: 0.8,
 	})
 	mod.AddSystem(&Physics{

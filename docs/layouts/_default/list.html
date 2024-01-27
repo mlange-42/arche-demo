@@ -11,11 +11,11 @@
     </div>
     <div tabindex="0" class="sidebar sidebar-right">
         <div class="vertical-text">Description</div>
-        <div>
+        <div class="description">
             {{ .Description | markdownify }}
         </div>
         {{ if .Page.Param "wasm" }}
-        <div>
+        <div class="description">
             <a href="{{ .Site.Params.repository }}/tree/main/{{ .Page.Params.wasm }}/" target="_blank">
                 <i class="fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this example
             </a>
