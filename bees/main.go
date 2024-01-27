@@ -37,17 +37,20 @@ func main() {
 	patches := NewPatches(image.Width, image.Height, 10)
 	ecs.AddResource(&mod.World, &patches)
 
-	mod.AddSystem(&InitHives{Count: 5})
+	colors := NewColors()
+	ecs.AddResource(&mod.World, &colors)
+
+	mod.AddSystem(&InitHives{Count: 2})
 	mod.AddSystem(&InitBees{CountPerHive: 1000})
 
 	mod.AddSystem(&ManagePatches{
-		Count: 50,
+		Count: 12,
 	})
 	mod.AddSystem(&SysHiveDecisions{
 		ReleaseInterval:  8,
-		ReleaseCount:     4,
-		ScoutProbability: 0.025,
-		DanceSamples:     3,
+		ReleaseCount:     8,
+		ScoutProbability: 0.1,
+		DanceSamples:     2,
 	})
 
 	mod.AddSystem(&SysScouting{
@@ -60,21 +63,26 @@ func main() {
 	})
 	mod.AddSystem(&SysForaging{
 		MaxForagingTime: 120,
-		MaxCollect:      0.002,
+		MaxCollect:      0.001,
 	})
 	mod.AddSystem(&SysReturning{
-		MaxRotation:  45,
-		FleeDistance: 80,
+		MaxRotation:         45,
+		FleeDistance:        80,
+		MaxDanceProbability: 0.5,
 	})
 	mod.AddSystem(&SysWaggleDance{
-		MaxDanceDuration: 120,
+		MinDanceDuration: 60,
+		MaxDanceDuration: 600,
 	})
 	mod.AddSystem(&SysFleeing{
 		FleeDistance: 50,
 	})
 
 	mod.AddUISystem(&ManagePause{})
+	mod.AddUISystem(&DrawPatches{})
+	mod.AddUISystem(&DrawBees{})
 	mod.AddUISystem(&DrawHives{})
+	mod.AddUISystem(&SysRepaint{})
 
 	println("Running the model")
 	mod.Run()

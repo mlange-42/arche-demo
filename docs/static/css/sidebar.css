@@ -1,6 +1,6 @@
 .sidebar {
     height: 100%;
-    width: 270px;
+    width: 290px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -8,10 +8,11 @@
     transition: 0.5s;
     display: flex;
     flex-direction: column;
+    overflow: auto;
 }
 
 .sidebar-left {
-    left: -240px;
+    left: -260px;
     padding: 60px 36px 20px 20px;
     border-right: solid 2px white;
 }
@@ -23,7 +24,7 @@
 }
 
 .sidebar-right {
-    right: -240px;
+    right: -260px;
     padding: 60px 20px 20px 36px;
     border-left: solid 2px white;
 }

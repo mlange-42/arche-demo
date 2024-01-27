@@ -51,7 +51,7 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 		body.SetLinearVelocity(box2d.B2Vec2{X: rand.NormFloat64() * 100, Y: rand.NormFloat64() * 100})
 
 		shape := box2d.MakeB2CircleShape()
-		shape.M_radius = rand.Float64()*10 + 5
+		shape.M_radius = rand.Float64()*12 + 6
 
 		fd := box2d.MakeB2FixtureDef()
 		fd.Shape = &shape

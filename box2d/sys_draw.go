@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"image/draw"
 
-	"github.com/llgcode/draw2d/draw2dimg"
-	"github.com/llgcode/draw2d/draw2dkit"
+	xdraw "golang.org/x/image/draw"
+
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -14,29 +14,28 @@ import (
 // DrawEntities system
 type DrawEntities struct {
 	canvas generic.Resource[Image]
+	images generic.Resource[Images]
 	filter generic.Filter1[Body]
 }
 
 // InitializeUI the system
 func (s *DrawEntities) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[Image](world)
+	s.images = generic.NewResource[Images](world)
 	s.filter = *generic.NewFilter1[Body]()
 }
 
 // UpdateUI the system
 func (s *DrawEntities) UpdateUI(world *ecs.World) {
 	black := color.RGBA{0, 0, 0, 255}
-	white := color.RGBA{255, 255, 255, 255}
+	circle := s.images.Get().Circle
+	bounds := circle.Bounds()
 
 	canvas := s.canvas.Get()
 	img := canvas.Image
-	gc := draw2dimg.NewGraphicContext(img)
 
 	// Clear the image
 	draw.Draw(img, img.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
-
-	gc.SetStrokeColor(white)
-	gc.SetLineWidth(1.2)
 
 	// Draw pixel entities
 	query := s.filter.Query(world)
@@ -44,9 +43,8 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 		bodyComp := query.Get()
 		pos := bodyComp.Body.GetPosition()
 		r := bodyComp.Radius
-
-		draw2dkit.Circle(gc, pos.X, pos.Y, r)
-		gc.Stroke()
+		rect := image.Rect(int(pos.X-r), int(pos.Y-r), int(pos.X+r), int(pos.Y+r))
+		xdraw.ApproxBiLinear.Scale(img, rect, circle, bounds, draw.Over, nil)
 	}
 
 	canvas.Redraw()

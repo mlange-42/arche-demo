@@ -11,8 +11,9 @@ import (
 
 // SysReturning system
 type SysReturning struct {
-	MaxRotation  float64
-	FleeDistance float64
+	MaxRotation         float64
+	FleeDistance        float64
+	MaxDanceProbability float64
 
 	params         generic.Resource[Params]
 	time           generic.Resource[resource.Tick]
@@ -88,7 +89,7 @@ func (s *SysReturning) Update(world *ecs.World) {
 
 	for _, e := range s.toArrive {
 		ret := s.returnMap.Get(e)
-		if ret.Load <= 0 || rand.Float64() >= ret.Load {
+		if ret.Load <= 0 || rand.Float64() >= ret.Load*s.MaxDanceProbability {
 			s.exchangeArrive.Exchange(e)
 			continue
 		}
