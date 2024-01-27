@@ -8,6 +8,7 @@ import (
 
 // SysWaggleDance system
 type SysWaggleDance struct {
+	MinDanceDuration int64
 	MaxDanceDuration int64
 
 	time   generic.Resource[resource.Tick]
@@ -34,14 +35,15 @@ func (s *SysWaggleDance) Initialize(world *ecs.World) {
 func (s *SysWaggleDance) Update(world *ecs.World) {
 	tick := s.time.Get().Tick
 
-	maxDance := float64(s.MaxDanceDuration)
+	minDance := float64(s.MinDanceDuration)
+	rangeDance := float64(s.MaxDanceDuration - s.MinDanceDuration)
 
 	query := s.filter.Query(world)
 	for query.Next() {
 		wag := query.Get()
 
 		if wag.End <= 0 {
-			wag.End = tick + int64(maxDance*wag.Load)
+			wag.End = tick + int64(minDance+rangeDance*wag.Load)
 			continue
 		}
 

@@ -46,8 +46,8 @@ func main() {
 	mod.AddSystem(&SysHiveDecisions{
 		ReleaseInterval:  8,
 		ReleaseCount:     4,
-		ScoutProbability: 0.025,
-		DanceSamples:     3,
+		ScoutProbability: 0.1,
+		DanceSamples:     2,
 	})
 
 	mod.AddSystem(&SysScouting{
@@ -63,11 +63,13 @@ func main() {
 		MaxCollect:      0.002,
 	})
 	mod.AddSystem(&SysReturning{
-		MaxRotation:  45,
-		FleeDistance: 80,
+		MaxRotation:         45,
+		FleeDistance:        80,
+		MaxDanceProbability: 0.5,
 	})
 	mod.AddSystem(&SysWaggleDance{
-		MaxDanceDuration: 120,
+		MinDanceDuration: 60,
+		MaxDanceDuration: 600,
 	})
 	mod.AddSystem(&SysFleeing{
 		FleeDistance: 50,
