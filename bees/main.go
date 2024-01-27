@@ -48,7 +48,7 @@ func main() {
 	})
 	mod.AddSystem(&SysHiveDecisions{
 		ReleaseInterval:  8,
-		ReleaseCount:     4,
+		ReleaseCount:     8,
 		ScoutProbability: 0.1,
 		DanceSamples:     2,
 	})
@@ -63,7 +63,7 @@ func main() {
 	})
 	mod.AddSystem(&SysForaging{
 		MaxForagingTime: 120,
-		MaxCollect:      0.002,
+		MaxCollect:      0.001,
 	})
 	mod.AddSystem(&SysReturning{
 		MaxRotation:         45,
@@ -80,8 +80,8 @@ func main() {
 
 	mod.AddUISystem(&ManagePause{})
 	mod.AddUISystem(&DrawPatches{})
-	mod.AddUISystem(&DrawHives{})
 	mod.AddUISystem(&DrawBees{})
+	mod.AddUISystem(&DrawHives{})
 	mod.AddUISystem(&SysRepaint{})
 
 	println("Running the model")
