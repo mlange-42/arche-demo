@@ -44,7 +44,7 @@ func main() {
 	mod.AddSystem(&InitBees{CountPerHive: 1000})
 
 	mod.AddSystem(&ManagePatches{
-		Count: 50,
+		Count: 12,
 	})
 	mod.AddSystem(&SysHiveDecisions{
 		ReleaseInterval:  8,

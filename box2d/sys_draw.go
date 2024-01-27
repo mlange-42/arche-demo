@@ -4,9 +4,9 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"math"
 
 	"github.com/llgcode/draw2d/draw2dimg"
-	"github.com/llgcode/draw2d/draw2dkit"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -36,16 +36,20 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 	draw.Draw(img, img.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
 
 	gc.SetStrokeColor(white)
-	gc.SetLineWidth(1.2)
+	gc.SetLineWidth(1)
 
 	// Draw pixel entities
 	query := s.filter.Query(world)
 	for query.Next() {
 		bodyComp := query.Get()
 		pos := bodyComp.Body.GetPosition()
+		ang := bodyComp.Body.GetAngle()
 		r := bodyComp.Radius
 
-		draw2dkit.Circle(gc, pos.X, pos.Y, r)
+		gc.BeginPath()
+		gc.MoveTo(pos.X, pos.Y)
+		gc.ArcTo(pos.X, pos.Y, r, r, ang, -math.Pi*2)
+		gc.Close()
 		gc.Stroke()
 	}
 
