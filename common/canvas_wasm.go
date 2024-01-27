@@ -26,6 +26,8 @@ type HTMLCanvas struct {
 	ctx      js.Value
 	imgData  js.Value
 	copybuff js.Value
+
+	repaint js.Func
 }
 
 // NewCanvas creates a new Canvas.
@@ -101,6 +103,12 @@ func (c *HTMLCanvas) set(canvas js.Value, width int, height int) {
 	if c.isTouchDevice() {
 		c.instructions.Set("innerHTML", "<s>"+c.instructions.Get("innerHTML").String()+"</s><br />Sorry, but this interactive simulation does not work with touch devices.")
 	}
+
+	c.repaint = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		//timestamp := args[0].Float()
+		c.repaintCallback()
+		return nil
+	})
 }
 
 func (c *HTMLCanvas) isTouchDevice() bool {
@@ -152,11 +160,12 @@ func (c *HTMLCanvas) onClick(this js.Value, args []js.Value) interface{} {
 	return nil
 }
 
-// Redraw does the actuall copy over of the image data for the 'render' call.
+// Redraw does the actual copy over of the image data for the 'render' call.
 func (c *HTMLCanvas) Redraw() {
-	// TODO:  This currently does multiple data copies.   go image buffer -> JS Uint8Array,   Then JS Uint8Array -> ImageData,  then ImageData into the Canvas.
-	// Would like to eliminate at least one of them, however currently CopyBytesToJS only supports Uint8Array  rather than the Uint8ClampedArray of ImageData.
+	js.Global().Call("requestAnimationFrame", c.repaint)
+}
 
+func (c *HTMLCanvas) repaintCallback() {
 	js.CopyBytesToJS(c.copybuff, c.image.Pix)
 	c.imgData.Get("data").Call("set", c.copybuff)
 	c.ctx.Call("putImageData", c.imgData, 0, 0)
