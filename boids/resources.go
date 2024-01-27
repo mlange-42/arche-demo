@@ -3,6 +3,8 @@ package boids
 import (
 	"fmt"
 	"math"
+
+	"github.com/mlange-42/arche/ecs"
 )
 
 // Grid resource holding a grid of bins for lookup acceleration.
@@ -17,14 +19,16 @@ type Grid struct {
 
 // GridEntry for the acceleration grid.
 type GridEntry struct {
-	X  float64
-	Y  float64
-	VX float64
-	VY float64
+	Entity ecs.Entity
+	X      float64
+	Y      float64
+	VX     float64
+	VY     float64
 }
 
 // Set the values of a grid entry
-func (e *GridEntry) Set(pos *Position, vel *Velocity) {
+func (e *GridEntry) Set(entity ecs.Entity, pos *Position, vel *Velocity) {
+	e.Entity = entity
 	e.X = pos.X
 	e.Y = pos.Y
 	e.VX = vel.X
@@ -60,13 +64,14 @@ func (g *Grid) Clear() {
 }
 
 // Add an entry to a cell.
-func (g *Grid) Add(x, y int, pos *Position, vel *Velocity) {
+func (g *Grid) Add(x, y int, entity ecs.Entity, pos *Position, vel *Velocity) {
 	idx := uint32(x*g.Rows + y)
 	count := g.perCell[idx]
-	if count+1 >= g.maxPerBin {
+	if count >= g.maxPerBin {
 		panic(fmt.Sprintf("grid cell is full: %d %d", x, y))
 	}
-	g.cells[idx*g.maxPerBin+count].Set(pos, vel)
+	g.cells[idx*g.maxPerBin+count].Set(entity, pos, vel)
+	g.perCell[idx]++
 }
 
 // Get all entries of a cell.
@@ -76,16 +81,27 @@ func (g *Grid) Get(x, y int) []GridEntry {
 	return g.cells[idx*g.maxPerBin : idx*g.maxPerBin+count]
 }
 
+// Count returns the number of entires in a cell.
+func (g *Grid) Count(x, y int) int {
+	idx := uint32(x*g.Rows + y)
+	return int(g.perCell[idx])
+}
+
 // ToCell converts world coordinates to integer patch coordinates.
 func (g *Grid) ToCell(x, y float64) (int, int) {
 	cs := float64(g.CellSize)
 	return int(x / cs), int(y / cs)
 }
 
-// ToCellCenter returns the world coordinates of the center of the cell
+// ToCellCenter returns the world coordinates of the center of the cell.
 // the given point is in.
 func (g *Grid) ToCellCenter(x, y float64) (float64, float64) {
 	cs := float64(g.CellSize)
 	return (math.Floor(x/cs) + 0.5) * cs,
 		(math.Floor(y/cs) + 0.5) * cs
+}
+
+// Contains returns whether the grid contains the given cell coordinates.
+func (g *Grid) Contains(x, y int) bool {
+	return x >= 0 && y >= 0 && x < g.Cols && y < g.Rows
 }

@@ -12,8 +12,8 @@ var mod *model.Model
 
 func main() {
 	mod = model.New()
-	mod.FPS = 60
-	mod.TPS = 60
+	mod.FPS = 30
+	mod.TPS = 30
 
 	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
@@ -24,14 +24,16 @@ func main() {
 	cvs.SetListener(&listener)
 	ecs.AddResource(&mod.World, &listener)
 
-	grid := boids.NewGrid(image.Width, image.Width, 80, 32)
+	grid := boids.NewGrid(image.Width, image.Width, 80, 64)
 	ecs.AddResource(&mod.World, &grid)
 
 	mod.AddSystem(&boids.InitEntities{
-		Count: 2500,
+		Count: 1000,
 	})
 
-	mod.AddSystem(&boids.MoveEntities{})
+	mod.AddSystem(&boids.MoveEntities{
+		ViewRadius: 60,
+	})
 
 	mod.AddUISystem(&boids.ManagePause{})
 
