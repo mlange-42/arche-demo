@@ -1,7 +1,5 @@
 package boids
 
-import "github.com/mlange-42/arche/ecs"
-
 // Position component
 type Position struct {
 	X float64
@@ -18,9 +16,4 @@ type Velocity struct {
 type Cell struct {
 	X int
 	Y int
-}
-
-// CurrentCell resource.
-type CurrentCell struct {
-	ecs.Relation
 }

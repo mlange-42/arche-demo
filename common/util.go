@@ -2,7 +2,6 @@ package common
 
 import (
 	"math"
-	"syscall/js"
 )
 
 // Norm normalizes a vector. The third return value is the original vector's length.
@@ -33,10 +32,4 @@ func Distance(x1, y1, x2, y2 float64) float64 {
 	dx := x1 - x2
 	dy := y1 - y2
 	return math.Sqrt(dx*dx + dy*dy)
-}
-
-// RemoveElementByID removes an HTML element by ID.
-func removeElementByID(doc js.Value, id string) {
-	elem := doc.Call("getElementById", id)
-	elem.Call("remove")
 }

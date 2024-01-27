@@ -7,7 +7,7 @@ import (
 	"github.com/mlange-42/arche/ecs"
 )
 
-var cvs *common.Canvas
+var cvs common.Canvas
 var mod *model.Model
 
 func main() {
@@ -17,16 +17,16 @@ func main() {
 
 	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
 
-	image := common.Image{Image: cvs.Image, Width: cvs.Width, Height: cvs.Height, Redraw: cvs.Redraw}
+	image := common.Image{Image: cvs.Image(), Width: cvs.Width(), Height: cvs.Height(), Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
 	listener := common.PauseMouseListener{}
-	cvs.MouseListener = &listener
+	cvs.SetListener(&listener)
 	ecs.AddResource(&mod.World, &listener)
 
-	mod.AddSystem(&boids.InitGrid{
-		CellSize: 40,
-	})
+	grid := boids.NewGrid(image.Width, image.Width, 80, 32)
+	ecs.AddResource(&mod.World, &grid)
+
 	mod.AddSystem(&boids.InitEntities{
 		Count: 2500,
 	})
