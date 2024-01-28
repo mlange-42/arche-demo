@@ -6,6 +6,11 @@ import (
 	"github.com/mlange-42/arche/ecs"
 )
 
+// Nest resource, representing an ant nest.
+type Nest struct {
+	Node ecs.Entity
+}
+
 // Patches resource holding a grid of potential flower patches.
 type Patches struct {
 	Rows     int

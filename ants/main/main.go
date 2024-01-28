@@ -28,10 +28,25 @@ func main() {
 	ecs.AddResource(&mod.World, &listener)
 
 	mod.AddSystem(&ants.InitGrid{})
+	mod.AddSystem(&ants.InitNest{
+		AntsPerNest: 1000,
+	})
 
+	mod.AddSystem(&ants.SysResources{
+		Count: 5,
+	})
 	mod.AddSystem(&ants.SysDecay{
 		Persistence: 0.99,
 	})
+	mod.AddSystem(&ants.SysNestDecisions{
+		ReleaseInterval:  4,
+		ReleaseCount:     4,
+		ScoutProbability: 0.05,
+	})
+	mod.AddSystem(&ants.SysMoveAnts{
+		MaxSpeed: 1.0,
+	})
+	mod.AddSystem(&ants.SysScouting{})
 
 	mod.AddUISystem(&ants.ManagePause{})
 	mod.AddUISystem(&ants.DrawGrid{})

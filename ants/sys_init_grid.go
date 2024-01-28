@@ -12,7 +12,7 @@ type coord struct {
 	Y int
 }
 
-// InitGrid is a system create a network on a grid.
+// InitGrid is a system to create a network on a grid.
 type InitGrid struct{}
 
 // Initialize the system
@@ -21,7 +21,7 @@ func (s *InitGrid) Initialize(world *ecs.World) {
 	grid := gridRes.Get()
 
 	nodeBuilder := generic.NewMap2[Position, Node](world)
-	edgeBuilder := generic.NewMap1[Edge](world)
+	edgeBuilder := generic.NewMap3[Edge, EdgeGeometry, Trace](world)
 
 	query := nodeBuilder.NewBatchQ(grid.Cols * grid.Rows)
 	cnt := 0
@@ -52,17 +52,24 @@ func (s *InitGrid) Initialize(world *ecs.World) {
 				otherEntity := grid.Get(xx, yy)
 				otherPos, otherNode := nodeBuilder.Get(otherEntity)
 
-				ln := common.Distance(thisPos.X, thisPos.Y, otherPos.X, otherPos.Y)
-				edge1 := edgeBuilder.NewWith(&Edge{From: thisEntity, To: otherEntity, Length: ln})
-				edge2 := edgeBuilder.NewWith(&Edge{From: otherEntity, To: thisEntity, Length: ln})
+				dx, dy, ln := common.Norm(otherPos.X-thisPos.X, otherPos.Y-thisPos.Y)
+
+				edge1 := edgeBuilder.NewWith(
+					&Edge{From: thisEntity, To: otherEntity},
+					&EdgeGeometry{From: *thisPos, Dir: Position{X: dx, Y: dy}, Length: ln},
+					&Trace{},
+				)
+				edge2 := edgeBuilder.NewWith(
+					&Edge{From: otherEntity, To: thisEntity},
+					&EdgeGeometry{From: *otherPos, Dir: Position{X: -dx, Y: -dy}, Length: ln},
+					&Trace{},
+				)
 
 				thisNode.Add(edge2, edge1)
 				otherNode.Add(edge1, edge2)
 			}
 		}
 	}
-
-	_ = grid
 }
 
 // Update the system
