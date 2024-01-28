@@ -16,8 +16,9 @@ type returnEntry struct {
 
 // SysScouting is a system that performs scout decisions.
 type SysScouting struct {
-	MaxCollect float64
-	TraceDecay float64
+	MaxCollect    float64
+	TraceDecay    float64
+	MaxSearchTime int
 
 	time        generic.Resource[resource.Tick]
 	filter      generic.Filter2[AntEdge, ActScout]
@@ -65,22 +66,35 @@ func (s *SysScouting) Update(world *ecs.World) {
 		oldEdge, oldTrace := s.edgeMap.Get(antEdge.Edge)
 		oldTrace.FromNest += math.Pow(s.TraceDecay, float64(tick-scout.Start))
 
-		node := s.nodeMap.Get(oldEdge.To)
-		if !s.resourceMap.Has(oldEdge.To) {
-			edge := node.OutEdges[rand.Intn(node.NumEdges)]
-			geom := s.edgeGeomMap.Get(edge)
+		if s.resourceMap.Has(oldEdge.To) {
+			res := s.resourceMap.Get(oldEdge.To)
 
-			antEdge.Update(edge, geom)
+			entry := returnEntry{Entity: query.Entity(), Load: res.Resource}
+			res.Resource -= s.MaxCollect
+			if res.Resource < 0 {
+				res.Resource = 0
+			}
+			s.toReturn = append(s.toReturn, entry)
 			continue
 		}
-		res := s.resourceMap.Get(oldEdge.To)
 
-		entry := returnEntry{Entity: query.Entity(), Load: res.Resource}
-		res.Resource -= s.MaxCollect
-		if res.Resource < 0 {
-			res.Resource = 0
+		if tick > scout.Start+int64(s.MaxSearchTime) {
+			s.toReturn = append(s.toReturn, returnEntry{Entity: query.Entity(), Load: 0})
+			continue
 		}
-		s.toReturn = append(s.toReturn, entry)
+
+		node := s.nodeMap.Get(oldEdge.To)
+		for {
+			idx := rand.Intn(node.NumEdges)
+			if node.InEdges[idx] == antEdge.Edge {
+				// Don't allow scouts to go where they came from.
+				continue
+			}
+			edge := node.OutEdges[idx]
+			geom := s.edgeGeomMap.Get(edge)
+			antEdge.Update(edge, geom)
+			break
+		}
 	}
 
 	for _, e := range s.toReturn {

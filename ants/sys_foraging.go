@@ -12,10 +12,11 @@ import (
 
 // SysForaging is a system that performs forager decisions.
 type SysForaging struct {
-	MaxCollect   float64
-	ProbExponent float64
-	RandomProb   float64
-	TraceDecay   float64
+	MaxCollect    float64
+	ProbExponent  float64
+	RandomProb    float64
+	TraceDecay    float64
+	MaxSearchTime int
 
 	time        generic.Resource[resource.Tick]
 	filter      generic.Filter2[AntEdge, ActForage]
@@ -66,22 +67,27 @@ func (s *SysForaging) Update(world *ecs.World) {
 		oldEdge, oldTrace := s.edgeMap.Get(antEdge.Edge)
 		oldTrace.FromNest += math.Pow(s.TraceDecay, float64(tick-forage.Start))
 
-		if !s.resourceMap.Has(oldEdge.To) {
-			node := s.nodeMap.Get(oldEdge.To)
-			edge := s.selectEdge(world, node)
-			geom := s.edgeGeomMap.Get(edge)
+		if s.resourceMap.Has(oldEdge.To) {
+			res := s.resourceMap.Get(oldEdge.To)
 
-			antEdge.Update(edge, geom)
+			entry := returnEntry{Entity: query.Entity(), Load: res.Resource}
+			res.Resource -= s.MaxCollect
+			if res.Resource < 0 {
+				res.Resource = 0
+			}
+			s.toReturn = append(s.toReturn, entry)
 			continue
 		}
-		res := s.resourceMap.Get(oldEdge.To)
-
-		entry := returnEntry{Entity: query.Entity(), Load: res.Resource}
-		res.Resource -= s.MaxCollect
-		if res.Resource < 0 {
-			res.Resource = 0
+		if tick > forage.Start+int64(s.MaxSearchTime) {
+			s.toReturn = append(s.toReturn, returnEntry{Entity: query.Entity(), Load: 0})
+			continue
 		}
-		s.toReturn = append(s.toReturn, entry)
+
+		node := s.nodeMap.Get(oldEdge.To)
+		edge := s.selectEdge(world, node)
+		geom := s.edgeGeomMap.Get(edge)
+
+		antEdge.Update(edge, geom)
 	}
 
 	for _, e := range s.toReturn {

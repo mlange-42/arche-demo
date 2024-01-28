@@ -37,16 +37,23 @@ func (s *SysResources) Initialize(world *ecs.World) {
 // Update the system
 func (s *SysResources) Update(world *ecs.World) {
 	query := s.resourcesFilter.Query(world)
+	count := 0
 	for query.Next() {
 		res := query.Get()
 
 		if res.Resource <= 0 {
 			s.toRemove = append(s.toRemove, query.Entity())
+		} else {
+			count++
 		}
 	}
 
 	for _, e := range s.toRemove {
 		s.exchangeRemove.Exchange(e)
+	}
+
+	if count < s.Count {
+		s.createRandomResources(s.Count - count)
 	}
 
 	s.toRemove = s.toRemove[:0]

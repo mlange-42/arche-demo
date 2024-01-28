@@ -41,23 +41,26 @@ func main() {
 	mod.AddSystem(&ants.SysNestDecisions{
 		ReleaseInterval:  8,
 		ReleaseCount:     1,
-		ScoutProbability: 0.05,
+		ScoutProbability: 0.1,
+		ProbExponent:     0.6,
 	})
 	mod.AddSystem(&ants.SysMoveAnts{
 		MaxSpeed: 2.0,
 	})
 	mod.AddSystem(&ants.SysScouting{
-		MaxCollect: 0.001,
-		TraceDecay: 0.97,
+		MaxCollect:    0.001,
+		TraceDecay:    0.95,
+		MaxSearchTime: 600,
 	})
 	mod.AddSystem(&ants.SysForaging{
-		ProbExponent: 2.0,
-		RandomProb:   0.05,
-		MaxCollect:   0.001,
-		TraceDecay:   0.95,
+		MaxCollect:    0.001,
+		ProbExponent:  1.0,
+		RandomProb:    0.05,
+		TraceDecay:    0.95,
+		MaxSearchTime: 300,
 	})
 	mod.AddSystem(&ants.SysReturning{
-		ProbExponent: 2.0,
+		ProbExponent: 1.0,
 		RandomProb:   0.05,
 		TraceDecay:   0.95,
 	})

@@ -1,8 +1,10 @@
 package ants
 
 import (
+	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -15,6 +17,7 @@ type SysNestDecisions struct {
 	ReleaseInterval  int64
 	ReleaseCount     int
 	ScoutProbability float64
+	ProbExponent     float64
 
 	time       generic.Resource[resource.Tick]
 	nest       generic.Resource[Nest]
@@ -31,6 +34,7 @@ type SysNestDecisions struct {
 	traceMap   generic.Map1[Trace]
 
 	toLeave []ecs.Entity
+	probs   [8]float64
 }
 
 type waggleInfo struct {
@@ -115,28 +119,16 @@ func (s *SysNestDecisions) Update(world *ecs.World) {
 }
 
 func (s *SysNestDecisions) selectEdge(world *ecs.World, node *Node) (ecs.Entity, bool) {
-	maxTrace := 0.0
-	var maxEdge ecs.Entity
-	count := 0
-	anyFound := false
 	for i := 0; i < node.NumEdges; i++ {
 		edge := node.InEdges[i]
 		trace := s.traceMap.Get(edge)
-		if trace.FromResource > maxTrace {
-			maxTrace = trace.FromResource
-			maxEdge = node.OutEdges[i]
-			count = 1
-			anyFound = true
-			continue
-		}
-		if trace.FromResource == maxTrace {
-			count++
-			if rand.Float64() < 1.0/float64(count) {
-				maxEdge = edge
-			}
-		}
+		s.probs[i] = math.Pow(trace.FromResource, s.ProbExponent)
 	}
-	return maxEdge, anyFound
+
+	if sel, ok := common.SelectRoulette(s.probs[:node.NumEdges]); ok {
+		return node.OutEdges[sel], true
+	}
+	return ecs.Entity{}, false
 }
 
 // Finalize the system
