@@ -74,6 +74,7 @@ func main() {
 	})
 
 	mod.AddUISystem(&bees.ManagePause{})
+	mod.AddUISystem(&bees.SysClearFrame{})
 	mod.AddUISystem(&bees.DrawPatches{})
 	mod.AddUISystem(&bees.DrawBees{})
 	mod.AddUISystem(&bees.DrawHives{})

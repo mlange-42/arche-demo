@@ -162,12 +162,13 @@ func (c *HTMLCanvas) onClick(this js.Value, args []js.Value) interface{} {
 
 // Redraw does the actual copy over of the image data for the 'render' call.
 func (c *HTMLCanvas) Redraw() {
+	js.CopyBytesToJS(c.copybuff, c.image.Pix)
+	c.imgData.Get("data").Call("set", c.copybuff)
+
 	js.Global().Call("requestAnimationFrame", c.repaint)
 }
 
 func (c *HTMLCanvas) repaintCallback() {
-	js.CopyBytesToJS(c.copybuff, c.image.Pix)
-	c.imgData.Get("data").Call("set", c.copybuff)
 	c.ctx.Call("putImageData", c.imgData, 0, 0)
 }
 
