@@ -1,8 +1,10 @@
 package ants
 
 import (
+	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -15,7 +17,9 @@ type returnEntry struct {
 // SysScouting is a system that performs scout decisions.
 type SysScouting struct {
 	MaxCollect float64
+	TraceDecay float64
 
+	time        generic.Resource[resource.Tick]
 	filter      generic.Filter2[AntEdge, ActScout]
 	antEdgeMap  generic.Map1[AntEdge]
 	returnMap   generic.Map1[ActReturn]
@@ -31,6 +35,7 @@ type SysScouting struct {
 
 // Initialize the system
 func (s *SysScouting) Initialize(world *ecs.World) {
+	s.time = generic.NewResource[resource.Tick](world)
 	s.filter = *generic.NewFilter2[AntEdge, ActScout]()
 
 	s.antEdgeMap = generic.NewMap1[AntEdge](world)
@@ -49,14 +54,16 @@ func (s *SysScouting) Initialize(world *ecs.World) {
 
 // Update the system
 func (s *SysScouting) Update(world *ecs.World) {
+	tick := s.time.Get().Tick
+
 	query := s.filter.Query(world)
 	for query.Next() {
-		antEdge, _ := query.Get()
+		antEdge, scout := query.Get()
 		if antEdge.Pos < antEdge.Length {
 			continue
 		}
 		oldEdge, oldTrace := s.edgeMap.Get(antEdge.Edge)
-		oldTrace.FromNest++
+		oldTrace.FromNest += math.Pow(s.TraceDecay, float64(tick-scout.Start))
 
 		node := s.nodeMap.Get(oldEdge.To)
 		if !s.resourceMap.Has(oldEdge.To) {
@@ -79,6 +86,7 @@ func (s *SysScouting) Update(world *ecs.World) {
 	for _, e := range s.toReturn {
 		s.exchangeReturn.Exchange(e.Entity)
 		ret := s.returnMap.Get(e.Entity)
+		ret.Start = tick
 		ret.Load = e.Load
 	}
 

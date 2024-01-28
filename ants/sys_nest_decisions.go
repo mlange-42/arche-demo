@@ -22,6 +22,7 @@ type SysNestDecisions struct {
 
 	exchangeScout  generic.Exchange
 	scoutMap       generic.Map1[ActScout]
+	forageMap      generic.Map1[ActForage]
 	exchangeForage generic.Exchange
 
 	antEdgeMap generic.Map1[AntEdge]
@@ -47,6 +48,7 @@ func (s *SysNestDecisions) Initialize(world *ecs.World) {
 		Adds(generic.T2[ActScout, AntEdge]()...).
 		Removes(generic.T[ActInNest]())
 	s.scoutMap = generic.NewMap1[ActScout](world)
+	s.forageMap = generic.NewMap1[ActForage](world)
 
 	s.exchangeForage = *generic.NewExchange(world).
 		Adds(generic.T2[ActForage, AntEdge]()...).
@@ -104,6 +106,9 @@ func (s *SysNestDecisions) Update(world *ecs.World) {
 		geom := s.edgeMap.Get(edge)
 		ant := s.antEdgeMap.Get(e)
 		ant.Update(edge, geom)
+
+		forage := s.forageMap.Get(e)
+		forage.Start = tick
 	}
 
 	s.toLeave = s.toLeave[:0]

@@ -1,16 +1,22 @@
 package ants
 
 import (
+	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
+	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // SysReturning is a system that performs decisions of ants going back to their nest.
 type SysReturning struct {
-	RandomProb float64
+	ProbExponent float64
+	RandomProb   float64
+	TraceDecay   float64
 
+	time        generic.Resource[resource.Tick]
 	nest        generic.Resource[Nest]
 	filter      generic.Filter2[AntEdge, ActReturn]
 	antEdgeMap  generic.Map1[AntEdge]
@@ -22,10 +28,12 @@ type SysReturning struct {
 	exchangeArrive generic.Exchange
 
 	toArrive []ecs.Entity
+	probs    [8]float64
 }
 
 // Initialize the system
 func (s *SysReturning) Initialize(world *ecs.World) {
+	s.time = generic.NewResource[resource.Tick](world)
 	s.nest = generic.NewResource[Nest](world)
 	s.filter = *generic.NewFilter2[AntEdge, ActReturn]()
 
@@ -44,6 +52,7 @@ func (s *SysReturning) Initialize(world *ecs.World) {
 
 // Update the system
 func (s *SysReturning) Update(world *ecs.World) {
+	tick := s.time.Get().Tick
 	nest := s.nest.Get()
 
 	query := s.filter.Query(world)
@@ -53,7 +62,7 @@ func (s *SysReturning) Update(world *ecs.World) {
 			continue
 		}
 		oldEdge, oldTrace := s.edgeMap.Get(antEdge.Edge)
-		oldTrace.FromResource += ret.Load
+		oldTrace.FromResource += ret.Load * math.Pow(s.TraceDecay, float64(tick-ret.Start))
 
 		if oldEdge.To == nest.Node {
 			s.toArrive = append(s.toArrive, query.Entity())
@@ -81,24 +90,14 @@ func (s *SysReturning) selectEdge(world *ecs.World, node *Node) ecs.Entity {
 		return node.OutEdges[rand.Intn(node.NumEdges)]
 	}
 
-	maxTrace := -1.0
-	var maxEdge ecs.Entity
-	count := 0
 	for i := 0; i < node.NumEdges; i++ {
 		edge := node.InEdges[i]
 		trace := s.traceMap.Get(edge)
-		if trace.FromNest > maxTrace {
-			maxTrace = trace.FromNest
-			maxEdge = node.OutEdges[i]
-			count = 1
-			continue
-		}
-		if trace.FromNest == maxTrace {
-			count++
-			if rand.Float64() < 1.0/float64(count) {
-				maxEdge = edge
-			}
-		}
+		s.probs[i] = math.Pow(trace.FromNest, s.ProbExponent)
 	}
-	return maxEdge
+
+	if sel, ok := common.SelectRoulette(s.probs[:node.NumEdges]); ok {
+		return node.OutEdges[sel]
+	}
+	return node.OutEdges[rand.Intn(node.NumEdges)]
 }

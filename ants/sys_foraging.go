@@ -1,17 +1,23 @@
 package ants
 
 import (
+	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
+	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // SysForaging is a system that performs forager decisions.
 type SysForaging struct {
-	MaxCollect float64
-	RandomProb float64
+	MaxCollect   float64
+	ProbExponent float64
+	RandomProb   float64
+	TraceDecay   float64
 
+	time        generic.Resource[resource.Tick]
 	filter      generic.Filter2[AntEdge, ActForage]
 	antEdgeMap  generic.Map1[AntEdge]
 	returnMap   generic.Map1[ActReturn]
@@ -24,10 +30,12 @@ type SysForaging struct {
 	exchangeReturn generic.Exchange
 
 	toReturn []returnEntry
+	probs    [8]float64
 }
 
 // Initialize the system
 func (s *SysForaging) Initialize(world *ecs.World) {
+	s.time = generic.NewResource[resource.Tick](world)
 	s.filter = *generic.NewFilter2[AntEdge, ActForage]()
 
 	s.antEdgeMap = generic.NewMap1[AntEdge](world)
@@ -47,14 +55,16 @@ func (s *SysForaging) Initialize(world *ecs.World) {
 
 // Update the system
 func (s *SysForaging) Update(world *ecs.World) {
+	tick := s.time.Get().Tick
+
 	query := s.filter.Query(world)
 	for query.Next() {
-		antEdge, _ := query.Get()
+		antEdge, forage := query.Get()
 		if antEdge.Pos < antEdge.Length {
 			continue
 		}
 		oldEdge, oldTrace := s.edgeMap.Get(antEdge.Edge)
-		oldTrace.FromNest++
+		oldTrace.FromNest += math.Pow(s.TraceDecay, float64(tick-forage.Start))
 
 		if !s.resourceMap.Has(oldEdge.To) {
 			node := s.nodeMap.Get(oldEdge.To)
@@ -77,6 +87,7 @@ func (s *SysForaging) Update(world *ecs.World) {
 	for _, e := range s.toReturn {
 		s.exchangeReturn.Exchange(e.Entity)
 		ret := s.returnMap.Get(e.Entity)
+		ret.Start = tick
 		ret.Load = e.Load
 	}
 
@@ -91,24 +102,14 @@ func (s *SysForaging) selectEdge(world *ecs.World, node *Node) ecs.Entity {
 		return node.OutEdges[rand.Intn(node.NumEdges)]
 	}
 
-	maxTrace := -1.0
-	var maxEdge ecs.Entity
-	count := 0
 	for i := 0; i < node.NumEdges; i++ {
 		edge := node.InEdges[i]
 		trace := s.traceMap.Get(edge)
-		if trace.FromResource > maxTrace {
-			maxTrace = trace.FromResource
-			maxEdge = node.OutEdges[i]
-			count = 1
-			continue
-		}
-		if trace.FromResource == maxTrace {
-			count++
-			if rand.Float64() < 1.0/float64(count) {
-				maxEdge = edge
-			}
-		}
+		s.probs[i] = math.Pow(trace.FromResource, s.ProbExponent)
 	}
-	return maxEdge
+
+	if sel, ok := common.SelectRoulette(s.probs[:node.NumEdges]); ok {
+		return node.OutEdges[sel]
+	}
+	return node.OutEdges[rand.Intn(node.NumEdges)]
 }

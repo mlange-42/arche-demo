@@ -20,7 +20,7 @@ func main() {
 	image := common.Image{Image: cvs.Image(), Width: cvs.Width(), Height: cvs.Height(), Redraw: cvs.Redraw}
 	ecs.AddResource(&mod.World, &image)
 
-	grid := ants.NewPatches(image.Width, image.Height, 20)
+	grid := ants.NewPatches(image.Width, image.Height, 10)
 	ecs.AddResource(&mod.World, &grid)
 
 	listener := common.PauseMouseListener{}
@@ -36,7 +36,7 @@ func main() {
 		Count: 24,
 	})
 	mod.AddSystem(&ants.SysDecay{
-		Persistence: 0.95,
+		Persistence: 0.99,
 	})
 	mod.AddSystem(&ants.SysNestDecisions{
 		ReleaseInterval:  8,
@@ -48,13 +48,18 @@ func main() {
 	})
 	mod.AddSystem(&ants.SysScouting{
 		MaxCollect: 0.001,
+		TraceDecay: 0.97,
 	})
 	mod.AddSystem(&ants.SysForaging{
-		MaxCollect: 0.001,
-		RandomProb: 0.2,
+		ProbExponent: 2.0,
+		RandomProb:   0.05,
+		MaxCollect:   0.001,
+		TraceDecay:   0.95,
 	})
 	mod.AddSystem(&ants.SysReturning{
-		RandomProb: 0.2,
+		ProbExponent: 2.0,
+		RandomProb:   0.05,
+		TraceDecay:   0.95,
 	})
 
 	mod.AddUISystem(&ants.ManagePause{})

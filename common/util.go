@@ -2,6 +2,7 @@ package common
 
 import (
 	"math"
+	"math/rand"
 )
 
 // Norm normalizes a vector. The third return value is the original vector's length.
@@ -32,4 +33,25 @@ func Distance(x1, y1, x2, y2 float64) float64 {
 	dx := x1 - x2
 	dy := y1 - y2
 	return math.Sqrt(dx*dx + dy*dy)
+}
+
+// SelectRoulette performs roulette selection
+func SelectRoulette(probs []float64) (int, bool) {
+	sum := 0.0
+	for _, prob := range probs {
+		sum += prob
+	}
+	if sum == 0 {
+		return -1, false
+	}
+	r := rand.Float64() * sum
+
+	cum := 0.0
+	for i, prob := range probs {
+		cum += prob
+		if r <= cum {
+			return i, true
+		}
+	}
+	return -1, false
 }

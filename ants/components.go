@@ -79,11 +79,14 @@ type ActScout struct {
 }
 
 // ActForage component
-type ActForage struct{}
+type ActForage struct {
+	Start int64
+}
 
 // ActReturn component
 type ActReturn struct {
-	Load float64
+	Start int64
+	Load  float64
 }
 
 // ActInNest component
