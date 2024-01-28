@@ -27,6 +27,9 @@ func main() {
 	cvs.SetListener(&listener)
 	ecs.AddResource(&mod.World, &listener)
 
+	colors := ants.NewColors()
+	ecs.AddResource(&mod.World, &colors)
+
 	mod.AddSystem(&ants.InitGrid{})
 	mod.AddSystem(&ants.InitNest{
 		AntsPerNest: 1000,
@@ -68,8 +71,8 @@ func main() {
 	mod.AddUISystem(&ants.ManagePause{})
 	mod.AddUISystem(&ants.SysClearFrame{})
 	mod.AddUISystem(&ants.DrawResources{})
-	mod.AddUISystem(&ants.DrawNest{})
 	mod.AddUISystem(&ants.DrawAnts{})
+	mod.AddUISystem(&ants.DrawNest{})
 	mod.AddUISystem(&ants.SysRepaint{})
 
 	println("Running the model")
