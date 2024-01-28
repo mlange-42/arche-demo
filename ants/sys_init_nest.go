@@ -17,13 +17,14 @@ func (s *InitNest) Initialize(world *ecs.World) {
 	grid := gridRes.Get()
 
 	node := grid.Get(grid.Cols/2, grid.Rows/2)
-	s.nest = Nest{
-		Node: node,
-	}
-	ecs.AddResource(world, &s.nest)
-
 	posMap := generic.NewMap1[Position](world)
 	nestPos := posMap.Get(node)
+
+	s.nest = Nest{
+		Node: node,
+		Pos:  *nestPos,
+	}
+	ecs.AddResource(world, &s.nest)
 
 	antBuilder := generic.NewMap3[Position, ActInNest, Ant](world)
 

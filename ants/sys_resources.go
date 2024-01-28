@@ -16,6 +16,8 @@ type SysResources struct {
 	resourceMap     generic.Map[NodeResource]
 	resourceAdder   generic.Map1[NodeResource]
 
+	exchangeRemove generic.Exchange
+
 	toRemove []ecs.Entity
 }
 
@@ -26,6 +28,7 @@ func (s *SysResources) Initialize(world *ecs.World) {
 	s.resourceMap = generic.NewMap[NodeResource](world)
 	s.resourceAdder = generic.NewMap1[NodeResource](world)
 
+	s.exchangeRemove = *generic.NewExchange(world).Removes(generic.T[NodeResource]())
 	s.toRemove = make([]ecs.Entity, 0, 8)
 
 	s.createRandomResources(s.Count)
@@ -43,7 +46,7 @@ func (s *SysResources) Update(world *ecs.World) {
 	}
 
 	for _, e := range s.toRemove {
-		world.RemoveEntity(e)
+		s.exchangeRemove.Exchange(e)
 	}
 
 	s.toRemove = s.toRemove[:0]

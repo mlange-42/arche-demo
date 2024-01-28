@@ -9,6 +9,7 @@ import (
 // Nest resource, representing an ant nest.
 type Nest struct {
 	Node ecs.Entity
+	Pos  Position
 }
 
 // Patches resource holding a grid of potential flower patches.

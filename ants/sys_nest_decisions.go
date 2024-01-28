@@ -95,32 +95,33 @@ func (s *SysNestDecisions) Update(world *ecs.World) {
 			continue
 		}
 
-		s.exchangeForage.Exchange(e)
-		edge := node.OutEdges[rand.Intn(node.NumEdges)]
-		geom := s.edgeMap.Get(edge)
+		edge, ok := s.selectEdge(world, node)
+		if !ok {
+			continue
+		}
 
+		s.exchangeForage.Exchange(e)
+		geom := s.edgeMap.Get(edge)
 		ant := s.antEdgeMap.Get(e)
-		ant.Edge = edge
-		ant.From = geom.From
-		ant.Dir = geom.Dir
-		ant.Length = geom.Length
-		ant.Pos = 0
+		ant.Update(edge, geom)
 	}
 
 	s.toLeave = s.toLeave[:0]
 }
 
-func (s *SysNestDecisions) selectEdge(world *ecs.World, node *Node) ecs.Entity {
-	maxTrace := -1.0
+func (s *SysNestDecisions) selectEdge(world *ecs.World, node *Node) (ecs.Entity, bool) {
+	maxTrace := 0.0
 	var maxEdge ecs.Entity
 	count := 0
+	anyFound := false
 	for i := 0; i < node.NumEdges; i++ {
 		edge := node.InEdges[i]
 		trace := s.traceMap.Get(edge)
 		if trace.FromResource > maxTrace {
 			maxTrace = trace.FromResource
-			maxEdge = edge
+			maxEdge = node.OutEdges[i]
 			count = 1
+			anyFound = true
 			continue
 		}
 		if trace.FromResource == maxTrace {
@@ -130,7 +131,7 @@ func (s *SysNestDecisions) selectEdge(world *ecs.World, node *Node) ecs.Entity {
 			}
 		}
 	}
-	return maxEdge
+	return maxEdge, anyFound
 }
 
 // Finalize the system

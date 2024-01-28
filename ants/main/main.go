@@ -33,20 +33,29 @@ func main() {
 	})
 
 	mod.AddSystem(&ants.SysResources{
-		Count: 5,
+		Count: 24,
 	})
 	mod.AddSystem(&ants.SysDecay{
-		Persistence: 0.99,
+		Persistence: 0.95,
 	})
 	mod.AddSystem(&ants.SysNestDecisions{
-		ReleaseInterval:  4,
-		ReleaseCount:     4,
+		ReleaseInterval:  8,
+		ReleaseCount:     1,
 		ScoutProbability: 0.05,
 	})
 	mod.AddSystem(&ants.SysMoveAnts{
-		MaxSpeed: 1.0,
+		MaxSpeed: 2.0,
 	})
-	mod.AddSystem(&ants.SysScouting{})
+	mod.AddSystem(&ants.SysScouting{
+		MaxCollect: 0.001,
+	})
+	mod.AddSystem(&ants.SysForaging{
+		MaxCollect: 0.001,
+		RandomProb: 0.2,
+	})
+	mod.AddSystem(&ants.SysReturning{
+		RandomProb: 0.2,
+	})
 
 	mod.AddUISystem(&ants.ManagePause{})
 	mod.AddUISystem(&ants.DrawGrid{})

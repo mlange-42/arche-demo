@@ -82,7 +82,9 @@ type ActScout struct {
 type ActForage struct{}
 
 // ActReturn component
-type ActReturn struct{}
+type ActReturn struct {
+	Load float64
+}
 
 // ActInNest component
 type ActInNest struct{}
