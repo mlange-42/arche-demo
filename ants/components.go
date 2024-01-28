@@ -10,8 +10,9 @@ type Position struct {
 
 // Edge component
 type Edge struct {
-	From ecs.Entity
-	To   ecs.Entity
+	From   ecs.Entity
+	To     ecs.Entity
+	Length float64
 }
 
 // Node component

@@ -1,6 +1,7 @@
 ---
 title: Ant Colony
 wasm: ants
+draft: true
 description: |
     TODO
 ---

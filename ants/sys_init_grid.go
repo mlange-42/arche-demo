@@ -1,6 +1,7 @@
 package ants
 
 import (
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -21,7 +22,6 @@ func (s *InitGrid) Initialize(world *ecs.World) {
 
 	nodeBuilder := generic.NewMap2[Position, Node](world)
 	edgeBuilder := generic.NewMap1[Edge](world)
-	nodeMap := generic.NewMap1[Node](world)
 
 	query := nodeBuilder.NewBatchQ(grid.Cols * grid.Rows)
 	cnt := 0
@@ -43,17 +43,18 @@ func (s *InitGrid) Initialize(world *ecs.World) {
 	for x := 0; x < grid.Cols-1; x++ {
 		for y := 0; y < grid.Cols-1; y++ {
 			thisEntity := grid.Get(x, y)
-			thisNode := nodeMap.Get(thisEntity)
+			thisPos, thisNode := nodeBuilder.Get(thisEntity)
 			for _, off := range dirs {
 				xx, yy := x+off.X, y+off.Y
 				if !grid.Contains(xx, yy) {
 					continue
 				}
 				otherEntity := grid.Get(xx, yy)
-				otherNode := nodeMap.Get(otherEntity)
+				otherPos, otherNode := nodeBuilder.Get(otherEntity)
 
-				edge1 := edgeBuilder.NewWith(&Edge{From: thisEntity, To: otherEntity})
-				edge2 := edgeBuilder.NewWith(&Edge{From: otherEntity, To: thisEntity})
+				ln := common.Distance(thisPos.X, thisPos.Y, otherPos.X, otherPos.Y)
+				edge1 := edgeBuilder.NewWith(&Edge{From: thisEntity, To: otherEntity, Length: ln})
+				edge2 := edgeBuilder.NewWith(&Edge{From: otherEntity, To: thisEntity, Length: ln})
 
 				thisNode.Add(edge2, edge1)
 				otherNode.Add(edge1, edge2)
