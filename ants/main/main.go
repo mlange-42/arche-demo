@@ -66,7 +66,11 @@ func main() {
 	})
 
 	mod.AddUISystem(&ants.ManagePause{})
-	mod.AddUISystem(&ants.DrawGrid{})
+	mod.AddUISystem(&ants.SysClearFrame{})
+	mod.AddUISystem(&ants.DrawResources{})
+	mod.AddUISystem(&ants.DrawNest{})
+	mod.AddUISystem(&ants.DrawAnts{})
+	mod.AddUISystem(&ants.SysRepaint{})
 
 	println("Running the model")
 	mod.Run()
