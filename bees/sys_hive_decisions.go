@@ -20,7 +20,6 @@ type SysHiveDecisions struct {
 	DanceSamples int
 
 	time         generic.Resource[resource.Tick]
-	patches      generic.Resource[Patches]
 	hiveFilter   generic.Filter1[Random256]
 	idleFilter   generic.Filter0
 	waggleFilter generic.Filter1[ActWaggleDance]

@@ -76,7 +76,7 @@ func (s *ManagePatches) createRandomPatches(count int) {
 		e := query.Entity()
 		patch := query.Get()
 
-		for true {
+		for {
 			x := rand.Intn(w)
 			y := rand.Intn(h)
 			if patches.Patches[x][y].IsZero() {

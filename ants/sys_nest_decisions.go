@@ -37,11 +37,6 @@ type SysNestDecisions struct {
 	probs   [8]float64
 }
 
-type waggleInfo struct {
-	Target  Position
-	Benefit float64
-}
-
 // Initialize the system
 func (s *SysNestDecisions) Initialize(world *ecs.World) {
 	s.time = generic.NewResource[resource.Tick](world)
