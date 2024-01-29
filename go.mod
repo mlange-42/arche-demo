@@ -9,10 +9,8 @@ require (
 	github.com/hajimehoshi/ebiten/v2 v2.6.4
 	github.com/llgcode/draw2d v0.0.0-20231212091825-f55e0c776b44
 	github.com/mlange-42/arche v0.10.0
-	github.com/mlange-42/arche-model v0.6.1-0.20240129113809-bb02c1895e61
+	github.com/mlange-42/arche-model v0.6.1-0.20240129171331-cda3d50f7721
 )
-
-replace github.com/mlange-42/arche-model v0.6.1-0.20240129113809-bb02c1895e61 => ../arche-model
 
 require (
 	github.com/ebitengine/purego v0.5.0 // indirect
