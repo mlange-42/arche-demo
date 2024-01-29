@@ -19,7 +19,7 @@ type SysForaging struct {
 	MaxSearchTime int
 
 	time        generic.Resource[resource.Tick]
-	filter      generic.Filter2[AntEdge, ActForage]
+	filter      generic.Filter3[AntEdge, ActForage, Position]
 	antEdgeMap  generic.Map1[AntEdge]
 	returnMap   generic.Map1[ActReturn]
 	edgeMap     generic.Map2[Edge, Trace]
@@ -37,7 +37,7 @@ type SysForaging struct {
 // Initialize the system
 func (s *SysForaging) Initialize(world *ecs.World) {
 	s.time = generic.NewResource[resource.Tick](world)
-	s.filter = *generic.NewFilter2[AntEdge, ActForage]()
+	s.filter = *generic.NewFilter3[AntEdge, ActForage, Position]()
 
 	s.antEdgeMap = generic.NewMap1[AntEdge](world)
 	s.returnMap = generic.NewMap1[ActReturn](world)
@@ -60,8 +60,9 @@ func (s *SysForaging) Update(world *ecs.World) {
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		antEdge, forage := query.Get()
-		if antEdge.Pos < antEdge.Length {
+		antEdge, forage, pos := query.Get()
+		newPos := antEdge.Pos - antEdge.Length
+		if newPos < 0 {
 			continue
 		}
 		oldEdge, oldTrace := s.edgeMap.Get(antEdge.Edge)
@@ -88,6 +89,8 @@ func (s *SysForaging) Update(world *ecs.World) {
 		geom := s.edgeGeomMap.Get(edge)
 
 		antEdge.Update(edge, geom)
+		antEdge.Pos = newPos
+		antEdge.UpdatePos(pos)
 	}
 
 	for _, e := range s.toReturn {
