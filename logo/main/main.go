@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/png"
+	"log"
 
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/logo"
@@ -9,45 +10,43 @@ import (
 	"github.com/mlange-42/arche/ecs"
 )
 
-var cvs common.Canvas
-var mod *model.Model
+const (
+	screenWidth  = 880
+	screenHeight = 480
+)
 
 func main() {
-	mod = model.New()
-	mod.FPS = 60
-	mod.TPS = 60
+	game := common.NewGame(
+		model.New(), screenWidth, screenHeight,
+	)
 
 	grid, err := createImageResource()
 	if err != nil {
 		println("unable to load image: ", err.Error())
 		panic(err)
 	}
-	ecs.AddResource(&mod.World, &grid)
+	ecs.AddResource(&game.Model.World, &grid)
 
-	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
+	ecs.AddResource(&game.Model.World, &game.Screen)
+	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	image := common.Image{Image: cvs.Image(), Width: cvs.Width(), Height: cvs.Height(), Redraw: cvs.Redraw}
-	ecs.AddResource(&mod.World, &image)
+	game.Model.AddSystem(&logo.InitEntities{})
 
-	listener := common.PauseMouseListener{}
-	cvs.SetListener(&listener)
-	ecs.AddResource(&mod.World, &listener)
-
-	mod.AddSystem(&logo.InitEntities{})
-
-	mod.AddSystem(&logo.MoveEntities{
+	game.Model.AddSystem(&logo.MoveEntities{
 		MaxSpeed: 10,
 		MaxAcc:   0.08, MaxAccFlee: 0.1,
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		Damp:            0.975})
 
-	mod.AddUISystem(&logo.ManagePause{})
+	game.Model.AddUISystem(&logo.ManagePause{})
 
-	mod.AddUISystem(&logo.DrawEntities{})
+	game.Model.AddUISystem(&logo.DrawEntities{})
 
-	println("Running the model")
-	mod.Run()
+	game.Initialize()
+	if err := game.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func createImageResource() (logo.Grid, error) {

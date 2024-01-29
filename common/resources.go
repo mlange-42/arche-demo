@@ -11,7 +11,6 @@ type Image struct {
 	Image  *image.RGBA
 	Width  int
 	Height int
-	Redraw func()
 }
 
 // EbitenImage resource for drawing. Will be shown on an HTML5 canvas.

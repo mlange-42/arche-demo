@@ -20,9 +20,6 @@ func main() {
 		model.New(), screenWidth, screenHeight,
 	)
 
-	game.Model.FPS = 9999
-	game.Model.TPS = 9999
-
 	grav := box2d.MakeB2Vec2(0.0, 50.0)
 	world := box2d.MakeB2World(grav)
 	boxWorld := b2d.BoxWorld{

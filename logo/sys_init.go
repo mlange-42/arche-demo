@@ -20,7 +20,7 @@ type InitEntities struct {
 func (s *InitEntities) Initialize(world *ecs.World) {
 	gridRes := generic.NewResource[Grid](world)
 	grid := gridRes.Get()
-	canvasRes := generic.NewResource[common.Image](world)
+	canvasRes := generic.NewResource[common.EbitenImage](world)
 	canvas := canvasRes.Get()
 
 	xOffset := (canvas.Width - grid.Width) / 2

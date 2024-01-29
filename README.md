@@ -16,3 +16,20 @@ See the [live demo here](https://mlange-42.github.io/arche-demo/).
 </a>
 
 </div>
+
+## Usage
+
+Besides the [live demo](https://mlange-42.github.io/arche-demo/), you can run the examples locally.
+
+Clone the repository, and navigate into it:
+
+```
+git clone https://github.com/mlange-42/arche-demo.git
+cd arche-demo
+```
+
+Then, run individual examples like this:
+
+```
+go run ./<example>/main
+```

@@ -1,6 +1,5 @@
 ---
 title: Home
-wasm: logo
 description: |
     A simple simulation with 30.000 entities.
     
@@ -10,18 +9,8 @@ description: |
 ---
 
 {{< rawhtml >}}
-<style>
-    #loading {
-        width: 880px;
-        height: 480px;
-    }
-</style>
+{{< canvas logo 880 480 >}}
 
-<div id="canvas-container">
-    <div id="loading">
-        <p class="centered">Loading...</p>
-    </div>
-</div>
 <p id="instructions">Move the mouse over the logo! Click to pause and resume!</p>
 <p><tt style="font-size: 120%">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a></tt>
 </p>
