@@ -19,7 +19,7 @@ type InitEntities struct {
 func (s *InitEntities) Initialize(world *ecs.World) {
 	worldRes := generic.NewResource[BoxWorld](world)
 	w := worldRes.Get().World
-	canvasRes := generic.NewResource[common.Image](world)
+	canvasRes := generic.NewResource[common.EbitenImage](world)
 	canvas := canvasRes.Get()
 
 	bd := box2d.MakeB2BodyDef()

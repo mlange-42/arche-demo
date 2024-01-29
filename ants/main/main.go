@@ -48,7 +48,7 @@ func main() {
 		ProbExponent:     0.6,
 	})
 	mod.AddSystem(&ants.SysMoveAnts{
-		MaxSpeed: 2.0,
+		MaxSpeed: 1.0,
 	})
 	mod.AddSystem(&ants.SysScouting{
 		MaxCollect:    0.001,

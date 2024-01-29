@@ -21,6 +21,11 @@ a {
     color: #FFFFFF;
 }
 
+#iframe {
+    max-width: 100%;
+    margin-bottom: -6px;
+}
+
 a:visited {
     color: #aaaaaa;
 }

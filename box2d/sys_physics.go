@@ -15,22 +15,20 @@ type Physics struct {
 	MinFleeDistance float64
 	MaxFleeDistance float64
 	ForceScale      float64
-	mouse           generic.Resource[common.PauseMouseListener]
+	mouse           generic.Resource[common.Mouse]
 	filter          generic.Filter1[Body]
 }
 
 // Initialize the system
 func (s *Physics) Initialize(world *ecs.World) {
-	s.mouse = generic.NewResource[common.PauseMouseListener](world)
+	s.mouse = generic.NewResource[common.Mouse](world)
 	s.filter = *generic.NewFilter1[Body]()
 }
 
 // Update the system
 func (s *Physics) Update(world *ecs.World) {
-	listener := s.mouse.Get()
-	mouse := listener.Mouse
-
-	if !listener.MouseInside {
+	mouse := s.mouse.Get()
+	if !mouse.IsInside {
 		return
 	}
 
@@ -41,7 +39,7 @@ func (s *Physics) Update(world *ecs.World) {
 	for query.Next() {
 		body := query.Get()
 		pos := body.Body.GetPosition()
-		repX, repY, repDist := common.Norm(pos.X-mouse.X, pos.Y-mouse.Y)
+		repX, repY, repDist := common.Norm(pos.X-float64(mouse.X), pos.Y-float64(mouse.Y))
 		repFac := math.Min(1.0-((repDist-minDist)/distRange), 1.0) * body.Body.M_mass
 		if repFac > 0 {
 			body.Body.ApplyLinearImpulseToCenter(

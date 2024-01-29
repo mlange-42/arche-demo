@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/ByteArena/box2d"
 	b2d "github.com/mlange-42/arche-demo/box2d"
 	"github.com/mlange-42/arche-demo/common"
@@ -8,51 +10,52 @@ import (
 	"github.com/mlange-42/arche/ecs"
 )
 
-var cvs common.Canvas
-var mod *model.Model
+const (
+	screenWidth  = 880
+	screenHeight = 480
+)
 
 func main() {
-	mod = model.New()
-	mod.FPS = 30
-	mod.TPS = 60
+	game := common.NewGame(
+		model.New(), screenWidth, screenHeight,
+	)
+
+	game.Model.FPS = 9999
+	game.Model.TPS = 9999
 
 	grav := box2d.MakeB2Vec2(0.0, 50.0)
 	world := box2d.MakeB2World(grav)
 	boxWorld := b2d.BoxWorld{
 		World: &world,
 	}
-	ecs.AddResource(&mod.World, &boxWorld)
+	ecs.AddResource(&game.Model.World, &boxWorld)
 
-	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
-
-	image := common.Image{Image: cvs.Image(), Width: cvs.Width(), Height: cvs.Height(), Redraw: cvs.Redraw}
-	ecs.AddResource(&mod.World, &image)
-
-	listener := common.PauseMouseListener{}
-	cvs.SetListener(&listener)
-	ecs.AddResource(&mod.World, &listener)
+	ecs.AddResource(&game.Model.World, &game.Screen)
+	ecs.AddResource(&game.Model.World, &game.Mouse)
 
 	images, err := b2d.NewImages()
 	if err != nil {
 		println("unable to load image: ", err.Error())
 		panic(err)
 	}
-	ecs.AddResource(&mod.World, &images)
+	ecs.AddResource(&game.Model.World, &images)
 
-	mod.AddSystem(&b2d.InitEntities{
-		Count:       80,
+	game.Model.AddSystem(&b2d.InitEntities{
+		Count:       120,
 		Restitution: 0.8,
 	})
-	mod.AddSystem(&b2d.Physics{
+	game.Model.AddSystem(&b2d.Physics{
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		ForceScale:      10,
 	})
-	mod.AddSystem(&b2d.B2Physics{})
+	game.Model.AddSystem(&b2d.B2Physics{})
 
-	mod.AddUISystem(&b2d.ManagePause{})
-	mod.AddUISystem(&b2d.DrawEntities{})
+	game.Model.AddUISystem(&b2d.ManagePause{})
+	game.Model.AddUISystem(&b2d.DrawEntities{})
 
-	println("Running the model")
-	mod.Run()
+	game.Initialize()
+	if err := game.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
