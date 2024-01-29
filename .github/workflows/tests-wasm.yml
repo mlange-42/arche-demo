@@ -1,4 +1,4 @@
-name: Tests
+name: Tests (WASM)
 
 on:
   push:
@@ -7,6 +7,10 @@ on:
   pull_request:
     branches:
     - main
+
+env:
+  GOOS: js
+  GOARCH: wasm
 
 jobs:
 
@@ -20,10 +24,7 @@ jobs:
         with:
           go-version: '1.21.x'
       - name: Install dependencies
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libgl1-mesa-dev xorg-dev
-          go get ./...
+        run: go get ./...
       - name: Build WebAssembly
         run: |
           go build -o test/home.wasm ./logo/main
@@ -43,8 +44,6 @@ jobs:
       uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get update -y
-        sudo apt-get install -y libgl1-mesa-dev xorg-dev
         go get ./...
     - name: Run Unit tests
       run: |
@@ -62,11 +61,7 @@ jobs:
           go-version: '1.21.x'
       - name: Install dependencies
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libgl1-mesa-dev xorg-dev
           go get ./...
-          go install honnef.co/go/tools/cmd/staticcheck@latest
-          go install github.com/gordonklaus/ineffassign@latest
       - name: Check format
         run: |
           if gofmt -e -l . >&1 | grep '^'; then
@@ -74,7 +69,3 @@ jobs:
           fi
       - name: Lint with vet
         run: go vet ./...
-      - name: Lint with staticcheck
-        run: staticcheck ./...
-      - name: Lint with ineffassign
-        run: ineffassign ./...

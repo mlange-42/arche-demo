@@ -65,7 +65,7 @@ func (s *MoveEntities) Update(world *ecs.World) {
 
 		velAbs := vel.X*vel.X + vel.Y*vel.Y
 		if velAbs > 1.0 {
-			velAbs := math.Sqrt(velAbs)
+			velAbs = math.Sqrt(velAbs)
 			vel.X /= velAbs
 			vel.Y /= velAbs
 			velAbs = 1.0

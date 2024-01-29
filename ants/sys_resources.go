@@ -69,7 +69,7 @@ func (s *SysResources) createRandomResources(count int) {
 	h := patches.Rows
 
 	for i := 0; i < count; i++ {
-		for true {
+		for {
 			x := rand.Intn(w)
 			y := rand.Intn(h)
 			node := patches.Get(x, y)
