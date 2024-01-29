@@ -45,3 +45,6 @@ func (c *ImageCanvas) SetListener(l MouseListener) {}
 
 // Redraw does nothing in this canvas implementation.
 func (c *ImageCanvas) Redraw() {}
+
+// AdjustEbitenCanvas moves a canvas created by Ebitengine to the right place.
+func AdjustEbitenCanvas() {}

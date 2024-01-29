@@ -1,42 +1,36 @@
 package box2d
 
 import (
-	"image"
 	"image/color"
-	"image/draw"
 
-	xdraw "golang.org/x/image/draw"
-
-	"github.com/mlange-42/arche-demo/common"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // DrawEntities is a system to draw Box2D bodies on an [Image] resource.
 type DrawEntities struct {
-	canvas generic.Resource[common.Image]
+	canvas generic.Resource[Image]
 	images generic.Resource[Images]
 	filter generic.Filter1[Body]
 }
 
 // InitializeUI the system
 func (s *DrawEntities) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[common.Image](world)
+	s.canvas = generic.NewResource[Image](world)
 	s.images = generic.NewResource[Images](world)
 	s.filter = *generic.NewFilter1[Body]()
 }
 
 // UpdateUI the system
 func (s *DrawEntities) UpdateUI(world *ecs.World) {
-	black := color.RGBA{0, 0, 0, 255}
-	circle := s.images.Get().Circle
-	bounds := circle.Bounds()
+	grey := color.RGBA{160, 160, 160, 255}
 
 	canvas := s.canvas.Get()
 	img := canvas.Image
 
 	// Clear the image
-	draw.Draw(img, img.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
+	img.Clear()
 
 	// Draw pixel entities
 	query := s.filter.Query(world)
@@ -44,11 +38,9 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 		bodyComp := query.Get()
 		pos := bodyComp.Body.GetPosition()
 		r := bodyComp.Radius
-		rect := image.Rect(int(pos.X-r), int(pos.Y-r), int(pos.X+r), int(pos.Y+r))
-		xdraw.ApproxBiLinear.Scale(img, rect, circle, bounds, draw.Over, nil)
-	}
 
-	canvas.Redraw()
+		vector.DrawFilledCircle(img, float32(pos.X), float32(pos.Y), float32(r), grey, true)
+	}
 }
 
 // PostUpdateUI the system

@@ -1,6 +1,8 @@
 package box2d
 
 import (
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
@@ -22,7 +24,10 @@ func (s *ManagePause) InitializeUI(world *ecs.World) {
 
 // UpdateUI the system
 func (s *ManagePause) UpdateUI(world *ecs.World) {
-	s.systems.Get().Paused = s.mouse.Get().Paused
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButton0) {
+		sys := s.systems.Get()
+		sys.Paused = !sys.Paused
+	}
 }
 
 // PostUpdateUI the system

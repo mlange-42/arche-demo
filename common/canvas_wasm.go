@@ -177,3 +177,19 @@ func removeElementByID(doc js.Value, id string) {
 	elem := doc.Call("getElementById", id)
 	elem.Call("remove")
 }
+
+// AdjustEbitenCanvas moves a canvas created by Ebitengine to the right place.
+func AdjustEbitenCanvas(parentID string, width, height int) {
+	window := js.Global()
+	doc := window.Get("document")
+	parent := doc.Call("getElementById", parentID)
+	body := doc.Get("body")
+	canvas := body.Call("getElementsByTagName", "canvas").Index(0)
+
+	canvas.Set("style", "")
+	canvas.Set("height", height)
+	canvas.Set("width", width)
+
+	parent.Set("innerHTML", "")
+	parent.Call("appendChild", canvas)
+}
