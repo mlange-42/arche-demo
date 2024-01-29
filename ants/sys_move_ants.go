@@ -23,9 +23,6 @@ func (s *SysMoveAnts) Update(world *ecs.World) {
 	for query.Next() {
 		antEdge, pos := query.Get()
 		antEdge.Pos += s.MaxSpeed
-		if antEdge.Pos >= antEdge.Length {
-			antEdge.Pos = antEdge.Length + 0.01
-		}
 		antEdge.UpdatePos(pos)
 	}
 }

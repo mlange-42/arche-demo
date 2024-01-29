@@ -18,7 +18,7 @@ type SysReturning struct {
 
 	time        generic.Resource[resource.Tick]
 	nest        generic.Resource[Nest]
-	filter      generic.Filter2[AntEdge, ActReturn]
+	filter      generic.Filter3[AntEdge, ActReturn, Position]
 	antEdgeMap  generic.Map1[AntEdge]
 	edgeMap     generic.Map2[Edge, Trace]
 	edgeGeomMap generic.Map1[EdgeGeometry]
@@ -35,7 +35,7 @@ type SysReturning struct {
 func (s *SysReturning) Initialize(world *ecs.World) {
 	s.time = generic.NewResource[resource.Tick](world)
 	s.nest = generic.NewResource[Nest](world)
-	s.filter = *generic.NewFilter2[AntEdge, ActReturn]()
+	s.filter = *generic.NewFilter3[AntEdge, ActReturn, Position]()
 
 	s.antEdgeMap = generic.NewMap1[AntEdge](world)
 	s.edgeMap = generic.NewMap2[Edge, Trace](world)
@@ -57,8 +57,9 @@ func (s *SysReturning) Update(world *ecs.World) {
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		antEdge, ret := query.Get()
-		if antEdge.Pos < antEdge.Length {
+		antEdge, ret, pos := query.Get()
+		newPos := antEdge.Pos - antEdge.Length
+		if newPos < 0 {
 			continue
 		}
 		oldEdge, oldTrace := s.edgeMap.Get(antEdge.Edge)
@@ -73,6 +74,8 @@ func (s *SysReturning) Update(world *ecs.World) {
 		geom := s.edgeGeomMap.Get(edge)
 
 		antEdge.Update(edge, geom)
+		antEdge.Pos = newPos
+		antEdge.UpdatePos(pos)
 	}
 
 	for _, e := range s.toArrive {
