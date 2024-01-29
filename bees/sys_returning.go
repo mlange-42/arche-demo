@@ -21,7 +21,7 @@ type SysReturning struct {
 
 	params         generic.Resource[Params]
 	time           generic.Resource[resource.Tick]
-	mouse          generic.Resource[common.PauseMouseListener]
+	mouse          generic.Resource[common.Mouse]
 	filter         generic.Filter4[Position, Direction, ActReturn, Random256]
 	exchangeArrive generic.Exchange
 	exchangeWaggle generic.Exchange
@@ -34,7 +34,7 @@ type SysReturning struct {
 func (s *SysReturning) Initialize(world *ecs.World) {
 	s.params = generic.NewResource[Params](world)
 	s.time = generic.NewResource[resource.Tick](world)
-	s.mouse = generic.NewResource[common.PauseMouseListener](world)
+	s.mouse = generic.NewResource[common.Mouse](world)
 	s.filter = *generic.NewFilter4[Position, Direction, ActReturn, Random256]()
 
 	s.exchangeArrive = *generic.NewExchange(world).
@@ -56,9 +56,8 @@ func (s *SysReturning) Update(world *ecs.World) {
 	maxSpeed := s.params.Get().MaxBeeSpeed
 	maxAng := (s.MaxRotation * math.Pi / 180.0) / 2
 
-	listener := s.mouse.Get()
-	mouse := listener.Mouse
-	mouseInside := listener.MouseInside
+	mouse := s.mouse.Get()
+	mouseInside := mouse.IsInside
 
 	fleeDistSq := s.FleeDistance * s.FleeDistance
 
@@ -69,9 +68,9 @@ func (s *SysReturning) Update(world *ecs.World) {
 		speed := 1.0
 		if tick%4 == int64(r256.Value)%4 {
 			var dx, dy float64
-			if mouseInside && common.DistanceSq(pos.X, pos.Y, mouse.X, mouse.Y) < fleeDistSq {
-				dx = pos.X - mouse.X
-				dy = pos.Y - mouse.Y
+			if mouseInside && common.DistanceSq(pos.X, pos.Y, float64(mouse.X), float64(mouse.Y)) < fleeDistSq {
+				dx = pos.X - float64(mouse.X)
+				dy = pos.Y - float64(mouse.Y)
 				speed = 1.5
 			} else {
 				dx = ret.Target.X - pos.X

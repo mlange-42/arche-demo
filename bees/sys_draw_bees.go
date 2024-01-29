@@ -71,8 +71,6 @@ func (s *DrawBees) UpdateUI(world *ecs.World) {
 			img.SetRGBA(int(pos.X), int(pos.Y), cols.Waggle)
 		}
 	*/
-
-	canvas.Redraw()
 }
 
 // PostUpdateUI the system

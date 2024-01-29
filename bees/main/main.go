@@ -1,84 +1,92 @@
 package main
 
 import (
+	"image"
+	"log"
+
 	"github.com/mlange-42/arche-demo/bees"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
 
-var cvs common.Canvas
-var mod *model.Model
+const (
+	screenWidth  = 880
+	screenHeight = 480
+)
 
 func main() {
-	mod = model.New()
-	mod.FPS = 60
-	mod.TPS = 60
+	game := common.NewGame(
+		model.New(), screenWidth, screenHeight,
+	)
 
 	params := bees.Params{
 		MaxBeeSpeed: 1.0,
 	}
-	ecs.AddResource(&mod.World, &params)
+	ecs.AddResource(&game.Model.World, &params)
+	ecs.AddResource(&game.Model.World, &game.Screen)
+	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
+	image := common.Image{
+		Image:  image.NewRGBA(game.Screen.Image.Bounds()),
+		Width:  game.Screen.Width,
+		Height: game.Screen.Height,
+	}
+	ecs.AddResource(&game.Model.World, &image)
 
-	image := common.Image{Image: cvs.Image(), Width: cvs.Width(), Height: cvs.Height(), Redraw: cvs.Redraw}
-	ecs.AddResource(&mod.World, &image)
-
-	listener := common.PauseMouseListener{}
-	cvs.SetListener(&listener)
-	ecs.AddResource(&mod.World, &listener)
-
-	patches := bees.NewPatches(image.Width, image.Height, 10)
-	ecs.AddResource(&mod.World, &patches)
+	patches := bees.NewPatches(game.Screen.Width, game.Screen.Height, 10)
+	ecs.AddResource(&game.Model.World, &patches)
 
 	colors := bees.NewColors()
-	ecs.AddResource(&mod.World, &colors)
+	ecs.AddResource(&game.Model.World, &colors)
 
-	mod.AddSystem(&bees.InitHives{Count: 2})
-	mod.AddSystem(&bees.InitBees{CountPerHive: 1000})
+	game.Model.AddSystem(&bees.InitHives{Count: 2})
+	game.Model.AddSystem(&bees.InitBees{CountPerHive: 1000})
 
-	mod.AddSystem(&bees.ManagePatches{
+	game.Model.AddSystem(&bees.ManagePatches{
 		Count: 12,
 	})
-	mod.AddSystem(&bees.SysHiveDecisions{
+	game.Model.AddSystem(&bees.SysHiveDecisions{
 		ReleaseInterval:  8,
 		ReleaseCount:     8,
 		ScoutProbability: 0.1,
 		DanceSamples:     2,
 	})
 
-	mod.AddSystem(&bees.SysScouting{
+	game.Model.AddSystem(&bees.SysScouting{
 		MaxRotation:  90,
 		MaxScoutTime: 1500,
 	})
-	mod.AddSystem(&bees.SysFollowing{
+	game.Model.AddSystem(&bees.SysFollowing{
 		MaxRotation:      45,
 		ScoutProbability: 0.2,
 	})
-	mod.AddSystem(&bees.SysForaging{
+	game.Model.AddSystem(&bees.SysForaging{
 		MaxForagingTime: 120,
 		MaxCollect:      0.001,
 	})
-	mod.AddSystem(&bees.SysReturning{
+	game.Model.AddSystem(&bees.SysReturning{
 		MaxRotation:         45,
 		FleeDistance:        80,
 		MaxDanceProbability: 0.5,
 	})
-	mod.AddSystem(&bees.SysWaggleDance{
+	game.Model.AddSystem(&bees.SysWaggleDance{
 		MinDanceDuration: 60,
 		MaxDanceDuration: 600,
 	})
-	mod.AddSystem(&bees.SysFleeing{
+	game.Model.AddSystem(&bees.SysFleeing{
 		FleeDistance: 50,
 	})
 
-	mod.AddUISystem(&bees.ManagePause{})
-	mod.AddUISystem(&bees.SysClearFrame{})
-	mod.AddUISystem(&bees.DrawPatches{})
-	mod.AddUISystem(&bees.DrawBees{})
-	mod.AddUISystem(&bees.DrawHives{})
-	mod.AddUISystem(&bees.SysRepaint{})
+	game.Model.AddUISystem(&bees.ManagePause{})
+	game.Model.AddUISystem(&bees.SysClearFrame{})
+	game.Model.AddUISystem(&bees.DrawPatches{})
+	game.Model.AddUISystem(&bees.DrawBees{})
+	game.Model.AddUISystem(&bees.DrawHives{})
+	game.Model.AddUISystem(&bees.SysRepaint{})
 
-	mod.Run()
+	game.Initialize()
+	if err := game.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
