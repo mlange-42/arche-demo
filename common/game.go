@@ -9,8 +9,10 @@ import (
 type Game struct {
 	Model  *model.Model
 	Screen EbitenImage
+	Mouse  Mouse
 	width  int
 	height int
+	canvas *canvasHelper
 }
 
 // NewGame returns a new game
@@ -20,6 +22,7 @@ func NewGame(mod *model.Model, width, height int) Game {
 		Screen: EbitenImage{Image: ebiten.NewImage(width, height), Width: width, Height: height},
 		width:  width,
 		height: height,
+		canvas: newCanvasHelper(),
 	}
 }
 
@@ -44,15 +47,31 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 
 // Update the game.
 func (g *Game) Update() error {
+	g.updateMouse()
+
 	g.Model.UpdateSystems()
 	return nil
 }
 
 // Draw the game.
 func (g *Game) Draw(screen *ebiten.Image) {
+	g.updateMouse()
+
 	g.Screen.Image.Clear()
 	g.Model.UpdateUISystems()
 
 	options := ebiten.DrawImageOptions{}
 	screen.DrawImage(g.Screen.Image, &options)
+}
+
+func (g *Game) updateMouse() {
+	x, y := ebiten.CursorPosition()
+	g.Mouse.IsInside = g.IsMouseInside()
+	g.Mouse.X = x
+	g.Mouse.Y = y
+}
+
+// IsMouseInside returns whether the mouse is inside the game canvas.
+func (g *Game) IsMouseInside() bool {
+	return g.canvas.isMouseInside()
 }

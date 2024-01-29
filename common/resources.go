@@ -20,3 +20,10 @@ type EbitenImage struct {
 	Width  int
 	Height int
 }
+
+// Mouse resource for events.
+type Mouse struct {
+	IsInside bool
+	X        int
+	Y        int
+}

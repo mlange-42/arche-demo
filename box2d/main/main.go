@@ -31,6 +31,7 @@ func main() {
 	ecs.AddResource(&game.Model.World, &boxWorld)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
+	ecs.AddResource(&game.Model.World, &game.Mouse)
 
 	images, err := b2d.NewImages()
 	if err != nil {
