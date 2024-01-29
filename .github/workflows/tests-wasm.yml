@@ -1,4 +1,4 @@
-name: Tests
+name: Tests (WASM)
 
 on:
   push:
@@ -7,6 +7,10 @@ on:
   pull_request:
     branches:
     - main
+
+env:
+  GOOS: js
+  GOARCH: wasm
 
 jobs:
 
@@ -57,9 +61,7 @@ jobs:
           go-version: '1.21.x'
       - name: Install dependencies
         run: |
-          go get .
-          go install honnef.co/go/tools/cmd/staticcheck@latest
-          go install github.com/gordonklaus/ineffassign@latest
+          go get ./...
       - name: Check format
         run: |
           if gofmt -e -l . >&1 | grep '^'; then
@@ -67,7 +69,3 @@ jobs:
           fi
       - name: Lint with vet
         run: go vet ./...
-      - name: Lint with staticcheck
-        run: staticcheck ./...
-      - name: Lint with ineffassign
-        run: ineffassign ./...

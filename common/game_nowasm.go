@@ -4,8 +4,8 @@ package common
 
 type canvasHelper struct{}
 
-func newCanvasHelper() canvasHelper {
-	return canvasHelper{}
+func newCanvasHelper() *canvasHelper {
+	return &canvasHelper{}
 }
 
 func (c *canvasHelper) isMouseInside() bool {
