@@ -1,4 +1,4 @@
 <div id="canvas-container">
-    <iframe id="iframe" src="{{ .Site.BaseURL }}/wasm/index.html?{{ .Get 0 }}" width="{{ .Get 1 }}"
-        height="{{ .Get 2 }}" allow="autoplay" frameBorder="0" scrolling="no"></iframe>
+    <iframe id="iframe" src="{{ .Site.BaseURL }}/wasm/index.html?{{ .Page.Params.wasm }}" width="{{ .Get 0 }}"
+        height="{{ .Get 1 }}" allow="autoplay" frameBorder="0" scrolling="no"></iframe>
 </div>
