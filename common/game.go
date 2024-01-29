@@ -22,7 +22,7 @@ func NewGame(mod *model.Model, width, height int) Game {
 		Screen: EbitenImage{Image: ebiten.NewImage(width, height), Width: width, Height: height},
 		width:  width,
 		height: height,
-		canvas: newCanvasHelper(),
+		canvas: newCanvasHelper(width, height),
 	}
 }
 
