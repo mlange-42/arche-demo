@@ -1,3 +1,8 @@
+---
+type: helper
+layout: single
+---
+{{< rawhtml >}}
 <!doctype html>
 <html>
 
@@ -14,7 +19,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             const go = new Go();
             const name = window.location.search.substring(1);
-            let url = `/wasm/${name}.wasm`;
+            let url = `./${name}.wasm`;
 
             // Polyfill
             if (!WebAssembly.instantiateStreaming) {
@@ -35,3 +40,4 @@
 </body>
 
 </html>
+{{< /rawhtml >}}
