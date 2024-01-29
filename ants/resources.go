@@ -1,10 +1,35 @@
 package ants
 
 import (
+	"image/color"
 	"math"
 
 	"github.com/mlange-42/arche/ecs"
 )
+
+// Nest resource, representing an ant nest.
+type Nest struct {
+	Node ecs.Entity
+	Pos  Position
+}
+
+// Colors resource, holding colors for drawing bee activities.
+type Colors struct {
+	Scout  color.RGBA
+	Forage color.RGBA
+	Return color.RGBA
+	InNest color.RGBA
+}
+
+// NewColors returns default bee activity colors.
+func NewColors() Colors {
+	return Colors{
+		Scout:  color.RGBA{255, 200, 0, 255},
+		Forage: color.RGBA{255, 255, 255, 160},
+		Return: color.RGBA{0, 255, 255, 255},
+		InNest: color.RGBA{80, 80, 80, 255},
+	}
+}
 
 // Patches resource holding a grid of potential flower patches.
 type Patches struct {

@@ -45,8 +45,9 @@ func (s *ManagePatches) Update(world *ecs.World) {
 
 		if patch.Resources <= 0 {
 			s.toRemove = append(s.toRemove, query.Entity())
+		} else {
+			count++
 		}
-		count++
 	}
 
 	for _, e := range s.toRemove {
