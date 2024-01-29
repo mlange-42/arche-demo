@@ -16,9 +16,8 @@ description: |
     }
 </style>
 
-<div id="canvas-container">
-    <iframe id="iframe" src="/wasm.html?box2d" width="880" height="480" allow="autoplay" frameBorder="0" scrolling="no"></iframe>
-</div>
+{{< canvas box2d 880 480 >}}
+
 <p id="instructions">Move the mouse over the canvas! Click to pause and resume!</p>
 <p class="tt">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a>
 </p>
