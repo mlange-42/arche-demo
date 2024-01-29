@@ -30,18 +30,17 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	game.Model.AddSystem(&logo.InitEntities{})
+	game.Model.AddSystem(&logo.SysInitEntities{})
 
-	game.Model.AddSystem(&logo.MoveEntities{
+	game.Model.AddSystem(&logo.SysMoveEntities{
 		MaxSpeed: 10,
 		MaxAcc:   0.08, MaxAccFlee: 0.1,
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		Damp:            0.975})
 
-	game.Model.AddUISystem(&logo.ManagePause{})
-
-	game.Model.AddUISystem(&logo.DrawEntities{})
+	game.Model.AddUISystem(&logo.UISysManagePause{})
+	game.Model.AddUISystem(&logo.UISysDrawEntities{})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {

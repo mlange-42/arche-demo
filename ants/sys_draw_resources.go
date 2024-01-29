@@ -10,20 +10,20 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawResources is a system that draws resource patches.
-type DrawResources struct {
+// UISysDrawResources is a system that draws resource patches.
+type UISysDrawResources struct {
 	canvas     generic.Resource[common.Image]
 	nodeFilter generic.Filter2[Position, NodeResource]
 }
 
 // InitializeUI the system
-func (s *DrawResources) InitializeUI(world *ecs.World) {
+func (s *UISysDrawResources) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.Image](world)
 	s.nodeFilter = *generic.NewFilter2[Position, NodeResource]()
 }
 
 // UpdateUI the system
-func (s *DrawResources) UpdateUI(world *ecs.World) {
+func (s *UISysDrawResources) UpdateUI(world *ecs.World) {
 	canvas := s.canvas.Get()
 	img := canvas.Image
 
@@ -39,7 +39,7 @@ func (s *DrawResources) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *DrawResources) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawResources) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawResources) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawResources) FinalizeUI(world *ecs.World) {}

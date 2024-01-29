@@ -10,23 +10,23 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawPatches is a system for drawing flower patches as squares with fading green color
+// UISysDrawPatches is a system for drawing flower patches as squares with fading green color
 // as they become depleted.
-type DrawPatches struct {
+type UISysDrawPatches struct {
 	canvas      generic.Resource[common.Image]
 	patches     generic.Resource[Patches]
 	patchFilter generic.Filter1[FlowerPatch]
 }
 
 // InitializeUI the system
-func (s *DrawPatches) InitializeUI(world *ecs.World) {
+func (s *UISysDrawPatches) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.Image](world)
 	s.patches = generic.NewResource[Patches](world)
 	s.patchFilter = *generic.NewFilter1[FlowerPatch]()
 }
 
 // UpdateUI the system
-func (s *DrawPatches) UpdateUI(world *ecs.World) {
+func (s *UISysDrawPatches) UpdateUI(world *ecs.World) {
 	canvas := s.canvas.Get()
 	img := canvas.Image
 	cs := s.patches.Get().CellSize
@@ -44,7 +44,7 @@ func (s *DrawPatches) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *DrawPatches) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawPatches) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawPatches) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawPatches) FinalizeUI(world *ecs.World) {}

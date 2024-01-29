@@ -40,10 +40,10 @@ func main() {
 	colors := bees.NewColors()
 	ecs.AddResource(&game.Model.World, &colors)
 
-	game.Model.AddSystem(&bees.InitHives{Count: 2})
-	game.Model.AddSystem(&bees.InitBees{CountPerHive: 1000})
+	game.Model.AddSystem(&bees.SysInitHives{Count: 2})
+	game.Model.AddSystem(&bees.SysInitBees{CountPerHive: 1000})
 
-	game.Model.AddSystem(&bees.ManagePatches{
+	game.Model.AddSystem(&bees.SysManagePatches{
 		Count: 12,
 	})
 	game.Model.AddSystem(&bees.SysHiveDecisions{
@@ -78,12 +78,12 @@ func main() {
 		FleeDistance: 50,
 	})
 
-	game.Model.AddUISystem(&bees.ManagePause{})
-	game.Model.AddUISystem(&bees.SysClearFrame{})
-	game.Model.AddUISystem(&bees.DrawPatches{})
-	game.Model.AddUISystem(&bees.DrawBees{})
-	game.Model.AddUISystem(&bees.DrawHives{})
-	game.Model.AddUISystem(&bees.SysRepaint{})
+	game.Model.AddUISystem(&bees.UISysManagePause{})
+	game.Model.AddUISystem(&bees.UISysClearFrame{})
+	game.Model.AddUISystem(&bees.UISysDrawPatches{})
+	game.Model.AddUISystem(&bees.UISysDrawBees{})
+	game.Model.AddUISystem(&bees.UISysDrawHives{})
+	game.Model.AddUISystem(&bees.UISysRepaint{})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {

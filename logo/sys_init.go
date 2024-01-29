@@ -8,16 +8,16 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitEntities is a system to initialize entities by creating one
+// SysInitEntities is a system to initialize entities by creating one
 // for each white pixel of the Arche [Logo], obtained via resource [Grid].
 //
 // Each entity has it's associated pixel as [Target] position,
 // and is places in a random location on the output [Image] area.
-type InitEntities struct {
+type SysInitEntities struct {
 }
 
 // Initialize the system
-func (s *InitEntities) Initialize(world *ecs.World) {
+func (s *SysInitEntities) Initialize(world *ecs.World) {
 	gridRes := generic.NewResource[Grid](world)
 	grid := gridRes.Get()
 	canvasRes := generic.NewResource[common.EbitenImage](world)
@@ -47,7 +47,7 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 }
 
 // Update the system
-func (s *InitEntities) Update(world *ecs.World) {}
+func (s *SysInitEntities) Update(world *ecs.World) {}
 
 // Finalize the system
-func (s *InitEntities) Finalize(world *ecs.World) {}
+func (s *SysInitEntities) Finalize(world *ecs.World) {}

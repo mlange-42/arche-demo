@@ -6,8 +6,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawBees is a system for drawing bees as colored pixels.
-type DrawBees struct {
+// UISysDrawBees is a system for drawing bees as colored pixels.
+type UISysDrawBees struct {
 	canvas generic.Resource[common.Image]
 	colors generic.Resource[Colors]
 
@@ -20,7 +20,7 @@ type DrawBees struct {
 }
 
 // InitializeUI the system
-func (s *DrawBees) InitializeUI(world *ecs.World) {
+func (s *UISysDrawBees) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.Image](world)
 	s.colors = generic.NewResource[Colors](world)
 
@@ -33,7 +33,7 @@ func (s *DrawBees) InitializeUI(world *ecs.World) {
 }
 
 // UpdateUI the system
-func (s *DrawBees) UpdateUI(world *ecs.World) {
+func (s *UISysDrawBees) UpdateUI(world *ecs.World) {
 	cols := s.colors.Get()
 
 	canvas := s.canvas.Get()
@@ -74,7 +74,7 @@ func (s *DrawBees) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *DrawBees) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawBees) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawBees) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawBees) FinalizeUI(world *ecs.World) {}

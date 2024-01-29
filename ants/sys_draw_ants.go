@@ -8,8 +8,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawAnts is a system that draws ants.
-type DrawAnts struct {
+// UISysDrawAnts is a system that draws ants.
+type UISysDrawAnts struct {
 	canvas       generic.Resource[common.Image]
 	scoutFilter  generic.Filter1[Position]
 	forageFilter generic.Filter1[Position]
@@ -17,7 +17,7 @@ type DrawAnts struct {
 }
 
 // InitializeUI the system
-func (s *DrawAnts) InitializeUI(world *ecs.World) {
+func (s *UISysDrawAnts) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.Image](world)
 	s.scoutFilter = *generic.NewFilter1[Position]().With(generic.T[ActScout]())
 	s.forageFilter = *generic.NewFilter1[Position]().With(generic.T[ActForage]())
@@ -25,7 +25,7 @@ func (s *DrawAnts) InitializeUI(world *ecs.World) {
 }
 
 // UpdateUI the system
-func (s *DrawAnts) UpdateUI(world *ecs.World) {
+func (s *UISysDrawAnts) UpdateUI(world *ecs.World) {
 	canvas := s.canvas.Get()
 	img := canvas.Image
 
@@ -53,7 +53,7 @@ func (s *DrawAnts) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *DrawAnts) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawAnts) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawAnts) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawAnts) FinalizeUI(world *ecs.World) {}

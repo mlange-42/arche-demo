@@ -7,10 +7,10 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// ManagePatches is a system that creates a number of randomly placed flower patches.
+// SysManagePatches is a system that creates a number of randomly placed flower patches.
 // Further, it removes patches that are depleted, and creates new patches if the
 // number of patches falls below Count.
-type ManagePatches struct {
+type SysManagePatches struct {
 	// Target number of patches.
 	Count int
 
@@ -23,7 +23,7 @@ type ManagePatches struct {
 }
 
 // Initialize the system
-func (s *ManagePatches) Initialize(world *ecs.World) {
+func (s *SysManagePatches) Initialize(world *ecs.World) {
 	s.patchFilter = *generic.NewFilter1[FlowerPatch]()
 	s.patchBuilder = generic.NewMap1[FlowerPatch](world)
 	s.patchesRes = generic.NewResource[Patches](world)
@@ -34,7 +34,7 @@ func (s *ManagePatches) Initialize(world *ecs.World) {
 }
 
 // Update the system
-func (s *ManagePatches) Update(world *ecs.World) {
+func (s *SysManagePatches) Update(world *ecs.World) {
 	patches := s.patchesRes.Get()
 
 	query := s.patchFilter.Query(world)
@@ -64,9 +64,9 @@ func (s *ManagePatches) Update(world *ecs.World) {
 }
 
 // Finalize the system
-func (s *ManagePatches) Finalize(world *ecs.World) {}
+func (s *SysManagePatches) Finalize(world *ecs.World) {}
 
-func (s *ManagePatches) createRandomPatches(count int) {
+func (s *SysManagePatches) createRandomPatches(count int) {
 	patches := s.patchesRes.Get()
 	w := patches.Cols
 	h := patches.Rows

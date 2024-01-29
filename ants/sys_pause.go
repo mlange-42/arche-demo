@@ -8,18 +8,18 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// ManagePause is a simple system that listens to clicks and pauses the simulation..
-type ManagePause struct {
+// UISysManagePause is a simple system that listens to clicks and pauses the simulation..
+type UISysManagePause struct {
 	systems generic.Resource[model.Systems]
 }
 
 // InitializeUI the system
-func (s *ManagePause) InitializeUI(world *ecs.World) {
+func (s *UISysManagePause) InitializeUI(world *ecs.World) {
 	s.systems = generic.NewResource[model.Systems](world)
 }
 
 // UpdateUI the system
-func (s *ManagePause) UpdateUI(world *ecs.World) {
+func (s *UISysManagePause) UpdateUI(world *ecs.World) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButton0) {
 		sys := s.systems.Get()
 		sys.Paused = !sys.Paused
@@ -27,7 +27,7 @@ func (s *ManagePause) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *ManagePause) PostUpdateUI(world *ecs.World) {}
+func (s *UISysManagePause) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *ManagePause) FinalizeUI(world *ecs.World) {}
+func (s *UISysManagePause) FinalizeUI(world *ecs.World) {}

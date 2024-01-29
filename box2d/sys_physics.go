@@ -9,9 +9,9 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// Physics is a system that applies an impulse to all Box2D bodies
+// SysPhysics is a system that applies an impulse to all Box2D bodies
 // that are within a certain distance to the mouse.
-type Physics struct {
+type SysPhysics struct {
 	MinFleeDistance float64
 	MaxFleeDistance float64
 	ForceScale      float64
@@ -20,13 +20,13 @@ type Physics struct {
 }
 
 // Initialize the system
-func (s *Physics) Initialize(world *ecs.World) {
+func (s *SysPhysics) Initialize(world *ecs.World) {
 	s.mouse = generic.NewResource[common.Mouse](world)
 	s.filter = *generic.NewFilter1[Body]()
 }
 
 // Update the system
-func (s *Physics) Update(world *ecs.World) {
+func (s *SysPhysics) Update(world *ecs.World) {
 	mouse := s.mouse.Get()
 	if !mouse.IsInside {
 		return
@@ -51,4 +51,4 @@ func (s *Physics) Update(world *ecs.World) {
 }
 
 // Finalize the system
-func (s *Physics) Finalize(world *ecs.World) {}
+func (s *SysPhysics) Finalize(world *ecs.World) {}

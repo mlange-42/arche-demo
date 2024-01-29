@@ -5,14 +5,14 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitNest is a system to initialize an ant nest, and to populate it with ants.
-type InitNest struct {
+// SysInitNest is a system to initialize an ant nest, and to populate it with ants.
+type SysInitNest struct {
 	AntsPerNest int
 	nest        Nest
 }
 
 // Initialize the system
-func (s *InitNest) Initialize(world *ecs.World) {
+func (s *SysInitNest) Initialize(world *ecs.World) {
 	gridRes := generic.NewResource[Patches](world)
 	grid := gridRes.Get()
 
@@ -36,7 +36,7 @@ func (s *InitNest) Initialize(world *ecs.World) {
 }
 
 // Update the system
-func (s *InitNest) Update(world *ecs.World) {}
+func (s *SysInitNest) Update(world *ecs.World) {}
 
 // Finalize the system
-func (s *InitNest) Finalize(world *ecs.World) {}
+func (s *SysInitNest) Finalize(world *ecs.World) {}

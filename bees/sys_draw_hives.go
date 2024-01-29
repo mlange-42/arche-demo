@@ -11,8 +11,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawHives is a system for drawing hives as pie charts over the activities of related bees.
-type DrawHives struct {
+// UISysDrawHives is a system for drawing hives as pie charts over the activities of related bees.
+type UISysDrawHives struct {
 	canvas     generic.Resource[common.Image]
 	hiveFilter generic.Filter1[Position]
 
@@ -23,7 +23,7 @@ type DrawHives struct {
 }
 
 // InitializeUI the system
-func (s *DrawHives) InitializeUI(world *ecs.World) {
+func (s *UISysDrawHives) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.Image](world)
 	s.hiveFilter = *generic.NewFilter1[Position]().With(generic.T[Hive]())
 
@@ -51,7 +51,7 @@ func (s *DrawHives) InitializeUI(world *ecs.World) {
 }
 
 // UpdateUI the system
-func (s *DrawHives) UpdateUI(world *ecs.World) {
+func (s *UISysDrawHives) UpdateUI(world *ecs.World) {
 	canvas := s.canvas.Get()
 	img := canvas.Image
 	gc := draw2dimg.NewGraphicContext(img)
@@ -66,7 +66,7 @@ func (s *DrawHives) UpdateUI(world *ecs.World) {
 	}
 }
 
-func (s *DrawHives) countEntities(w *ecs.World, hive ecs.Entity) {
+func (s *UISysDrawHives) countEntities(w *ecs.World, hive ecs.Entity) {
 	for i, mask := range s.masks {
 		filter := ecs.NewRelationFilter(mask, hive)
 		q := w.Query(&filter)
@@ -75,7 +75,7 @@ func (s *DrawHives) countEntities(w *ecs.World, hive ecs.Entity) {
 	}
 }
 
-func (s *DrawHives) drawPieChart(gc *draw2dimg.GraphicContext, pos Position, rad float64, counts []int) {
+func (s *UISysDrawHives) drawPieChart(gc *draw2dimg.GraphicContext, pos Position, rad float64, counts []int) {
 	gc.SetStrokeColor(color.RGBA{40, 40, 40, 255})
 	gc.SetLineWidth(1.0)
 
@@ -105,7 +105,7 @@ func drawSegment(path draw2d.PathBuilder, cx, cy, radius, startAngle, angle floa
 }
 
 // PostUpdateUI the system
-func (s *DrawHives) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawHives) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawHives) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawHives) FinalizeUI(world *ecs.World) {}

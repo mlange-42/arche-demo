@@ -12,11 +12,11 @@ type coord struct {
 	Y int
 }
 
-// InitGrid is a system to create a network on a grid.
-type InitGrid struct{}
+// SysInitGrid is a system to create a network on a grid.
+type SysInitGrid struct{}
 
 // Initialize the system
-func (s *InitGrid) Initialize(world *ecs.World) {
+func (s *SysInitGrid) Initialize(world *ecs.World) {
 	gridRes := generic.NewResource[Patches](world)
 	grid := gridRes.Get()
 
@@ -73,7 +73,7 @@ func (s *InitGrid) Initialize(world *ecs.World) {
 }
 
 // Update the system
-func (s *InitGrid) Update(world *ecs.World) {}
+func (s *SysInitGrid) Update(world *ecs.World) {}
 
 // Finalize the system
-func (s *InitGrid) Finalize(world *ecs.World) {}
+func (s *SysInitGrid) Finalize(world *ecs.World) {}
