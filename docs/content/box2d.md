@@ -9,13 +9,6 @@ description: |
 ---
 
 {{< rawhtml >}}
-<style>
-    #loading {
-        width: 880px;
-        height: 480px;
-    }
-</style>
-
 {{< canvas box2d 880 480 >}}
 
 <p id="instructions">Move the mouse over the canvas! Click to pause and resume!</p>

@@ -25,22 +25,21 @@ type MoveEntities struct {
 	MaxFleeDistance float64
 	// Dampening of entity movement.
 	Damp    float64
-	mouse   generic.Resource[common.PauseMouseListener]
+	mouse   generic.Resource[common.Mouse]
 	filter  generic.Filter3[Position, Velocity, Target]
 	counter uint64
 }
 
 // Initialize the system
 func (s *MoveEntities) Initialize(world *ecs.World) {
-	s.mouse = generic.NewResource[common.PauseMouseListener](world)
+	s.mouse = generic.NewResource[common.Mouse](world)
 	s.filter = *generic.NewFilter3[Position, Velocity, Target]()
 }
 
 // Update the system
 func (s *MoveEntities) Update(world *ecs.World) {
-	listener := s.mouse.Get()
-	mouse := listener.Mouse
-	mouseInside := listener.MouseInside
+	mouse := s.mouse.Get()
+	mouseInside := mouse.IsInside
 
 	minDist := s.MinFleeDistance
 	distRange := s.MaxFleeDistance - minDist
@@ -55,7 +54,7 @@ func (s *MoveEntities) Update(world *ecs.World) {
 		vel.Y += attrY * s.MaxAcc
 
 		if mouseInside {
-			repX, repY, repDist := common.Norm(pos.X-mouse.X, pos.Y-mouse.Y)
+			repX, repY, repDist := common.Norm(pos.X-float64(mouse.X), pos.Y-float64(mouse.Y))
 			repFac := math.Min(1.0-((repDist-minDist)/distRange), 1.0)
 			if repFac > 0 {
 				vel.X += repX * s.MaxAccFlee * repFac
