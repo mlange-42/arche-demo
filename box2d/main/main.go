@@ -37,19 +37,19 @@ func main() {
 	}
 	ecs.AddResource(&game.Model.World, &images)
 
-	game.Model.AddSystem(&b2d.InitEntities{
+	game.Model.AddSystem(&b2d.SysInitEntities{
 		Count:       120,
 		Restitution: 0.8,
 	})
-	game.Model.AddSystem(&b2d.Physics{
+	game.Model.AddSystem(&b2d.SysPhysics{
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		ForceScale:      10,
 	})
-	game.Model.AddSystem(&b2d.B2Physics{})
+	game.Model.AddSystem(&b2d.SysB2Physics{})
 
-	game.Model.AddUISystem(&b2d.ManagePause{})
-	game.Model.AddUISystem(&b2d.DrawEntities{})
+	game.Model.AddUISystem(&b2d.UISysManagePause{})
+	game.Model.AddUISystem(&b2d.UISysDrawEntities{})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {

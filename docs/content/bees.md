@@ -1,5 +1,6 @@
 ---
 title: Bee Hives
+wasm: bees
 description: |
     A stylized model of bee foraging and scouting.
 
@@ -15,7 +16,7 @@ description: |
 ---
 
 {{< rawhtml >}}
-{{< canvas bees 880 480 >}}
+{{< canvas 880 480 >}}
 
 <p id="instructions">Move the mouse over the canvas! Click to pause and resume!</p>
 <p class="tt">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a>

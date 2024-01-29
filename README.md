@@ -33,3 +33,10 @@ Then, run individual examples like this:
 ```
 go run ./<example>/main
 ```
+
+## Dependencies
+
+Due to the use of [Ebitengine](https://github.com/hajimehoshi/ebiten) for rendering, the dependencies of [go-gl/gl](https://github.com/go-gl/gl) and [go-gl/glfw](https://github.com/go-gl/glfw) apply. For Ubuntu/Debian-based systems, these are:
+
+- `libgl1-mesa-dev`
+- `xorg-dev`

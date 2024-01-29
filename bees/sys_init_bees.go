@@ -8,14 +8,14 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitBees is a system that creates a number of bee entities per hive.
-type InitBees struct {
+// SysInitBees is a system that creates a number of bee entities per hive.
+type SysInitBees struct {
 	// Target number of bees per hive.
 	CountPerHive int
 }
 
 // Initialize the system
-func (s *InitBees) Initialize(world *ecs.World) {
+func (s *SysInitBees) Initialize(world *ecs.World) {
 	builder := generic.NewMap5[Position, Direction, HomeHive, ActInHive, Random256](world, generic.T[HomeHive]())
 	posMap := generic.NewMap1[Position](world)
 
@@ -42,7 +42,7 @@ func (s *InitBees) Initialize(world *ecs.World) {
 }
 
 // Update the system
-func (s *InitBees) Update(world *ecs.World) {}
+func (s *SysInitBees) Update(world *ecs.World) {}
 
 // Finalize the system
-func (s *InitBees) Finalize(world *ecs.World) {}
+func (s *SysInitBees) Finalize(world *ecs.World) {}

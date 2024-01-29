@@ -8,14 +8,14 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitHives is a system that creates a number of randomly places hives.
-type InitHives struct {
+// SysInitHives is a system that creates a number of randomly places hives.
+type SysInitHives struct {
 	// Target number of hives.
 	Count int
 }
 
 // Initialize the system
-func (s *InitHives) Initialize(world *ecs.World) {
+func (s *SysInitHives) Initialize(world *ecs.World) {
 	canvasRes := generic.NewResource[common.Image](world)
 	canvas := canvasRes.Get()
 	w := float64(canvas.Width)
@@ -34,7 +34,7 @@ func (s *InitHives) Initialize(world *ecs.World) {
 }
 
 // Update the system
-func (s *InitHives) Update(world *ecs.World) {}
+func (s *SysInitHives) Update(world *ecs.World) {}
 
 // Finalize the system
-func (s *InitHives) Finalize(world *ecs.World) {}
+func (s *SysInitHives) Finalize(world *ecs.World) {}

@@ -11,8 +11,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawNest is a system that draws the ant nest.
-type DrawNest struct {
+// UISysDrawNest is a system that draws the ant nest.
+type UISysDrawNest struct {
 	canvas generic.Resource[common.Image]
 	nest   generic.Resource[Nest]
 
@@ -23,7 +23,7 @@ type DrawNest struct {
 }
 
 // InitializeUI the system
-func (s *DrawNest) InitializeUI(world *ecs.World) {
+func (s *UISysDrawNest) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.Image](world)
 	s.nest = generic.NewResource[Nest](world)
 
@@ -47,7 +47,7 @@ func (s *DrawNest) InitializeUI(world *ecs.World) {
 }
 
 // UpdateUI the system
-func (s *DrawNest) UpdateUI(world *ecs.World) {
+func (s *UISysDrawNest) UpdateUI(world *ecs.World) {
 	nest := s.nest.Get()
 	canvas := s.canvas.Get()
 	img := canvas.Image
@@ -58,12 +58,12 @@ func (s *DrawNest) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *DrawNest) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawNest) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawNest) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawNest) FinalizeUI(world *ecs.World) {}
 
-func (s *DrawNest) countEntities(w *ecs.World) {
+func (s *UISysDrawNest) countEntities(w *ecs.World) {
 	for i, mask := range s.masks {
 		q := w.Query(mask)
 		s.counts[i] = q.Count()
@@ -71,7 +71,7 @@ func (s *DrawNest) countEntities(w *ecs.World) {
 	}
 }
 
-func (s *DrawNest) drawPieChart(gc *draw2dimg.GraphicContext, pos Position, rad float64, counts []int) {
+func (s *UISysDrawNest) drawPieChart(gc *draw2dimg.GraphicContext, pos Position, rad float64, counts []int) {
 	gc.SetStrokeColor(color.RGBA{40, 40, 40, 255})
 	gc.SetLineWidth(1.0)
 

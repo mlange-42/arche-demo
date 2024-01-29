@@ -10,15 +10,15 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawEntities is a system that draws entities as white pixels on an [Image] resource.
-type DrawEntities struct {
+// UISysDrawEntities is a system that draws entities as white pixels on an [Image] resource.
+type UISysDrawEntities struct {
 	canvas generic.Resource[common.EbitenImage]
 	filter generic.Filter1[Position]
 	image  *image.RGBA
 }
 
 // InitializeUI the system
-func (s *DrawEntities) InitializeUI(world *ecs.World) {
+func (s *UISysDrawEntities) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.filter = *generic.NewFilter1[Position]()
 
@@ -27,7 +27,7 @@ func (s *DrawEntities) InitializeUI(world *ecs.World) {
 }
 
 // UpdateUI the system
-func (s *DrawEntities) UpdateUI(world *ecs.World) {
+func (s *UISysDrawEntities) UpdateUI(world *ecs.World) {
 	black := color.RGBA{0, 0, 0, 255}
 	white := color.RGBA{255, 255, 255, 255}
 
@@ -48,7 +48,7 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *DrawEntities) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawEntities) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawEntities) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawEntities) FinalizeUI(world *ecs.World) {}

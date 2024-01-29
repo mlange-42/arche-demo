@@ -9,10 +9,10 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// MoveEntities is a system that moves entities around.
+// SysMoveEntities is a system that moves entities around.
 // Entities accelerate towards their [Target] position,
 // as well as away from the mouse if it is within a certain distance.
-type MoveEntities struct {
+type SysMoveEntities struct {
 	// Maximum speed of an entity.
 	MaxSpeed float64
 	// Maximum acceleration of an entity.
@@ -31,13 +31,13 @@ type MoveEntities struct {
 }
 
 // Initialize the system
-func (s *MoveEntities) Initialize(world *ecs.World) {
+func (s *SysMoveEntities) Initialize(world *ecs.World) {
 	s.mouse = generic.NewResource[common.Mouse](world)
 	s.filter = *generic.NewFilter3[Position, Velocity, Target]()
 }
 
 // Update the system
-func (s *MoveEntities) Update(world *ecs.World) {
+func (s *SysMoveEntities) Update(world *ecs.World) {
 	mouse := s.mouse.Get()
 	mouseInside := mouse.IsInside
 
@@ -85,4 +85,4 @@ func (s *MoveEntities) Update(world *ecs.World) {
 }
 
 // Finalize the system
-func (s *MoveEntities) Finalize(world *ecs.World) {}
+func (s *SysMoveEntities) Finalize(world *ecs.World) {}

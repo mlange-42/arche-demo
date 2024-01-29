@@ -9,14 +9,14 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// InitEntities is a system to create Box2D bodies and associated ECS entities.
-type InitEntities struct {
+// SysInitEntities is a system to create Box2D bodies and associated ECS entities.
+type SysInitEntities struct {
 	Count       int
 	Restitution float64
 }
 
 // Initialize the system
-func (s *InitEntities) Initialize(world *ecs.World) {
+func (s *SysInitEntities) Initialize(world *ecs.World) {
 	worldRes := generic.NewResource[BoxWorld](world)
 	w := worldRes.Get().World
 	canvasRes := generic.NewResource[common.EbitenImage](world)
@@ -67,7 +67,7 @@ func (s *InitEntities) Initialize(world *ecs.World) {
 }
 
 // Update the system
-func (s *InitEntities) Update(world *ecs.World) {}
+func (s *SysInitEntities) Update(world *ecs.World) {}
 
 // Finalize the system
-func (s *InitEntities) Finalize(world *ecs.World) {}
+func (s *SysInitEntities) Finalize(world *ecs.World) {}

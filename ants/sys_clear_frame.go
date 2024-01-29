@@ -10,19 +10,19 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysClearFrame is a simple system that clears the [Image] resource
+// UISysClearFrame is a simple system that clears the [Image] resource
 // before other systems draw on it.
-type SysClearFrame struct {
+type UISysClearFrame struct {
 	canvas generic.Resource[common.Image]
 }
 
 // InitializeUI the system
-func (s *SysClearFrame) InitializeUI(world *ecs.World) {
+func (s *UISysClearFrame) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.Image](world)
 }
 
 // UpdateUI the system
-func (s *SysClearFrame) UpdateUI(world *ecs.World) {
+func (s *UISysClearFrame) UpdateUI(world *ecs.World) {
 	black := image.Uniform{color.RGBA{0, 0, 0, 255}}
 
 	canvas := s.canvas.Get()
@@ -33,7 +33,7 @@ func (s *SysClearFrame) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *SysClearFrame) PostUpdateUI(world *ecs.World) {}
+func (s *UISysClearFrame) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *SysClearFrame) FinalizeUI(world *ecs.World) {}
+func (s *UISysClearFrame) FinalizeUI(world *ecs.World) {}

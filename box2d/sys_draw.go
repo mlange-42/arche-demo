@@ -9,22 +9,22 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// DrawEntities is a system to draw Box2D bodies on an [Image] resource.
-type DrawEntities struct {
+// UISysDrawEntities is a system to draw Box2D bodies on an [Image] resource.
+type UISysDrawEntities struct {
 	canvas generic.Resource[common.EbitenImage]
 	images generic.Resource[Images]
 	filter generic.Filter1[Body]
 }
 
 // InitializeUI the system
-func (s *DrawEntities) InitializeUI(world *ecs.World) {
+func (s *UISysDrawEntities) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.images = generic.NewResource[Images](world)
 	s.filter = *generic.NewFilter1[Body]()
 }
 
 // UpdateUI the system
-func (s *DrawEntities) UpdateUI(world *ecs.World) {
+func (s *UISysDrawEntities) UpdateUI(world *ecs.World) {
 	grey := color.RGBA{160, 160, 160, 255}
 
 	canvas := s.canvas.Get()
@@ -41,7 +41,7 @@ func (s *DrawEntities) UpdateUI(world *ecs.World) {
 }
 
 // PostUpdateUI the system
-func (s *DrawEntities) PostUpdateUI(world *ecs.World) {}
+func (s *UISysDrawEntities) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *DrawEntities) FinalizeUI(world *ecs.World) {}
+func (s *UISysDrawEntities) FinalizeUI(world *ecs.World) {}

@@ -36,8 +36,8 @@ func main() {
 	colors := ants.NewColors()
 	ecs.AddResource(&game.Model.World, &colors)
 
-	game.Model.AddSystem(&ants.InitGrid{})
-	game.Model.AddSystem(&ants.InitNest{
+	game.Model.AddSystem(&ants.SysInitGrid{})
+	game.Model.AddSystem(&ants.SysInitNest{
 		AntsPerNest: 1000,
 	})
 
@@ -74,12 +74,12 @@ func main() {
 		TraceDecay:   0.95,
 	})
 
-	game.Model.AddUISystem(&ants.ManagePause{})
-	game.Model.AddUISystem(&ants.SysClearFrame{})
-	game.Model.AddUISystem(&ants.DrawResources{})
-	game.Model.AddUISystem(&ants.DrawAnts{})
-	game.Model.AddUISystem(&ants.DrawNest{})
-	game.Model.AddUISystem(&ants.SysRepaint{})
+	game.Model.AddUISystem(&ants.UISysManagePause{})
+	game.Model.AddUISystem(&ants.UISysClearFrame{})
+	game.Model.AddUISystem(&ants.UISysDrawResources{})
+	game.Model.AddUISystem(&ants.UISysDrawAnts{})
+	game.Model.AddUISystem(&ants.UISysDrawNest{})
+	game.Model.AddUISystem(&ants.UISysRepaint{})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {
