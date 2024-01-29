@@ -1,80 +1,88 @@
 package main
 
 import (
+	"image"
+	"log"
+
 	"github.com/mlange-42/arche-demo/ants"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
 
-var cvs common.Canvas
-var mod *model.Model
+const (
+	screenWidth  = 880
+	screenHeight = 480
+)
 
 func main() {
-	mod = model.New()
-	mod.FPS = 60
-	mod.TPS = 60
+	game := common.NewGame(
+		model.New(), screenWidth, screenHeight,
+	)
 
-	cvs, _ = common.NewCanvas("canvas-container", 880, 480, true)
+	ecs.AddResource(&game.Model.World, &game.Screen)
+	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	image := common.Image{Image: cvs.Image(), Width: cvs.Width(), Height: cvs.Height(), Redraw: cvs.Redraw}
-	ecs.AddResource(&mod.World, &image)
+	image := common.Image{
+		Image:  image.NewRGBA(game.Screen.Image.Bounds()),
+		Width:  game.Screen.Width,
+		Height: game.Screen.Height,
+	}
+	ecs.AddResource(&game.Model.World, &image)
 
-	grid := ants.NewPatches(image.Width, image.Height, 10)
-	ecs.AddResource(&mod.World, &grid)
-
-	listener := common.PauseMouseListener{}
-	cvs.SetListener(&listener)
-	ecs.AddResource(&mod.World, &listener)
+	grid := ants.NewPatches(game.Screen.Width, game.Screen.Height, 10)
+	ecs.AddResource(&game.Model.World, &grid)
 
 	colors := ants.NewColors()
-	ecs.AddResource(&mod.World, &colors)
+	ecs.AddResource(&game.Model.World, &colors)
 
-	mod.AddSystem(&ants.InitGrid{})
-	mod.AddSystem(&ants.InitNest{
+	game.Model.AddSystem(&ants.InitGrid{})
+	game.Model.AddSystem(&ants.InitNest{
 		AntsPerNest: 1000,
 	})
 
-	mod.AddSystem(&ants.SysResources{
+	game.Model.AddSystem(&ants.SysResources{
 		Count: 24,
 	})
-	mod.AddSystem(&ants.SysDecay{
+	game.Model.AddSystem(&ants.SysDecay{
 		Persistence: 0.99,
 	})
-	mod.AddSystem(&ants.SysNestDecisions{
+	game.Model.AddSystem(&ants.SysNestDecisions{
 		ReleaseInterval:  8,
 		ReleaseCount:     1,
 		ScoutProbability: 0.1,
 		ProbExponent:     0.6,
 	})
-	mod.AddSystem(&ants.SysMoveAnts{
+	game.Model.AddSystem(&ants.SysMoveAnts{
 		MaxSpeed: 1.0,
 	})
-	mod.AddSystem(&ants.SysScouting{
+	game.Model.AddSystem(&ants.SysScouting{
 		MaxCollect:    0.001,
 		TraceDecay:    0.95,
 		MaxSearchTime: 600,
 	})
-	mod.AddSystem(&ants.SysForaging{
+	game.Model.AddSystem(&ants.SysForaging{
 		MaxCollect:    0.001,
 		ProbExponent:  1.0,
 		RandomProb:    0.05,
 		TraceDecay:    0.95,
 		MaxSearchTime: 300,
 	})
-	mod.AddSystem(&ants.SysReturning{
+	game.Model.AddSystem(&ants.SysReturning{
 		ProbExponent: 1.0,
 		RandomProb:   0.05,
 		TraceDecay:   0.95,
 	})
 
-	mod.AddUISystem(&ants.ManagePause{})
-	mod.AddUISystem(&ants.SysClearFrame{})
-	mod.AddUISystem(&ants.DrawResources{})
-	mod.AddUISystem(&ants.DrawAnts{})
-	mod.AddUISystem(&ants.DrawNest{})
-	mod.AddUISystem(&ants.SysRepaint{})
+	game.Model.AddUISystem(&ants.ManagePause{})
+	game.Model.AddUISystem(&ants.SysClearFrame{})
+	game.Model.AddUISystem(&ants.DrawResources{})
+	game.Model.AddUISystem(&ants.DrawAnts{})
+	game.Model.AddUISystem(&ants.DrawNest{})
+	game.Model.AddUISystem(&ants.SysRepaint{})
 
-	println("Running the model")
-	mod.Run()
+	game.Initialize()
+	if err := game.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
