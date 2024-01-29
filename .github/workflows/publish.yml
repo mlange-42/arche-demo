@@ -34,6 +34,7 @@ jobs:
           go build -tags tiny -o docs/static/wasm/logo.wasm ./logo/main
           go build -tags tiny -o docs/static/wasm/box2d.wasm ./box2d/main
           go build -tags tiny -o docs/static/wasm/bees.wasm ./bees/main
+          go build -tags tiny -o docs/static/wasm/ants.wasm ./ants/main
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2

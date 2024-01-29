@@ -30,6 +30,7 @@ jobs:
           go build -o test/home.wasm ./logo/main
           go build -o test/box2d.wasm ./box2d/main
           go build -o test/bees.wasm ./bees/main
+          go build -o test/ants.wasm ./ants/main
 
   test:
     name: Run tests
