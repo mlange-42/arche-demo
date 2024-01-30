@@ -19,15 +19,24 @@ func main() {
 		model.New(), screenWidth, screenHeight,
 	)
 
-	grass := evolution.NewGrass(screenWidth, screenHeight, 8)
+	grass := evolution.NewGrass(screenWidth, screenHeight, 4)
 	ecs.AddResource(&game.Model.World, &grass)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	game.Model.AddSystem(&evolution.SysInitGrass{})
+	game.Model.AddSystem(&evolution.SysInitGrass{
+		Frequency: 0.1,
+		Octaves:   5,
+		Cutoff:    0.5,
+	})
 	game.Model.AddSystem(&evolution.SysInitEntities{
-		Count: 1000,
+		Count: 10000,
+	})
+
+	game.Model.AddSystem(&evolution.SysGrowGrass{
+		Interval: 4,
+		BaseRate: 0.01,
 	})
 
 	game.Model.AddUISystem(&evolution.UISysManagePause{})

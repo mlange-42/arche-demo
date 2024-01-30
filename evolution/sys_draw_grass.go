@@ -36,11 +36,9 @@ func (s *UISysDrawGrass) UpdateUI(world *ecs.World) {
 
 	w, h := grass.Width(), grass.Height()
 
-	sum := float32(0.0)
 	for x := 0; x < w; x++ {
 		for y := 0; y < h; y++ {
 			v := grass.Get(x, y)
-			sum += v
 			col := color.RGBA{R: 0, G: uint8(v * 127), B: 0, A: 255}
 			s.image.Set(x, y, col)
 		}
