@@ -10,7 +10,7 @@ type canvasHelper struct {
 	mouseInside bool
 }
 
-func newCanvasHelper() *canvasHelper {
+func newCanvasHelper(width, height int) *canvasHelper {
 	doc := js.Global().Get("document")
 	canvas := doc.Call("getElementsByTagName", "canvas").Index(0)
 

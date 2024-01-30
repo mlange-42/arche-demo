@@ -22,7 +22,7 @@ func NewGame(mod *model.Model, width, height int) Game {
 		Screen: EbitenImage{Image: ebiten.NewImage(width, height), Width: width, Height: height},
 		width:  width,
 		height: height,
-		canvas: newCanvasHelper(),
+		canvas: newCanvasHelper(width, height),
 	}
 }
 
@@ -49,7 +49,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 func (g *Game) Update() error {
 	g.updateMouse()
 
-	g.Model.UpdateSystems()
+	g.Model.Update()
 	return nil
 }
 
@@ -58,7 +58,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.updateMouse()
 
 	g.Screen.Image.Clear()
-	g.Model.UpdateUISystems()
+	g.Model.UpdateUI()
 
 	options := ebiten.DrawImageOptions{}
 	screen.DrawImage(g.Screen.Image, &options)

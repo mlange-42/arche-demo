@@ -59,14 +59,15 @@ func main() {
 	game.Model.AddSystem(&ants.SysScouting{
 		MaxCollect:    0.001,
 		TraceDecay:    0.95,
-		MaxSearchTime: 600,
+		MaxSearchTime: 1200,
 	})
 	game.Model.AddSystem(&ants.SysForaging{
-		MaxCollect:    0.001,
-		ProbExponent:  1.0,
-		RandomProb:    0.05,
-		TraceDecay:    0.95,
-		MaxSearchTime: 300,
+		MaxCollect:       0.001,
+		ProbExponent:     1.0,
+		RandomProb:       0.05,
+		TraceDecay:       0.95,
+		MaxSearchTime:    300,
+		ScoutProbability: 0.05,
 	})
 	game.Model.AddSystem(&ants.SysReturning{
 		ProbExponent: 1.0,

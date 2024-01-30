@@ -12,16 +12,19 @@ import (
 
 // SysForaging is a system that performs forager decisions.
 type SysForaging struct {
-	MaxCollect    float64
-	ProbExponent  float64
-	RandomProb    float64
-	TraceDecay    float64
-	MaxSearchTime int
+	MaxCollect       float64
+	ProbExponent     float64
+	RandomProb       float64
+	TraceDecay       float64
+	MaxSearchTime    int
+	ScoutProbability float64
 
 	time        generic.Resource[resource.Tick]
 	filter      generic.Filter3[AntEdge, ActForage, Position]
 	antEdgeMap  generic.Map1[AntEdge]
 	returnMap   generic.Map1[ActReturn]
+	scoutMap    generic.Map1[ActScout]
+	forageMap   generic.Map1[ActForage]
 	edgeMap     generic.Map2[Edge, Trace]
 	edgeGeomMap generic.Map1[EdgeGeometry]
 	nodeMap     generic.Map1[Node]
@@ -29,8 +32,10 @@ type SysForaging struct {
 	traceMap    generic.Map1[Trace]
 
 	exchangeReturn generic.Exchange
+	exchangeScout  generic.Exchange
 
 	toReturn []returnEntry
+	toScout  []ecs.Entity
 	probs    [8]float64
 }
 
@@ -41,6 +46,8 @@ func (s *SysForaging) Initialize(world *ecs.World) {
 
 	s.antEdgeMap = generic.NewMap1[AntEdge](world)
 	s.returnMap = generic.NewMap1[ActReturn](world)
+	s.scoutMap = generic.NewMap1[ActScout](world)
+	s.forageMap = generic.NewMap1[ActForage](world)
 	s.edgeMap = generic.NewMap2[Edge, Trace](world)
 	s.edgeGeomMap = generic.NewMap1[EdgeGeometry](world)
 	s.nodeMap = generic.NewMap1[Node](world)
@@ -50,8 +57,12 @@ func (s *SysForaging) Initialize(world *ecs.World) {
 	s.exchangeReturn = *generic.NewExchange(world).
 		Adds(generic.T[ActReturn]()).
 		Removes(generic.T[ActForage]())
+	s.exchangeScout = *generic.NewExchange(world).
+		Adds(generic.T[ActScout]()).
+		Removes(generic.T[ActForage]())
 
 	s.toReturn = make([]returnEntry, 0, 16)
+	s.toScout = make([]ecs.Entity, 0, 16)
 }
 
 // Update the system
@@ -80,7 +91,11 @@ func (s *SysForaging) Update(world *ecs.World) {
 			continue
 		}
 		if tick > forage.Start+int64(s.MaxSearchTime) {
-			s.toReturn = append(s.toReturn, returnEntry{Entity: query.Entity(), Load: 0})
+			if rand.Float64() < s.ScoutProbability {
+				s.toScout = append(s.toScout, query.Entity())
+			} else {
+				s.toReturn = append(s.toReturn, returnEntry{Entity: query.Entity(), Load: 0})
+			}
 			continue
 		}
 
@@ -93,6 +108,13 @@ func (s *SysForaging) Update(world *ecs.World) {
 		antEdge.UpdatePos(pos)
 	}
 
+	for _, e := range s.toScout {
+		start := s.forageMap.Get(e).Start
+		s.exchangeScout.Exchange(e)
+		scout := s.scoutMap.Get(e)
+		scout.Start = start
+	}
+
 	for _, e := range s.toReturn {
 		s.exchangeReturn.Exchange(e.Entity)
 		ret := s.returnMap.Get(e.Entity)
@@ -100,6 +122,7 @@ func (s *SysForaging) Update(world *ecs.World) {
 		ret.Load = e.Load
 	}
 
+	s.toScout = s.toScout[:0]
 	s.toReturn = s.toReturn[:0]
 }
 

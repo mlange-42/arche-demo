@@ -2,12 +2,21 @@
 
 package common
 
-type canvasHelper struct{}
+import "github.com/hajimehoshi/ebiten/v2"
 
-func newCanvasHelper() *canvasHelper {
-	return &canvasHelper{}
+type canvasHelper struct {
+	width  int
+	height int
+}
+
+func newCanvasHelper(width, height int) *canvasHelper {
+	return &canvasHelper{
+		width:  width,
+		height: height,
+	}
 }
 
 func (c *canvasHelper) isMouseInside() bool {
-	return true
+	x, y := ebiten.CursorPosition()
+	return x >= 0 && y >= 0 && x < c.width && y < c.height
 }
