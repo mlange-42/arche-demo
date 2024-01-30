@@ -19,7 +19,7 @@
 
 .sidebar-left:hover,
 .sidebar-left:active,
-.sidebar-left:focus {
+.sidebar-left:focus-within {
     left: 0;
 }
 
@@ -31,7 +31,7 @@
 
 .sidebar-right:hover,
 .sidebar-right:active,
-.sidebar-right:focus {
+.sidebar-right:focus-within {
     right: 0;
 }
 
