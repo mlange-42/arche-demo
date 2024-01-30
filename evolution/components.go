@@ -6,6 +6,14 @@ type Position struct {
 	Y float32
 }
 
+// Energy component
+type Energy struct {
+	Energy float32
+}
+
+// Grazing component
+type Grazing struct{}
+
 // Heading component
 type Heading struct {
 	Angle float32

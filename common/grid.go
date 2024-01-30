@@ -101,3 +101,8 @@ func (g *Grid[T]) CellCenter(x, y int) (float64, float64) {
 	return (float64(x) + 0.5) * cs,
 		(float64(y) + 0.5) * cs
 }
+
+// Contains returns whether the grid contains the given cell.
+func (g *Grid[T]) Contains(x, y int) bool {
+	return x >= 0 && y >= 0 && x < g.width && y < g.height
+}

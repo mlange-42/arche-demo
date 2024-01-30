@@ -38,6 +38,9 @@ func main() {
 		Interval: 4,
 		BaseRate: 0.01,
 	})
+	game.Model.AddSystem(&evolution.SysGrazing{
+		MaxUptake: 0.02,
+	})
 
 	game.Model.AddUISystem(&evolution.UISysManagePause{})
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})

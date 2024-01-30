@@ -18,17 +18,17 @@ func (s *SysInitEntities) Initialize(world *ecs.World) {
 	grassRes := generic.NewResource[Grass](world)
 	grass := grassRes.Get()
 
-	builder := generic.NewMap3[Position, Genes, Color](world)
+	builder := generic.NewMap5[Position, Energy, Genes, Color, Grazing](world)
 
-	cs := grass.Grass.Cellsize()
-	w, h := float32(grass.Grass.Width())*float32(cs), float32(grass.Grass.Height())*float32(cs)
+	cs := float32(grass.Grass.Cellsize())
+	w, h := float32(grass.Grass.Width())*cs, float32(grass.Grass.Height())*cs
 
 	query := builder.NewBatchQ(s.Count)
 	for query.Next() {
-		pos, genes, cols := query.Get()
+		pos, en, genes, cols, _ := query.Get()
 
-		pos.X = rand.Float32() * (w + 1)
-		pos.Y = rand.Float32() * (h + 1)
+		pos.X = rand.Float32() * w
+		pos.Y = rand.Float32() * h
 
 		genes.MaxAngle = (10 + rand.Float32()*80) * common.DegToRad
 		genes.MinGrass = rand.Float32()
@@ -38,6 +38,8 @@ func (s *SysInitEntities) Initialize(world *ecs.World) {
 		cols.R = uint8(60 + rand.Intn(120))
 		cols.G = uint8(60 + rand.Intn(120))
 		cols.B = uint8(60 + rand.Intn(120))
+
+		en.Energy = 0.2 + rand.Float32()*0.8
 	}
 }
 

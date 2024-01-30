@@ -4,6 +4,9 @@ import (
 	"github.com/mlange-42/arche-demo/common"
 )
 
+// GrasserCount resource.
+type GrasserCount = common.Grid[int32]
+
 // Grass resource.
 type Grass struct {
 	Grass  common.Grid[float32]
