@@ -18,6 +18,8 @@ github.com/mlange-42/arche v0.10.0 h1:fEFDAYMAnWa+xHc1oq4gVcA4PuEQOCGSRXSKITXawM
 github.com/mlange-42/arche v0.10.0/go.mod h1:gJ5J8vBreqrf4TcBomBFPGnWdE5P3qa4LtxYHn1gDcg=
 github.com/mlange-42/arche-model v0.7.0 h1:l8hcZXpENZBBGyrE5Ndczg7PXkvyzPlAGQ0iTjBziB4=
 github.com/mlange-42/arche-model v0.7.0/go.mod h1:Di0S5w5ljyZbD4NmcYV7otZ52mm+X71j35VKkf4FC/A=
+github.com/ojrac/opensimplex-go v1.0.2 h1:l4vs0D+JCakcu5OV0kJ99oEaWJfggSc9jiLpxaWvSzs=
+github.com/ojrac/opensimplex-go v1.0.2/go.mod h1:NwbXFFbXcdGgIFdiA7/REME+7n/lOf1TuEbLiZYOWnM=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.8.2 h1:+h33VjcLVPDHtOdpUCuF+7gSuG3yGIftsP1YvFihtJ8=

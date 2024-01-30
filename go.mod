@@ -10,6 +10,7 @@ require (
 	github.com/llgcode/draw2d v0.0.0-20231212091825-f55e0c776b44
 	github.com/mlange-42/arche v0.10.0
 	github.com/mlange-42/arche-model v0.7.0
+	github.com/ojrac/opensimplex-go v1.0.2
 )
 
 require (
