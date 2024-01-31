@@ -1,8 +1,11 @@
 package common
 
 import (
+	"math"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/mlange-42/arche-model/model"
+	"github.com/mlange-42/arche/generic"
 )
 
 // Game container
@@ -13,6 +16,9 @@ type Game struct {
 	width  int
 	height int
 	canvas *canvasHelper
+
+	frame uint64
+	speed generic.Resource[SimulationSpeed]
 }
 
 // NewGame returns a new game
@@ -23,6 +29,8 @@ func NewGame(mod *model.Model, width, height int) Game {
 		width:  width,
 		height: height,
 		canvas: newCanvasHelper(width, height),
+		frame:  0,
+		speed:  generic.NewResource[SimulationSpeed](&mod.World),
 	}
 }
 
@@ -47,9 +55,26 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 
 // Update the game.
 func (g *Game) Update() error {
-	g.updateMouse()
+	speed := 1.0
+	if g.speed.Has() {
+		exp := g.speed.Get().Exponent
+		speed = math.Pow(2, float64(exp))
+	}
+	if speed >= 1 {
+		iters := int(speed)
+		for i := 0; i < iters; i++ {
+			g.updateMouse()
+			g.Model.Update()
+		}
+	} else {
+		iters := int(1.0 / speed)
+		if g.frame%uint64(iters) == 0 {
+			g.updateMouse()
+			g.Model.Update()
+		}
+	}
 
-	g.Model.Update()
+	g.frame++
 	return nil
 }
 

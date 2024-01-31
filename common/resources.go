@@ -26,3 +26,9 @@ type Mouse struct {
 	X        int
 	Y        int
 }
+
+// SimulationSpeed resource.
+// The [Game] will adapt the simulation speed if the resource is present.
+type SimulationSpeed struct {
+	Exponent int
+}

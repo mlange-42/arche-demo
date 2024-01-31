@@ -88,3 +88,25 @@ func ClampInt(v, low, high int) int {
 	}
 	return v
 }
+
+// Clamp clamps to [low, high].
+func Clamp(v, low, high float64) float64 {
+	if v < low {
+		return low
+	}
+	if v > high {
+		return high
+	}
+	return v
+}
+
+// Clamp clamps to [low, high].
+func Clamp32(v, low, high float32) float32 {
+	if v < low {
+		return low
+	}
+	if v > high {
+		return high
+	}
+	return v
+}

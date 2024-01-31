@@ -4,6 +4,7 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -53,6 +54,8 @@ func (s *SysReproduction) Update(world *ecs.World) {
 			*col2 = *col
 
 			en2.Energy = enChild
+
+			s.mutate(genes2, col2)
 		}
 	}
 
@@ -61,3 +64,14 @@ func (s *SysReproduction) Update(world *ecs.World) {
 
 // Finalize the system
 func (s *SysReproduction) Finalize(world *ecs.World) {}
+
+func (s *SysReproduction) mutate(genes *Genes, color *Color) {
+	genes.MaxAngle = common.Clamp32(common.RadToDeg*genes.MaxAngle+float32(rand.NormFloat64()*3), 10, 90) * common.DegToRad
+	genes.MinGrass = common.Clamp32(genes.MinGrass+float32(rand.NormFloat64()*0.02), 0, 1)
+	genes.Invest = common.Clamp32(genes.Invest+float32(rand.NormFloat64()*0.02), 0, 1)
+	genes.Offspring = uint8(common.ClampInt(int(genes.Offspring)+rand.Intn(3)-1, 1, 10))
+
+	color.Color.R = uint8(common.ClampInt(int(color.Color.R)+rand.Intn(5)-2, 50, 250))
+	color.Color.G = uint8(common.ClampInt(int(color.Color.G)+rand.Intn(5)-2, 50, 250))
+	color.Color.B = uint8(common.ClampInt(int(color.Color.B)+rand.Intn(5)-2, 50, 250))
+}
