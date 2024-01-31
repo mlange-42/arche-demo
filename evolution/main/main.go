@@ -73,6 +73,9 @@ func main() {
 	game.Model.AddUISystem(&evolution.UISysManagePause{})
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})
 	game.Model.AddUISystem(&evolution.UISysDrawEntities{})
+	game.Model.AddUISystem(&evolution.UISysDrawScatter{
+		Interval: 60,
+	})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {
