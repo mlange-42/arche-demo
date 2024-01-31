@@ -6,6 +6,14 @@ import (
 	"math/rand"
 )
 
+// GeneNames for plotting.
+var GeneNames = [4]string{
+	"MaxAngle",
+	"MinGrass",
+	"Invest",
+	"Offspring",
+}
+
 // Position component
 type Position struct {
 	X float32

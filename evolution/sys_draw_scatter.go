@@ -4,12 +4,51 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"log"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
+
+var (
+	fontNormal font.Face
+	fontBig    font.Face
+)
+
+func init() {
+	tt, err := opentype.Parse(fonts.MPlus1pRegular_ttf)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	const dpi = 72
+	fontNormal, err = opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    16,
+		DPI:     dpi,
+		Hinting: font.HintingVertical,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fontBig, err = opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    24,
+		DPI:     dpi,
+		Hinting: font.HintingFull, // Use quantization to save glyph cache images.
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Adjust the line height.
+	fontBig = text.FaceWithLineHeight(fontBig, 54)
+}
 
 // UISysDrawScatter is a system that draws a scatter plot of entity [Genes].
 type UISysDrawScatter struct {
@@ -18,11 +57,12 @@ type UISysDrawScatter struct {
 	YIndex      int
 	ImageOffset Position
 
-	canvas      generic.Resource[common.EbitenImage]
-	filter      generic.Filter2[Genotype, Color]
-	image       *image.RGBA
-	eimage      *ebiten.Image
-	drawOptions ebiten.DrawImageOptions
+	canvas       generic.Resource[common.EbitenImage]
+	filter       generic.Filter2[Genotype, Color]
+	image        *image.RGBA
+	eimage       *ebiten.Image
+	drawOptions  ebiten.DrawImageOptions
+	yAxisOptions ebiten.DrawImageOptions
 
 	frame int
 }
@@ -41,6 +81,13 @@ func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 		GeoM:   geom,
 		Filter: ebiten.FilterNearest,
 	}
+
+	geom2 := ebiten.GeoM{}
+	geom2.Rotate(-0.5 * math.Pi)
+	geom2.Translate(16, 180)
+	s.yAxisOptions = ebiten.DrawImageOptions{
+		GeoM: geom2,
+	}
 }
 
 // UpdateUI the system
@@ -57,6 +104,7 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 
 	bg := color.RGBA{20, 20, 20, 255}
 	plotBg := color.RGBA{0, 0, 0, 255}
+	white := color.RGBA{255, 255, 255, 255}
 
 	var xOff, yOff float32 = 20.0, 180.0
 	var xScale, yScale float32 = 170.0, -170.0
@@ -75,6 +123,9 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 		s.image.SetRGBA(int(x), int(y), col.Color)
 	}
 	s.eimage.WritePixels(s.image.Pix)
+
+	text.Draw(s.eimage, GeneNames[s.XIndex], fontNormal, int(xOff), int(yOff)+16, white)
+	text.DrawWithOptions(s.eimage, GeneNames[s.YIndex], fontNormal, &s.yAxisOptions)
 
 	screen.DrawImage(s.eimage, &s.drawOptions)
 }
