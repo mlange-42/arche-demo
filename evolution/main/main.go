@@ -38,6 +38,7 @@ func main() {
 		InitialCount:    5,
 		ReleaseInterval: 60,
 		ReleaseCount:    1,
+		RandomGenes:     false,
 	})
 
 	game.Model.AddSystem(&evolution.SysGrowGrassLogistic{
@@ -54,10 +55,11 @@ func main() {
 	game.Model.AddSystem(&evolution.SysDecisions{})
 	game.Model.AddSystem(&evolution.SysReproduction{
 		MatingTrials:           10,
-		MaxMatingDiff:          10,
-		CrossProb:              0.1,
-		MutationMagnitude:      0.02,
-		ColorMutationMagnitude: 4,
+		MaxMatingDiff:          15,
+		CrossProb:              0.2,
+		MutationProbability:    0.5,
+		MutationMagnitude:      0.025,
+		ColorMutationMagnitude: 8,
 		AllowAsexual:           true,
 		HatchRadius:            3.0,
 	})
@@ -86,12 +88,16 @@ func main() {
 		Interval:    60,
 		XIndex:      0,
 		YIndex:      1,
+		Width:       200,
+		Height:      200,
 		ImageOffset: evolution.Position{X: 680, Y: 0},
 	})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
 		Interval:    60,
 		XIndex:      2,
 		YIndex:      3,
+		Width:       200,
+		Height:      200,
 		ImageOffset: evolution.Position{X: 680, Y: 200},
 	})
 

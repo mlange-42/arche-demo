@@ -56,13 +56,19 @@ type UISysDrawScatter struct {
 	XIndex      int
 	YIndex      int
 	ImageOffset Position
+	Width       int
+	Height      int
 
 	canvas       generic.Resource[common.EbitenImage]
 	filter       generic.Filter2[Genotype, Color]
 	image        *image.RGBA
 	eimage       *ebiten.Image
 	drawOptions  ebiten.DrawImageOptions
+	xAxisOptions ebiten.DrawImageOptions
 	yAxisOptions ebiten.DrawImageOptions
+
+	offset common.Vec2i
+	scale  common.Vec2i
 
 	frame int
 }
@@ -82,11 +88,19 @@ func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 		Filter: ebiten.FilterNearest,
 	}
 
-	geom2 := ebiten.GeoM{}
-	geom2.Rotate(-0.5 * math.Pi)
-	geom2.Translate(16, 180)
+	s.offset = common.Vec2i{X: 20, Y: s.Height - 20}
+	s.scale = common.Vec2i{X: s.Width - 30, Y: -(s.Height - 30)}
+
+	geomX := ebiten.GeoM{}
+	geomX.Translate(0, 16)
 	s.yAxisOptions = ebiten.DrawImageOptions{
-		GeoM: geom2,
+		GeoM: geomX,
+	}
+	geomY := ebiten.GeoM{}
+	geomY.Rotate(-0.5 * math.Pi)
+	geomY.Translate(16, 180)
+	s.yAxisOptions = ebiten.DrawImageOptions{
+		GeoM: geomY,
 	}
 }
 
@@ -106,25 +120,25 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 	plotBg := color.RGBA{0, 0, 0, 255}
 	white := color.RGBA{255, 255, 255, 255}
 
-	var xOff, yOff float32 = 20.0, 180.0
-	var xScale, yScale float32 = 170.0, -170.0
+	off := s.offset
+	sc := s.scale
 
 	// Clear the image
 	draw.Draw(s.image, s.image.Bounds(), &image.Uniform{bg}, image.Point{}, draw.Src)
-	draw.Draw(s.image, image.Rect(int(xOff), int(yOff), int(xOff+xScale), int(yOff+yScale)), &image.Uniform{plotBg}, image.Point{}, draw.Src)
+	draw.Draw(s.image, image.Rect(off.X, off.Y, int(off.X+sc.X), int(off.Y+sc.Y)), &image.Uniform{plotBg}, image.Point{}, draw.Src)
 
 	// Draw pixel entities
 	query := s.filter.Query(world)
 	for query.Next() {
 		genes, col := query.Get()
-		x := genes.Genes[s.XIndex]*xScale + xOff
-		y := genes.Genes[s.YIndex]*yScale + yOff
+		x := genes.Genes[s.XIndex]*float32(sc.X) + float32(off.X)
+		y := genes.Genes[s.YIndex]*float32(sc.Y) + float32(off.Y)
 
 		s.image.SetRGBA(int(x), int(y), col.Color)
 	}
 	s.eimage.WritePixels(s.image.Pix)
 
-	text.Draw(s.eimage, GeneNames[s.XIndex], fontNormal, int(xOff), int(yOff)+16, white)
+	text.Draw(s.eimage, GeneNames[s.XIndex], fontNormal, off.X, off.Y+16, white)
 	text.DrawWithOptions(s.eimage, GeneNames[s.YIndex], fontNormal, &s.yAxisOptions)
 
 	screen.DrawImage(s.eimage, &s.drawOptions)

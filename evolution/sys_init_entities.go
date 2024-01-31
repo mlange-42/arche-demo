@@ -14,6 +14,7 @@ type SysInitEntities struct {
 	InitialCount    int
 	ReleaseInterval int
 	ReleaseCount    int
+	RandomGenes     bool
 
 	width  float32
 	height float32
@@ -58,13 +59,14 @@ func (s *SysInitEntities) createEntities(world *ecs.World, count int) {
 		pos.Y = rand.Float32() * s.height
 		head.Angle = rand.Float32() * 2 * math.Pi
 
-		genes.Randomize()
+		if s.RandomGenes {
+			genes.Randomize()
+			cols.Randomize()
+		} else {
+			genes.Defaults()
+			cols.Defaults()
+		}
 		pt.From(genes)
-
-		cols.Color.R = uint8(50 + rand.Intn(200))
-		cols.Color.G = uint8(50 + rand.Intn(200))
-		cols.Color.B = uint8(50 + rand.Intn(200))
-		cols.Color.A = 255
 
 		en.Energy = 0.2 + rand.Float32()*0.8
 	}

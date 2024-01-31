@@ -20,6 +20,7 @@ type SysReproduction struct {
 	MatingTrials           int
 	MaxMatingDiff          uint8
 	CrossProb              float32
+	MutationProbability    float32
 	MutationMagnitude      float32
 	ColorMutationMagnitude uint8
 	AllowAsexual           bool
@@ -128,14 +129,22 @@ func (s *SysReproduction) crossColor(g1, g2, result *Color) {
 func (s *SysReproduction) mutate(genes *Genotype, color *Color) {
 	mag := s.MutationMagnitude
 	for i := range genes.Genes {
-		genes.Genes[i] = common.Clamp32(genes.Genes[i]+float32(rand.NormFloat64())*mag, 0, 1)
+		if rand.Float32() < s.MutationProbability {
+			genes.Genes[i] = common.Clamp32(genes.Genes[i]+float32(rand.NormFloat64())*mag, 0, 1)
+		}
 	}
 
 	cmHalf := int(s.ColorMutationMagnitude)
 	cm := cmHalf*2 + 1
-	color.Color.R = uint8(common.ClampInt(int(color.Color.R)+rand.Intn(cm)-cmHalf, 50, 250))
-	color.Color.G = uint8(common.ClampInt(int(color.Color.G)+rand.Intn(cm)-cmHalf, 50, 250))
-	color.Color.B = uint8(common.ClampInt(int(color.Color.B)+rand.Intn(cm)-cmHalf, 50, 250))
+	if rand.Float32() < s.MutationProbability {
+		color.Color.R = uint8(common.ClampInt(int(color.Color.R)+rand.Intn(cm)-cmHalf, 50, 250))
+	}
+	if rand.Float32() < s.MutationProbability {
+		color.Color.G = uint8(common.ClampInt(int(color.Color.G)+rand.Intn(cm)-cmHalf, 50, 250))
+	}
+	if rand.Float32() < s.MutationProbability {
+		color.Color.B = uint8(common.ClampInt(int(color.Color.B)+rand.Intn(cm)-cmHalf, 50, 250))
+	}
 }
 
 func (s *SysReproduction) findMate(col *color.RGBA) (ecs.Entity, bool) {

@@ -11,6 +11,12 @@ const DegToRad = math.Pi / 180.0
 // RadToDeg conversion factor.
 const RadToDeg = 180.0 / math.Pi
 
+// Vec2i is an int vector.
+type Vec2i struct {
+	X int
+	Y int
+}
+
 // Norm normalizes a vector. The third return value is the original vector's length.
 func Norm(dx, dy float64) (float64, float64, float64) {
 	len := math.Sqrt(dx*dx + dy*dy)
