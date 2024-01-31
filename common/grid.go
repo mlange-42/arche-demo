@@ -106,3 +106,8 @@ func (g *Grid[T]) CellCenter(x, y int) (float64, float64) {
 func (g *Grid[T]) Contains(x, y int) bool {
 	return x >= 0 && y >= 0 && x < g.width && y < g.height
 }
+
+// Contains returns whether the grid contains the given world coordinates.
+func (g *Grid[T]) IsInBounds(x, y float64) bool {
+	return x >= 0 && y >= 0 && x < float64(g.width)*g.cellsize && y < float64(g.height)*g.cellsize
+}

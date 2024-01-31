@@ -23,13 +23,13 @@ func (s *SysGrazing) Initialize(world *ecs.World) {
 	s.grazerFilter = *generic.NewFilter1[Position]().With(generic.T[Grazing]())
 	s.energyFilter = *generic.NewFilter2[Position, Energy]().With(generic.T[Grazing]())
 
-	grass := s.grass.Get().Grass
+	grass := &s.grass.Get().Grass
 	s.grazers = common.NewGrid[int16](grass.Width(), grass.Height(), grass.Cellsize())
 }
 
 // Update the system
 func (s *SysGrazing) Update(world *ecs.World) {
-	grass := s.grass.Get().Grass
+	grass := &s.grass.Get().Grass
 
 	s.grazers.Fill(0)
 

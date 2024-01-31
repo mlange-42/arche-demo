@@ -61,3 +61,19 @@ func SelectRoulette(probs []float64) (int, bool) {
 	}
 	return -1, false
 }
+
+// NormAngle brings an angle into range [0, 2*PI).
+func NormAngle(angle float64) float64 {
+	if angle < 0 {
+		return math.Pi*2 - math.Mod(angle, math.Pi*2)
+	}
+	return math.Mod(angle, math.Pi*2)
+}
+
+// NormAngle32 brings an angle into range [0, 2*PI).
+func NormAngle32(angle float32) float32 {
+	if angle < 0 {
+		return float32(math.Pi*2 + math.Mod(float64(angle), math.Pi*2))
+	}
+	return float32(math.Mod(float64(angle), math.Pi*2))
+}
