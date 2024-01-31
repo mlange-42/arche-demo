@@ -8,8 +8,8 @@ import (
 // SysDecisions is a system to perform grazer decisions.
 type SysDecisions struct {
 	grass          generic.Resource[Grass]
-	grazerFilter   generic.Filter2[Position, Genes]
-	searcherFilter generic.Filter2[Position, Genes]
+	grazerFilter   generic.Filter2[Position, Phenotype]
+	searcherFilter generic.Filter2[Position, Phenotype]
 
 	grazeExchange  generic.Exchange
 	searchExchange generic.Exchange
@@ -21,8 +21,8 @@ type SysDecisions struct {
 // Initialize the system
 func (s *SysDecisions) Initialize(world *ecs.World) {
 	s.grass = generic.NewResource[Grass](world)
-	s.grazerFilter = *generic.NewFilter2[Position, Genes]().With(generic.T[Grazing]())
-	s.searcherFilter = *generic.NewFilter2[Position, Genes]().With(generic.T[Searching]())
+	s.grazerFilter = *generic.NewFilter2[Position, Phenotype]().With(generic.T[Grazing]())
+	s.searcherFilter = *generic.NewFilter2[Position, Phenotype]().With(generic.T[Searching]())
 
 	s.grazeExchange = *generic.NewExchange(world).Adds(generic.T[Grazing]()).Removes(generic.T[Searching]())
 	s.searchExchange = *generic.NewExchange(world).Adds(generic.T[Searching]()).Removes(generic.T[Grazing]())
@@ -37,18 +37,18 @@ func (s *SysDecisions) Update(world *ecs.World) {
 
 	queryG := s.grazerFilter.Query(world)
 	for queryG.Next() {
-		pos, genes := queryG.Get()
+		pos, pt := queryG.Get()
 		cx, cy := grass.ToCell(float64(pos.X), float64(pos.Y))
-		if grass.Get(cx, cy) < genes.MinGrass {
+		if grass.Get(cx, cy) < pt.MinGrass {
 			s.toSearch = append(s.toSearch, queryG.Entity())
 		}
 	}
 
 	queryS := s.searcherFilter.Query(world)
 	for queryS.Next() {
-		pos, genes := queryS.Get()
+		pos, pt := queryS.Get()
 		cx, cy := grass.ToCell(float64(pos.X), float64(pos.Y))
-		if grass.Get(cx, cy) > genes.MinGrass {
+		if grass.Get(cx, cy) > pt.MinGrass {
 			s.toGrass = append(s.toGrass, queryS.Entity())
 		}
 	}

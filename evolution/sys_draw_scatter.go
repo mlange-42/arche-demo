@@ -4,7 +4,6 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
-	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/mlange-42/arche-demo/common"
@@ -14,10 +13,13 @@ import (
 
 // UISysDrawScatter is a system that draws a scatter plot of entity [Genes].
 type UISysDrawScatter struct {
-	Interval int
+	Interval    int
+	XIndex      int
+	YIndex      int
+	ImageOffset Position
 
 	canvas      generic.Resource[common.EbitenImage]
-	filter      generic.Filter2[Genes, Color]
+	filter      generic.Filter2[Genotype, Color]
 	image       *image.RGBA
 	eimage      *ebiten.Image
 	drawOptions ebiten.DrawImageOptions
@@ -28,13 +30,13 @@ type UISysDrawScatter struct {
 // InitializeUI the system
 func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
-	s.filter = *generic.NewFilter2[Genes, Color]()
+	s.filter = *generic.NewFilter2[Genotype, Color]()
 
 	s.image = image.NewRGBA(image.Rect(0, 0, 200, 200))
 	s.eimage = ebiten.NewImage(s.image.Rect.Dx(), s.image.Rect.Dy())
 
 	geom := ebiten.GeoM{}
-	geom.Translate(680, 0)
+	geom.Translate(float64(s.ImageOffset.X), float64(s.ImageOffset.Y))
 	s.drawOptions = ebiten.DrawImageOptions{
 		GeoM:   geom,
 		Filter: ebiten.FilterNearest,
@@ -46,7 +48,7 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 	canvas := s.canvas.Get()
 	screen := canvas.Image
 
-	if s.Interval > 0 && s.frame%s.Interval == 0 {
+	if s.Interval > 0 && s.frame%s.Interval != 0 {
 		screen.DrawImage(s.eimage, &s.drawOptions)
 		s.frame++
 		return
@@ -56,8 +58,8 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 	bg := color.RGBA{20, 20, 20, 255}
 	plotBg := color.RGBA{0, 0, 0, 255}
 
-	xOff, yOff := 20.0, 180.0
-	xScale, yScale := 170.0, -170.0
+	var xOff, yOff float32 = 20.0, 180.0
+	var xScale, yScale float32 = 170.0, -170.0
 
 	// Clear the image
 	draw.Draw(s.image, s.image.Bounds(), &image.Uniform{bg}, image.Point{}, draw.Src)
@@ -67,8 +69,8 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 	query := s.filter.Query(world)
 	for query.Next() {
 		genes, col := query.Get()
-		x := xOff + xScale*float64(genes.MaxAngle)*2/math.Pi
-		y := yOff + yScale*float64(genes.MinGrass)
+		x := genes.Genes[s.XIndex]*xScale + xOff
+		y := genes.Genes[s.YIndex]*yScale + yOff
 
 		s.image.SetRGBA(int(x), int(y), col.Color)
 	}

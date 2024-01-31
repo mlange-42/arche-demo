@@ -3,6 +3,7 @@ package evolution
 import (
 	"image/color"
 	"math"
+	"math/rand"
 )
 
 // Position component
@@ -33,12 +34,33 @@ func (h *Heading) Direction() (float32, float32) {
 	return float32(math.Cos(a)), float32(math.Sin(a))
 }
 
-// Genes components
-type Genes struct {
+// Genotype components
+type Genotype struct {
+	Genes [4]float32
+}
+
+// Randomize all genes
+func (g *Genotype) Randomize() {
+	g.Genes[0] = rand.Float32()
+	g.Genes[1] = rand.Float32()
+	g.Genes[2] = rand.Float32()
+	g.Genes[3] = rand.Float32()
+}
+
+// Phenotype components
+type Phenotype struct {
 	MaxAngle  float32
 	MinGrass  float32
 	Invest    float32
 	Offspring uint8
+}
+
+// From sets the Phenotype to a [Genotype].
+func (p *Phenotype) From(g *Genotype) {
+	p.MaxAngle = g.Genes[0] * 0.5 * math.Pi
+	p.MinGrass = g.Genes[1] * 0.5
+	p.Invest = g.Genes[2] * 0.5
+	p.Offspring = uint8(1 + g.Genes[3]*10)
 }
 
 // Color components

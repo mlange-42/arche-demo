@@ -29,9 +29,9 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
 	game.Model.AddSystem(&evolution.SysInitGrass{
-		Frequency: 0.05,
-		Octaves:   3,
-		Cutoff:    0.5,
+		Frequency: 0.035,
+		Octaves:   4,
+		Cutoff:    0.45,
 	})
 	game.Model.AddSystem(&evolution.SysInitEntities{
 		Count: 10000,
@@ -54,15 +54,16 @@ func main() {
 	})
 	game.Model.AddSystem(&evolution.SysMortality{})
 	game.Model.AddSystem(&evolution.SysReproduction{
-		MatingTrials:  10,
-		MaxMatingDiff: 15,
-		CrossProb:     0.25,
-		AllowAsexual:  false,
+		MatingTrials:      10,
+		MaxMatingDiff:     15,
+		CrossProb:         0.1,
+		MutationMagnitude: 0.02,
+		AllowAsexual:      false,
 	})
 	game.Model.AddSystem(&evolution.SysDisturbance{
-		Interval:  10,
+		Interval:  60,
 		Count:     1,
-		MinRadius: 3,
+		MinRadius: 4,
 		MaxRadius: 6,
 	})
 
@@ -74,7 +75,16 @@ func main() {
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})
 	game.Model.AddUISystem(&evolution.UISysDrawEntities{})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
-		Interval: 60,
+		Interval:    60,
+		XIndex:      0,
+		YIndex:      1,
+		ImageOffset: evolution.Position{X: 680, Y: 0},
+	})
+	game.Model.AddUISystem(&evolution.UISysDrawScatter{
+		Interval:    60,
+		XIndex:      2,
+		YIndex:      3,
+		ImageOffset: evolution.Position{X: 680, Y: 200},
 	})
 
 	game.Initialize()

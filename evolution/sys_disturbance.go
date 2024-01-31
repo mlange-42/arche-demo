@@ -36,7 +36,10 @@ func (s *SysDisturbance) Update(world *ecs.World) {
 	grass := &s.grass.Get().Grass
 	for i := 0; i < s.Count; i++ {
 		x, y := rand.Intn(grass.Width()), rand.Intn(grass.Height())
-		rad := rand.Intn(s.MaxRadius-s.MinRadius) + s.MinRadius
+		rad := s.MinRadius
+		if s.MaxRadius > rad {
+			rad = rand.Intn(s.MaxRadius-s.MinRadius) + s.MinRadius
+		}
 		s.disturb(grass, x, y, rad)
 	}
 }
