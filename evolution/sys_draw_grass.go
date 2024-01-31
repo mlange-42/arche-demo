@@ -30,7 +30,10 @@ func (s *UISysDrawGrass) InitializeUI(world *ecs.World) {
 
 // UpdateUI the system
 func (s *UISysDrawGrass) UpdateUI(world *ecs.World) {
-	grass := &s.grass.Get().Grass
+	grassRes := s.grass.Get()
+	grass := &grassRes.Grass
+	scale := grassRes.Scale
+
 	canvas := s.canvas.Get()
 	screen := canvas.Image
 
@@ -46,7 +49,7 @@ func (s *UISysDrawGrass) UpdateUI(world *ecs.World) {
 	s.eimage.WritePixels(s.image.Pix)
 
 	geom := ebiten.GeoM{}
-	geom.Scale(grass.Cellsize(), grass.Cellsize())
+	geom.Scale(grass.Cellsize()*float64(scale), grass.Cellsize()*float64(scale))
 	op := ebiten.DrawImageOptions{
 		GeoM:   geom,
 		Filter: ebiten.FilterNearest,

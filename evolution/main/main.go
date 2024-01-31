@@ -13,8 +13,8 @@ const (
 	screenWidth  = 880
 	screenHeight = 480
 
-	worldWidth  = 680
-	worldHeight = 480
+	worldWidth  = 340
+	worldHeight = 240
 )
 
 func main() {
@@ -22,14 +22,14 @@ func main() {
 		model.New(), screenWidth, screenHeight,
 	)
 
-	grass := evolution.NewGrass(worldWidth, worldHeight, 4)
+	grass := evolution.NewGrass(worldWidth, worldHeight, 4, 2)
 	ecs.AddResource(&game.Model.World, &grass)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
 	game.Model.AddSystem(&evolution.SysInitGrass{
-		Frequency: 0.035,
+		Frequency: 0.1,
 		Octaves:   4,
 		Cutoff:    0.45,
 	})
@@ -63,8 +63,8 @@ func main() {
 	game.Model.AddSystem(&evolution.SysDisturbance{
 		Interval:  60,
 		Count:     1,
-		MinRadius: 4,
-		MaxRadius: 6,
+		MinRadius: 3,
+		MaxRadius: 4,
 	})
 
 	game.Model.AddUISystem(&common.UISysSimSpeed{

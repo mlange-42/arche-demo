@@ -13,6 +13,7 @@ import (
 
 // UISysDrawEntities is a system that draws entities as white pixels on an [Image] resource.
 type UISysDrawEntities struct {
+	grass  generic.Resource[Grass]
 	canvas generic.Resource[common.EbitenImage]
 	filter generic.Filter2[Position, Color]
 	image  *image.RGBA
@@ -21,6 +22,7 @@ type UISysDrawEntities struct {
 
 // InitializeUI the system
 func (s *UISysDrawEntities) InitializeUI(world *ecs.World) {
+	s.grass = generic.NewResource[Grass](world)
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.filter = *generic.NewFilter2[Position, Color]()
 
@@ -31,6 +33,8 @@ func (s *UISysDrawEntities) InitializeUI(world *ecs.World) {
 
 // UpdateUI the system
 func (s *UISysDrawEntities) UpdateUI(world *ecs.World) {
+	scale := s.grass.Get().Scale
+
 	transp := color.RGBA{0, 0, 0, 0}
 
 	canvas := s.canvas.Get()
@@ -48,7 +52,10 @@ func (s *UISysDrawEntities) UpdateUI(world *ecs.World) {
 	}
 	s.eimage.WritePixels(s.image.Pix)
 
+	geom := ebiten.GeoM{}
+	geom.Scale(float64(scale), float64(scale))
 	op := ebiten.DrawImageOptions{
+		GeoM:   geom,
 		Filter: ebiten.FilterNearest,
 		Blend:  ebiten.BlendSourceOver,
 	}

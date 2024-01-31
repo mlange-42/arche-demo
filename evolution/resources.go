@@ -11,12 +11,14 @@ type GrasserCount = common.Grid[int32]
 type Grass struct {
 	Grass  common.Grid[float32]
 	Growth common.Grid[float32]
+	Scale  int
 }
 
 // NewGrass creates a new Grass resource.
-func NewGrass(width, height, cellsize int) Grass {
+func NewGrass(width, height, cellsize int, scale int) Grass {
 	return Grass{
 		Grass:  common.NewGridExtent[float32](float64(width), float64(height), float64(cellsize)),
 		Growth: common.NewGridExtent[float32](float64(width), float64(height), float64(cellsize)),
+		Scale:  scale,
 	}
 }
