@@ -12,6 +12,9 @@ import (
 const (
 	screenWidth  = 880
 	screenHeight = 480
+
+	worldWidth  = 680
+	worldHeight = 480
 )
 
 func main() {
@@ -19,7 +22,7 @@ func main() {
 		model.New(), screenWidth, screenHeight,
 	)
 
-	grass := evolution.NewGrass(screenWidth, screenHeight, 4)
+	grass := evolution.NewGrass(worldWidth, worldHeight, 4)
 	ecs.AddResource(&game.Model.World, &grass)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
@@ -50,7 +53,12 @@ func main() {
 		RateSearching: 0.005,
 	})
 	game.Model.AddSystem(&evolution.SysMortality{})
-	game.Model.AddSystem(&evolution.SysReproduction{})
+	game.Model.AddSystem(&evolution.SysReproduction{
+		MatingTrials:  10,
+		MaxMatingDiff: 15,
+		CrossProb:     0.25,
+		AllowAsexual:  false,
+	})
 	game.Model.AddSystem(&evolution.SysDisturbance{
 		Interval:  10,
 		Count:     1,

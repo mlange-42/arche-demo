@@ -41,13 +41,7 @@ type Genes struct {
 	Offspring uint8
 }
 
-// MateGenes component
-type MateGenes = Genes
-
 // Color components
 type Color struct {
 	Color color.RGBA
 }
-
-// MateColor component
-type MateColor = Color

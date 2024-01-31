@@ -100,7 +100,7 @@ func Clamp(v, low, high float64) float64 {
 	return v
 }
 
-// Clamp clamps to [low, high].
+// Clamp32 clamps to [low, high].
 func Clamp32(v, low, high float32) float32 {
 	if v < low {
 		return low
@@ -109,4 +109,23 @@ func Clamp32(v, low, high float32) float32 {
 		return high
 	}
 	return v
+}
+
+// AbsInt calculates the absolute value og an integer.
+func AbsInt(v int) int {
+	if v < 0 {
+		return -v
+	}
+	return v
+}
+
+// RandBetweenUIn8 returns a random uint8 between the given limits, both inclusive
+func RandBetweenUIn8(lim1, lim2 uint8) uint8 {
+	if lim1 == lim2 {
+		return lim1
+	}
+	if lim2 < lim1 {
+		lim1, lim2 = lim2, lim1
+	}
+	return uint8(rand.Intn(int(1+lim2-lim1))) + lim1
 }
