@@ -80,7 +80,7 @@ func main() {
 	game.Model.AddUISystem(&common.UISysSimSpeed{
 		InitialExponent: 1,
 		MinExponent:     -2,
-		MaxExponent:     4,
+		MaxExponent:     6,
 	})
 	game.Model.AddUISystem(&evolution.UISysManagePause{})
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})

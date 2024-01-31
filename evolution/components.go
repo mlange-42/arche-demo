@@ -33,11 +33,10 @@ type Energy struct {
 	Energy float32
 }
 
-// Grazing component
-type Grazing struct{}
-
-// Searching component
-type Searching struct{}
+// Activity component
+type Activity struct {
+	IsGrazing bool
+}
 
 // Heading component
 type Heading struct {

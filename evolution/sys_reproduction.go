@@ -30,7 +30,7 @@ type SysReproduction struct {
 	grass     generic.Resource[Grass]
 	filter    generic.Filter2[Energy, Color]
 	parentMap generic.Map5[Position, Energy, Genotype, Phenotype, Color]
-	childMap  generic.Map8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Searching]
+	childMap  generic.Map8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Activity]
 	mateMap   generic.Map1[Genotype]
 
 	toReproduce []repEntry
@@ -42,7 +42,7 @@ func (s *SysReproduction) Initialize(world *ecs.World) {
 	s.grass = generic.NewResource[Grass](world)
 	s.filter = *generic.NewFilter2[Energy, Color]()
 	s.parentMap = generic.NewMap5[Position, Energy, Genotype, Phenotype, Color](world)
-	s.childMap = generic.NewMap8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Searching](world)
+	s.childMap = generic.NewMap8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Activity](world)
 	s.mateMap = generic.NewMap1[Genotype](world)
 
 	s.toReproduce = make([]repEntry, 0, 16)

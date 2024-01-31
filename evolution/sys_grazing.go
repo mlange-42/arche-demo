@@ -12,8 +12,8 @@ type SysGrazing struct {
 	UptakeFactor float32
 
 	grass        generic.Resource[Grass]
-	grazerFilter generic.Filter1[Position]
-	energyFilter generic.Filter2[Position, Energy]
+	grazerFilter generic.Filter2[Position, Activity]
+	energyFilter generic.Filter3[Position, Activity, Energy]
 
 	grazers common.Grid[int16]
 }
@@ -21,8 +21,8 @@ type SysGrazing struct {
 // Initialize the system
 func (s *SysGrazing) Initialize(world *ecs.World) {
 	s.grass = generic.NewResource[Grass](world)
-	s.grazerFilter = *generic.NewFilter1[Position]().With(generic.T[Grazing]())
-	s.energyFilter = *generic.NewFilter2[Position, Energy]().With(generic.T[Grazing]())
+	s.grazerFilter = *generic.NewFilter2[Position, Activity]()
+	s.energyFilter = *generic.NewFilter3[Position, Activity, Energy]()
 
 	grass := &s.grass.Get().Grass
 	s.grazers = common.NewGrid[int16](grass.Width(), grass.Height(), grass.Cellsize())
@@ -36,14 +36,20 @@ func (s *SysGrazing) Update(world *ecs.World) {
 
 	query := s.grazerFilter.Query(world)
 	for query.Next() {
-		pos := query.Get()
+		pos, act := query.Get()
+		if !act.IsGrazing {
+			continue
+		}
 		cx, cy := s.grazers.ToCell(float64(pos.X), float64(pos.Y))
 		*s.grazers.GetPointer(cx, cy)++
 	}
 
 	queryEn := s.energyFilter.Query(world)
 	for queryEn.Next() {
-		pos, en := queryEn.Get()
+		pos, act, en := queryEn.Get()
+		if !act.IsGrazing {
+			continue
+		}
 		cx, cy := s.grazers.ToCell(float64(pos.X), float64(pos.Y))
 		available := grass.Get(cx, cy) / float32(s.grazers.Get(cx, cy))
 		uptake := grass.Get(cx, cy) * s.MaxUptake

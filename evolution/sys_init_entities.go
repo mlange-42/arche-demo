@@ -20,13 +20,13 @@ type SysInitEntities struct {
 	height float32
 
 	time    generic.Resource[resource.Tick]
-	builder generic.Map8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Grazing]
+	builder generic.Map8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Activity]
 }
 
 // Initialize the system
 func (s *SysInitEntities) Initialize(world *ecs.World) {
 	s.time = generic.NewResource[resource.Tick](world)
-	s.builder = generic.NewMap8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Grazing](world)
+	s.builder = generic.NewMap8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Activity](world)
 
 	grassRes := generic.NewResource[Grass](world)
 	grass := grassRes.Get()

@@ -10,27 +10,24 @@ type SysMetabolism struct {
 	RateGrazing   float32
 	RateSearching float32
 
-	filterGraze  generic.Filter1[Energy]
-	filterSearch generic.Filter1[Energy]
+	filter generic.Filter2[Energy, Activity]
 }
 
 // Initialize the system
 func (s *SysMetabolism) Initialize(world *ecs.World) {
-	s.filterGraze = *generic.NewFilter1[Energy]().With(generic.T[Grazing]())
-	s.filterSearch = *generic.NewFilter1[Energy]().With(generic.T[Searching]())
+	s.filter = *generic.NewFilter2[Energy, Activity]()
 }
 
 // Update the system
 func (s *SysMetabolism) Update(world *ecs.World) {
-	query := s.filterGraze.Query(world)
+	query := s.filter.Query(world)
 	for query.Next() {
-		en := query.Get()
-		en.Energy -= s.RateGrazing
-	}
-	query = s.filterSearch.Query(world)
-	for query.Next() {
-		en := query.Get()
-		en.Energy -= s.RateSearching
+		en, act := query.Get()
+		if act.IsGrazing {
+			en.Energy -= s.RateGrazing
+		} else {
+			en.Energy -= s.RateSearching
+		}
 	}
 }
 
