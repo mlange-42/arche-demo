@@ -51,9 +51,15 @@ func (s *SysDisturbance) disturb(grass *common.Grid[float32], x, y, rad int) {
 	ymin := common.ClampInt(y-rad, 0, grass.Height())
 	ymax := common.ClampInt(y+rad, 0, grass.Height())
 
-	for x := xmin; x < xmax; x++ {
-		for y := ymin; y < ymax; y++ {
-			grass.Set(x, y, s.TargetValue)
+	radSq := rad * rad
+
+	for xx := xmin; xx < xmax; xx++ {
+		dx := x - xx
+		for yy := ymin; yy < ymax; yy++ {
+			dy := y - yy
+			if dx*dx+dy*dy <= radSq {
+				grass.Set(xx, yy, s.TargetValue)
+			}
 		}
 	}
 }

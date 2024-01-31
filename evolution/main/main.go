@@ -35,7 +35,7 @@ func main() {
 		Cutoff:    0.45,
 	})
 	game.Model.AddSystem(&evolution.SysInitEntities{
-		InitialCount:    5,
+		InitialCount:    50,
 		ReleaseInterval: 60,
 		ReleaseCount:    1,
 		RandomGenes:     false,
@@ -43,7 +43,7 @@ func main() {
 
 	game.Model.AddSystem(&evolution.SysGrowGrassLogistic{
 		Interval: 4,
-		BaseRate: 0.1,
+		BaseRate: 0.15,
 	})
 	game.Model.AddSystem(&evolution.SysGrazing{
 		MaxUptake:    0.005,
@@ -54,26 +54,27 @@ func main() {
 	})
 	game.Model.AddSystem(&evolution.SysDecisions{})
 	game.Model.AddSystem(&evolution.SysReproduction{
-		MatingTrials:           10,
-		MaxMatingDiff:          15,
-		CrossProb:              0.2,
-		MutationProbability:    0.5,
-		MutationMagnitude:      0.025,
-		ColorMutationMagnitude: 8,
-		AllowAsexual:           true,
-		HatchRadius:            3.0,
+		MatingTrials:        10,
+		MaxMatingDiff:       10,
+		CrossProb:           0.15,
+		MutationProbability: 0.25,
+		MutationMagnitude:   0.025,
+		AllowAsexual:        false,
+		HatchRadius:         2.0,
 	})
 	game.Model.AddSystem(&evolution.SysMetabolism{
 		RateGrazing:   0.002,
 		RateSearching: 0.008,
 	})
-	game.Model.AddSystem(&evolution.SysMortality{})
+	game.Model.AddSystem(&evolution.SysMortality{
+		MaxAge: 6000,
+	})
 	game.Model.AddSystem(&evolution.SysDisturbance{
 		Interval:    600,
-		Count:       0,
-		MinRadius:   4,
-		MaxRadius:   6,
-		TargetValue: 0.025,
+		Count:       1,
+		MinRadius:   3,
+		MaxRadius:   5,
+		TargetValue: 0.01,
 	})
 
 	game.Model.AddUISystem(&common.UISysSimSpeed{
@@ -88,17 +89,25 @@ func main() {
 		Interval:    60,
 		XIndex:      0,
 		YIndex:      1,
-		Width:       200,
-		Height:      200,
+		Width:       160,
+		Height:      160,
 		ImageOffset: evolution.Position{X: 680, Y: 0},
 	})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
 		Interval:    60,
 		XIndex:      2,
 		YIndex:      3,
-		Width:       200,
-		Height:      200,
-		ImageOffset: evolution.Position{X: 680, Y: 200},
+		Width:       160,
+		Height:      160,
+		ImageOffset: evolution.Position{X: 680, Y: 160},
+	})
+	game.Model.AddUISystem(&evolution.UISysDrawScatter{
+		Interval:    60,
+		XIndex:      4,
+		YIndex:      5,
+		Width:       160,
+		Height:      160,
+		ImageOffset: evolution.Position{X: 680, Y: 320},
 	})
 
 	game.Initialize()

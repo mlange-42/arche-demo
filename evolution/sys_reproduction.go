@@ -6,6 +6,7 @@ import (
 	"math/rand"
 
 	"github.com/mlange-42/arche-demo/common"
+	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
@@ -17,37 +18,39 @@ type repEntry struct {
 
 // SysReproduction is a system that handles reproduction of grazers.
 type SysReproduction struct {
-	MatingTrials           int
-	MaxMatingDiff          uint8
-	CrossProb              float32
-	MutationProbability    float32
-	MutationMagnitude      float32
-	ColorMutationMagnitude uint8
-	AllowAsexual           bool
-	HatchRadius            float32
+	MatingTrials        int
+	MaxMatingDiff       uint8
+	CrossProb           float32
+	MutationProbability float32
+	MutationMagnitude   float32
+	AllowAsexual        bool
+	HatchRadius         float32
 
+	time      generic.Resource[resource.Tick]
 	grass     generic.Resource[Grass]
 	filter    generic.Filter2[Energy, Color]
 	parentMap generic.Map5[Position, Energy, Genotype, Phenotype, Color]
-	childMap  generic.Map7[Position, Heading, Energy, Genotype, Phenotype, Color, Searching]
-	mateMap   generic.Map2[Genotype, Color]
+	childMap  generic.Map8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Searching]
+	mateMap   generic.Map1[Genotype]
 
 	toReproduce []repEntry
 }
 
 // Initialize the system
 func (s *SysReproduction) Initialize(world *ecs.World) {
+	s.time = generic.NewResource[resource.Tick](world)
 	s.grass = generic.NewResource[Grass](world)
 	s.filter = *generic.NewFilter2[Energy, Color]()
 	s.parentMap = generic.NewMap5[Position, Energy, Genotype, Phenotype, Color](world)
-	s.childMap = generic.NewMap7[Position, Heading, Energy, Genotype, Phenotype, Color, Searching](world)
-	s.mateMap = generic.NewMap2[Genotype, Color](world)
+	s.childMap = generic.NewMap8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Searching](world)
+	s.mateMap = generic.NewMap1[Genotype](world)
 
 	s.toReproduce = make([]repEntry, 0, 16)
 }
 
 // Update the system
 func (s *SysReproduction) Update(world *ecs.World) {
+	tick := s.time.Get().Tick
 	grass := s.grass.Get().Grass
 
 	query := s.filter.Query(world)
@@ -72,9 +75,10 @@ func (s *SysReproduction) Update(world *ecs.World) {
 
 		query := s.childMap.NewBatchQ(int(pt.Offspring))
 		for query.Next() {
-			pos2, head2, en2, genes2, pt2, col2, _ := query.Get()
+			pos2, age2, head2, en2, genes2, pt2, col2, _ := query.Get()
 			head2.Angle = rand.Float32() * 2 * math.Pi
 			en2.Energy = enChild
+			age2.TickOfBirth = tick
 			for {
 				pos2.X = pos.X + float32(rand.NormFloat64())*s.HatchRadius
 				pos2.Y = pos.Y + float32(rand.NormFloat64())*s.HatchRadius
@@ -83,16 +87,15 @@ func (s *SysReproduction) Update(world *ecs.World) {
 				}
 			}
 			if ok {
-				genesMate, colMate := s.mateMap.Get(mate)
-				s.crossGenes(genes, genesMate, genes2)
-				s.crossColor(col, colMate, col2)
+				genesMate := s.mateMap.Get(mate)
+				s.cross(genes, genesMate, genes2)
 			} else {
 				*genes2 = *genes
-				*col2 = *col
 			}
 
 			s.mutate(genes2, col2)
 			pt2.From(genes2)
+			col2.From(genes2)
 		}
 	}
 
@@ -102,7 +105,7 @@ func (s *SysReproduction) Update(world *ecs.World) {
 // Finalize the system
 func (s *SysReproduction) Finalize(world *ecs.World) {}
 
-func (s *SysReproduction) crossGenes(g1, g2, result *Genotype) {
+func (s *SysReproduction) cross(g1, g2, result *Genotype) {
 	p := 1.0 - s.CrossProb
 	result.Genes = g1.Genes
 	for i := range result.Genes {
@@ -112,38 +115,12 @@ func (s *SysReproduction) crossGenes(g1, g2, result *Genotype) {
 	}
 }
 
-func (s *SysReproduction) crossColor(g1, g2, result *Color) {
-	p := 1.0 - s.CrossProb
-	result.Color = g1.Color
-	if rand.Float32() < p {
-		result.Color.R = common.RandBetweenUIn8(g1.Color.R, g2.Color.R)
-	}
-	if rand.Float32() < p {
-		result.Color.G = common.RandBetweenUIn8(g1.Color.G, g2.Color.G)
-	}
-	if rand.Float32() < p {
-		result.Color.B = common.RandBetweenUIn8(g1.Color.B, g2.Color.B)
-	}
-}
-
 func (s *SysReproduction) mutate(genes *Genotype, color *Color) {
 	mag := s.MutationMagnitude
 	for i := range genes.Genes {
 		if rand.Float32() < s.MutationProbability {
 			genes.Genes[i] = common.Clamp32(genes.Genes[i]+float32(rand.NormFloat64())*mag, 0, 1)
 		}
-	}
-
-	cmHalf := int(s.ColorMutationMagnitude)
-	cm := cmHalf*2 + 1
-	if rand.Float32() < s.MutationProbability {
-		color.Color.R = uint8(common.ClampInt(int(color.Color.R)+rand.Intn(cm)-cmHalf, 50, 250))
-	}
-	if rand.Float32() < s.MutationProbability {
-		color.Color.G = uint8(common.ClampInt(int(color.Color.G)+rand.Intn(cm)-cmHalf, 50, 250))
-	}
-	if rand.Float32() < s.MutationProbability {
-		color.Color.B = uint8(common.ClampInt(int(color.Color.B)+rand.Intn(cm)-cmHalf, 50, 250))
 	}
 }
 

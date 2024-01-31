@@ -1,30 +1,37 @@
 package evolution
 
 import (
+	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
 // SysMortality is a system that removes entities with energy below zero.
 type SysMortality struct {
-	filter generic.Filter1[Energy]
+	MaxAge int64
+
+	time   generic.Resource[resource.Tick]
+	filter generic.Filter2[Energy, Age]
 
 	toRemove []ecs.Entity
 }
 
 // Initialize the system
 func (s *SysMortality) Initialize(world *ecs.World) {
-	s.filter = *generic.NewFilter1[Energy]()
+	s.time = generic.NewResource[resource.Tick](world)
+	s.filter = *generic.NewFilter2[Energy, Age]()
 
 	s.toRemove = make([]ecs.Entity, 0, 16)
 }
 
 // Update the system
 func (s *SysMortality) Update(world *ecs.World) {
+	tick := s.time.Get().Tick
+
 	query := s.filter.Query(world)
 	for query.Next() {
-		en := query.Get()
-		if en.Energy < 0 {
+		en, age := query.Get()
+		if en.Energy < 0 || tick > age.TickOfBirth+s.MaxAge {
 			s.toRemove = append(s.toRemove, query.Entity())
 		}
 	}

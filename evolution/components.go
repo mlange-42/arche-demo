@@ -4,22 +4,28 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
-
-	"github.com/mlange-42/arche-demo/common"
 )
 
 // GeneNames for plotting.
-var GeneNames = [4]string{
+var GeneNames = [7]string{
 	"MaxAngle",
 	"MinGrass",
 	"Invest",
 	"Offspring",
+	"Red",
+	"Green",
+	"Blue",
 }
 
 // Position component
 type Position struct {
 	X float32
 	Y float32
+}
+
+// Age component
+type Age struct {
+	TickOfBirth int64
 }
 
 // Energy component
@@ -46,23 +52,21 @@ func (h *Heading) Direction() (float32, float32) {
 
 // Genotype components
 type Genotype struct {
-	Genes [4]float32
+	Genes [7]float32
 }
 
 // Randomize all genes
 func (g *Genotype) Randomize() {
-	g.Genes[0] = rand.Float32()
-	g.Genes[1] = rand.Float32()
-	g.Genes[2] = rand.Float32()
-	g.Genes[3] = rand.Float32()
+	for i := range g.Genes {
+		g.Genes[i] = rand.Float32()
+	}
 }
 
 // Defaults sets all genes to default values
 func (g *Genotype) Defaults() {
-	g.Genes[0] = 0.5
-	g.Genes[1] = 0.5
-	g.Genes[2] = 0.5
-	g.Genes[3] = 0.5
+	for i := range g.Genes {
+		g.Genes[i] = 0.5
+	}
 }
 
 // Phenotype components
@@ -86,18 +90,10 @@ type Color struct {
 	Color color.RGBA
 }
 
-// Randomize all bands
-func (c *Color) Randomize() {
-	c.Color.R = common.RandBetweenUIn8(50, 250)
-	c.Color.G = common.RandBetweenUIn8(50, 250)
-	c.Color.B = common.RandBetweenUIn8(50, 250)
-	c.Color.A = 255
-}
-
-// Defaults sets all bands to default values
-func (c *Color) Defaults() {
-	c.Color.R = 150
-	c.Color.G = 150
-	c.Color.B = 150
+// From sets the Colors to a [Genotype].
+func (c *Color) From(g *Genotype) {
+	c.Color.R = 50 + uint8(g.Genes[4]*200)
+	c.Color.G = 50 + uint8(g.Genes[5]*200)
+	c.Color.B = 50 + uint8(g.Genes[6]*200)
 	c.Color.A = 255
 }

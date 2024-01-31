@@ -98,7 +98,7 @@ func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 	}
 	geomY := ebiten.GeoM{}
 	geomY.Rotate(-0.5 * math.Pi)
-	geomY.Translate(16, 180)
+	geomY.Translate(16, float64(s.offset.Y))
 	s.yAxisOptions = ebiten.DrawImageOptions{
 		GeoM: geomY,
 	}
