@@ -60,7 +60,7 @@ func (s *SysReproduction) Update(world *ecs.World) {
 	for _, e := range s.toReproduce {
 		pos, en, genes, pt, col := s.parentMap.Get(e.Entity)
 
-		enTotal := pt.Invest
+		enTotal := pt.Invest * en.Energy
 		en.Energy -= enTotal
 		enChild := enTotal / float32(pt.Offspring)
 

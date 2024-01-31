@@ -40,13 +40,9 @@ func main() {
 		ReleaseCount:    1,
 	})
 
-	/*game.Model.AddSystem(&evolution.SysGrowGrassLinear{
-		Interval: 4,
-		BaseRate: 0.04,
-	})*/
 	game.Model.AddSystem(&evolution.SysGrowGrassLogistic{
 		Interval: 4,
-		BaseRate: 0.15,
+		BaseRate: 0.1,
 	})
 	game.Model.AddSystem(&evolution.SysGrazing{
 		MaxUptake:    0.005,
@@ -58,12 +54,12 @@ func main() {
 	game.Model.AddSystem(&evolution.SysDecisions{})
 	game.Model.AddSystem(&evolution.SysReproduction{
 		MatingTrials:           10,
-		MaxMatingDiff:          15,
-		CrossProb:              0.15,
-		MutationMagnitude:      0.01,
-		ColorMutationMagnitude: 2,
+		MaxMatingDiff:          10,
+		CrossProb:              0.1,
+		MutationMagnitude:      0.02,
+		ColorMutationMagnitude: 4,
 		AllowAsexual:           true,
-		HatchRadius:            2.0,
+		HatchRadius:            3.0,
 	})
 	game.Model.AddSystem(&evolution.SysMetabolism{
 		RateGrazing:   0.002,
