@@ -1,8 +1,6 @@
 package evolution
 
 import (
-	"math"
-
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -46,9 +44,10 @@ func (s *SysGrazing) Update(world *ecs.World) {
 	for queryEn.Next() {
 		pos, en := queryEn.Get()
 		cx, cy := s.grazers.ToCell(float64(pos.X), float64(pos.Y))
-		uptake := float32(math.Pow(float64(grass.Get(cx, cy)), 2) / float64(s.grazers.Get(cx, cy)))
-		if uptake > s.MaxUptake {
-			uptake = s.MaxUptake
+		available := grass.Get(cx, cy) / float32(s.grazers.Get(cx, cy))
+		uptake := grass.Get(cx, cy) * s.MaxUptake
+		if uptake > available {
+			uptake = available
 		}
 		en.Energy += uptake
 		*grass.GetPointer(cx, cy) -= uptake

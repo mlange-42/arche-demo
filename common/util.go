@@ -77,3 +77,14 @@ func NormAngle32(angle float32) float32 {
 	}
 	return float32(math.Mod(float64(angle), math.Pi*2))
 }
+
+// ClampInt clamps to [low, high].
+func ClampInt(v, low, high int) int {
+	if v < low {
+		return low
+	}
+	if v > high {
+		return high
+	}
+	return v
+}

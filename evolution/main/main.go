@@ -36,7 +36,7 @@ func main() {
 
 	game.Model.AddSystem(&evolution.SysGrowGrass{
 		Interval: 4,
-		BaseRate: 0.04,
+		BaseRate: 0.02,
 	})
 	game.Model.AddSystem(&evolution.SysGrazing{
 		MaxUptake: 0.01,
@@ -51,6 +51,12 @@ func main() {
 	})
 	game.Model.AddSystem(&evolution.SysMortality{})
 	game.Model.AddSystem(&evolution.SysReproduction{})
+	game.Model.AddSystem(&evolution.SysDisturbance{
+		Interval:  10,
+		Count:     1,
+		MinRadius: 3,
+		MaxRadius: 6,
+	})
 
 	game.Model.AddUISystem(&evolution.UISysManagePause{})
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})
