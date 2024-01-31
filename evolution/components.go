@@ -1,6 +1,9 @@
 package evolution
 
-import "math"
+import (
+	"image/color"
+	"math"
+)
 
 // Position component
 type Position struct {
@@ -40,7 +43,5 @@ type Genes struct {
 
 // Color components
 type Color struct {
-	R uint8
-	G uint8
-	B uint8
+	Color color.RGBA
 }

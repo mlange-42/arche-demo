@@ -31,7 +31,7 @@ func main() {
 		Cutoff:    0.5,
 	})
 	game.Model.AddSystem(&evolution.SysInitEntities{
-		Count: 100,
+		Count: 10000,
 	})
 
 	game.Model.AddSystem(&evolution.SysGrowGrass{
@@ -45,6 +45,12 @@ func main() {
 		MaxSpeed: 0.5,
 	})
 	game.Model.AddSystem(&evolution.SysDecisions{})
+	game.Model.AddSystem(&evolution.SysMetabolism{
+		RateGrazing:   0.002,
+		RateSearching: 0.005,
+	})
+	game.Model.AddSystem(&evolution.SysMortality{})
+	game.Model.AddSystem(&evolution.SysReproduction{})
 
 	game.Model.AddUISystem(&evolution.UISysManagePause{})
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})

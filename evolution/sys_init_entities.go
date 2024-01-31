@@ -37,9 +37,10 @@ func (s *SysInitEntities) Initialize(world *ecs.World) {
 		genes.Invest = rand.Float32()
 		genes.Offspring = uint8(rand.Intn(10)) + 1
 
-		cols.R = uint8(60 + rand.Intn(120))
-		cols.G = uint8(60 + rand.Intn(120))
-		cols.B = uint8(60 + rand.Intn(120))
+		cols.Color.R = uint8(50 + rand.Intn(200))
+		cols.Color.G = uint8(0 + rand.Intn(600))
+		cols.Color.B = uint8(50 + rand.Intn(200))
+		cols.Color.A = 255
 
 		en.Energy = 0.2 + rand.Float32()*0.8
 	}

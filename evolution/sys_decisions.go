@@ -49,7 +49,7 @@ func (s *SysDecisions) Update(world *ecs.World) {
 		pos, genes := queryS.Get()
 		cx, cy := grass.ToCell(float64(pos.X), float64(pos.Y))
 		if grass.Get(cx, cy) > genes.MinGrass {
-			s.toGrass = append(s.toSearch, queryS.Entity())
+			s.toGrass = append(s.toGrass, queryS.Entity())
 		}
 	}
 

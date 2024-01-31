@@ -14,7 +14,7 @@ import (
 // UISysDrawEntities is a system that draws entities as white pixels on an [Image] resource.
 type UISysDrawEntities struct {
 	canvas generic.Resource[common.EbitenImage]
-	filter generic.Filter1[Position]
+	filter generic.Filter2[Position, Color]
 	image  *image.RGBA
 	eimage *ebiten.Image
 }
@@ -22,7 +22,7 @@ type UISysDrawEntities struct {
 // InitializeUI the system
 func (s *UISysDrawEntities) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
-	s.filter = *generic.NewFilter1[Position]()
+	s.filter = *generic.NewFilter2[Position, Color]()
 
 	img := s.canvas.Get()
 	s.image = image.NewRGBA(img.Image.Bounds())
@@ -32,7 +32,6 @@ func (s *UISysDrawEntities) InitializeUI(world *ecs.World) {
 // UpdateUI the system
 func (s *UISysDrawEntities) UpdateUI(world *ecs.World) {
 	transp := color.RGBA{0, 0, 0, 0}
-	white := color.RGBA{255, 255, 255, 255}
 
 	canvas := s.canvas.Get()
 	screen := canvas.Image
@@ -43,9 +42,9 @@ func (s *UISysDrawEntities) UpdateUI(world *ecs.World) {
 	// Draw pixel entities
 	query := s.filter.Query(world)
 	for query.Next() {
-		pos := query.Get()
+		pos, col := query.Get()
 
-		s.image.SetRGBA(int(pos.X), int(pos.Y), white)
+		s.image.SetRGBA(int(pos.X), int(pos.Y), col.Color)
 	}
 	s.eimage.WritePixels(s.image.Pix)
 
