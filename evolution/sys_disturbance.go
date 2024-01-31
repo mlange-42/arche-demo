@@ -11,10 +11,11 @@ import (
 
 // SysDisturbance is a system that applies disturbances.
 type SysDisturbance struct {
-	Interval  int
-	Count     int
-	MinRadius int
-	MaxRadius int
+	Interval    int
+	Count       int
+	MinRadius   int
+	MaxRadius   int
+	TargetValue float32
 
 	grass generic.Resource[Grass]
 	time  generic.Resource[resource.Tick]
@@ -52,7 +53,7 @@ func (s *SysDisturbance) disturb(grass *common.Grid[float32], x, y, rad int) {
 
 	for x := xmin; x < xmax; x++ {
 		for y := ymin; y < ymax; y++ {
-			grass.Set(x, y, 0)
+			grass.Set(x, y, s.TargetValue)
 		}
 	}
 }

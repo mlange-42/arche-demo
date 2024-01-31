@@ -10,17 +10,27 @@ import (
 // UISysSimSpeed is a simple system that changes the simulation speed
 // when the user presses PageUp, PageDown or Home.
 type UISysSimSpeed struct {
-	MinExponent int
-	MaxExponent int
+	InitialExponent int
+	MinExponent     int
+	MaxExponent     int
 
 	speed generic.Resource[SimulationSpeed]
 }
 
 // InitializeUI the system
 func (s *UISysSimSpeed) InitializeUI(world *ecs.World) {
+	if s.MinExponent > s.MaxExponent {
+		panic("min exponent must not be higher than max exponent")
+	}
+	if s.InitialExponent < s.MinExponent || s.InitialExponent > s.MaxExponent {
+		panic("initial exponent must be in range min/max exponent")
+	}
+
 	s.speed = generic.NewResource[SimulationSpeed](world)
-	if !s.speed.Has() {
-		ecs.AddResource(world, &SimulationSpeed{})
+	if s.speed.Has() {
+		s.speed.Get().Exponent = s.InitialExponent
+	} else {
+		ecs.AddResource(world, &SimulationSpeed{Exponent: s.InitialExponent})
 	}
 }
 

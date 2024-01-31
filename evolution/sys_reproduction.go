@@ -17,11 +17,12 @@ type repEntry struct {
 
 // SysReproduction is a system that handles reproduction of grazers.
 type SysReproduction struct {
-	MatingTrials      int
-	MaxMatingDiff     uint8
-	CrossProb         float32
-	MutationMagnitude float32
-	AllowAsexual      bool
+	MatingTrials           int
+	MaxMatingDiff          uint8
+	CrossProb              float32
+	MutationMagnitude      float32
+	ColorMutationMagnitude uint8
+	AllowAsexual           bool
 
 	filter    generic.Filter2[Energy, Color]
 	parentMap generic.Map5[Position, Energy, Genotype, Phenotype, Color]
@@ -120,9 +121,11 @@ func (s *SysReproduction) mutate(genes *Genotype, color *Color) {
 		genes.Genes[i] = common.Clamp32(genes.Genes[i]+float32(rand.NormFloat64())*mag, 0, 1)
 	}
 
-	color.Color.R = uint8(common.ClampInt(int(color.Color.R)+rand.Intn(5)-2, 50, 250))
-	color.Color.G = uint8(common.ClampInt(int(color.Color.G)+rand.Intn(5)-2, 50, 250))
-	color.Color.B = uint8(common.ClampInt(int(color.Color.B)+rand.Intn(5)-2, 50, 250))
+	cmHalf := int(s.ColorMutationMagnitude)
+	cm := cmHalf*2 + 1
+	color.Color.R = uint8(common.ClampInt(int(color.Color.R)+rand.Intn(cm)-cmHalf, 50, 250))
+	color.Color.G = uint8(common.ClampInt(int(color.Color.G)+rand.Intn(cm)-cmHalf, 50, 250))
+	color.Color.B = uint8(common.ClampInt(int(color.Color.B)+rand.Intn(cm)-cmHalf, 50, 250))
 }
 
 func (s *SysReproduction) findMate(col *color.RGBA) (ecs.Entity, bool) {

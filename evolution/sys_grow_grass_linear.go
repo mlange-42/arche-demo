@@ -6,8 +6,8 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysGrowGrass is a system to grow the [Grass] resource.
-type SysGrowGrass struct {
+// SysGrowGrassLinear is a system to grow the [Grass] resource.
+type SysGrowGrassLinear struct {
 	Interval int
 	BaseRate float32
 
@@ -16,13 +16,13 @@ type SysGrowGrass struct {
 }
 
 // Initialize the system
-func (s *SysGrowGrass) Initialize(world *ecs.World) {
+func (s *SysGrowGrassLinear) Initialize(world *ecs.World) {
 	s.grass = generic.NewResource[Grass](world)
 	s.time = generic.NewResource[resource.Tick](world)
 }
 
 // Update the system
-func (s *SysGrowGrass) Update(world *ecs.World) {
+func (s *SysGrowGrassLinear) Update(world *ecs.World) {
 	tick := s.time.Get().Tick
 	if s.Interval > 0 && tick%int64(s.Interval) != 0 {
 		return
@@ -44,4 +44,4 @@ func (s *SysGrowGrass) Update(world *ecs.World) {
 }
 
 // Finalize the system
-func (s *SysGrowGrass) Finalize(world *ecs.World) {}
+func (s *SysGrowGrassLinear) Finalize(world *ecs.World) {}
