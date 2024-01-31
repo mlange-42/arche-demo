@@ -23,7 +23,9 @@ type SysReproduction struct {
 	MutationMagnitude      float32
 	ColorMutationMagnitude uint8
 	AllowAsexual           bool
+	HatchRadius            float32
 
+	grass     generic.Resource[Grass]
 	filter    generic.Filter2[Energy, Color]
 	parentMap generic.Map5[Position, Energy, Genotype, Phenotype, Color]
 	childMap  generic.Map7[Position, Heading, Energy, Genotype, Phenotype, Color, Searching]
@@ -34,6 +36,7 @@ type SysReproduction struct {
 
 // Initialize the system
 func (s *SysReproduction) Initialize(world *ecs.World) {
+	s.grass = generic.NewResource[Grass](world)
 	s.filter = *generic.NewFilter2[Energy, Color]()
 	s.parentMap = generic.NewMap5[Position, Energy, Genotype, Phenotype, Color](world)
 	s.childMap = generic.NewMap7[Position, Heading, Energy, Genotype, Phenotype, Color, Searching](world)
@@ -44,6 +47,8 @@ func (s *SysReproduction) Initialize(world *ecs.World) {
 
 // Update the system
 func (s *SysReproduction) Update(world *ecs.World) {
+	grass := s.grass.Get().Grass
+
 	query := s.filter.Query(world)
 	for query.Next() {
 		en, col := query.Get()
@@ -69,8 +74,13 @@ func (s *SysReproduction) Update(world *ecs.World) {
 			pos2, head2, en2, genes2, pt2, col2, _ := query.Get()
 			head2.Angle = rand.Float32() * 2 * math.Pi
 			en2.Energy = enChild
-			*pos2 = *pos
-
+			for {
+				pos2.X = pos.X + float32(rand.NormFloat64())*s.HatchRadius
+				pos2.Y = pos.Y + float32(rand.NormFloat64())*s.HatchRadius
+				if grass.IsInBounds(float64(pos2.X), float64(pos2.Y)) {
+					break
+				}
+			}
 			if ok {
 				genesMate, colMate := s.mateMap.Get(mate)
 				s.crossGenes(genes, genesMate, genes2)

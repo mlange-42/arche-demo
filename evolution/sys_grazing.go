@@ -8,7 +8,8 @@ import (
 
 // SysGrazing is a system that handle grazing of entities on [Grass].
 type SysGrazing struct {
-	MaxUptake float32
+	MaxUptake    float32
+	UptakeFactor float32
 
 	grass        generic.Resource[Grass]
 	grazerFilter generic.Filter1[Position]
@@ -49,7 +50,10 @@ func (s *SysGrazing) Update(world *ecs.World) {
 		if uptake > available {
 			uptake = available
 		}
-		en.Energy += uptake
+		en.Energy += uptake * s.UptakeFactor
+		if en.Energy > 1 {
+			en.Energy = 1
+		}
 		*grass.GetPointer(cx, cy) -= uptake
 	}
 }

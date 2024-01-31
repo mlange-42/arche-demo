@@ -67,7 +67,7 @@ type Phenotype struct {
 func (p *Phenotype) From(g *Genotype) {
 	p.MaxAngle = g.Genes[0] * 0.5 * math.Pi
 	p.MinGrass = g.Genes[1] * 0.5
-	p.Invest = g.Genes[2] * 0.5
+	p.Invest = g.Genes[2]
 	p.Offspring = uint8(1 + g.Genes[3]*10)
 }
 

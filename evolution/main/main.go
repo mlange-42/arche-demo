@@ -29,13 +29,15 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
 	game.Model.AddSystem(&evolution.SysInitGrass{
-		Frequency: 0.04,
+		Frequency: 0.05,
 		Octaves:   3,
-		Falloff:   0.8,
+		Falloff:   0.75,
 		Cutoff:    0.45,
 	})
 	game.Model.AddSystem(&evolution.SysInitEntities{
-		Count: 1000,
+		InitialCount:    5,
+		ReleaseInterval: 60,
+		ReleaseCount:    1,
 	})
 
 	/*game.Model.AddSystem(&evolution.SysGrowGrassLinear{
@@ -47,17 +49,13 @@ func main() {
 		BaseRate: 0.15,
 	})
 	game.Model.AddSystem(&evolution.SysGrazing{
-		MaxUptake: 0.01,
+		MaxUptake:    0.005,
+		UptakeFactor: 1.0,
 	})
 	game.Model.AddSystem(&evolution.SysSearching{
 		MaxSpeed: 0.5,
 	})
 	game.Model.AddSystem(&evolution.SysDecisions{})
-	game.Model.AddSystem(&evolution.SysMetabolism{
-		RateGrazing:   0.0035,
-		RateSearching: 0.01,
-	})
-	game.Model.AddSystem(&evolution.SysMortality{})
 	game.Model.AddSystem(&evolution.SysReproduction{
 		MatingTrials:           10,
 		MaxMatingDiff:          15,
@@ -65,10 +63,16 @@ func main() {
 		MutationMagnitude:      0.01,
 		ColorMutationMagnitude: 2,
 		AllowAsexual:           true,
+		HatchRadius:            2.0,
 	})
+	game.Model.AddSystem(&evolution.SysMetabolism{
+		RateGrazing:   0.002,
+		RateSearching: 0.008,
+	})
+	game.Model.AddSystem(&evolution.SysMortality{})
 	game.Model.AddSystem(&evolution.SysDisturbance{
 		Interval:    600,
-		Count:       1,
+		Count:       0,
 		MinRadius:   4,
 		MaxRadius:   6,
 		TargetValue: 0.025,
