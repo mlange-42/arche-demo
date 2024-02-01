@@ -14,7 +14,9 @@ import (
 
 // UISysDrawInfo is a system that draws info text.
 type UISysDrawInfo struct {
-	Offset     image.Point
+	// Where to put the text.
+	Offset image.Point
+	// Optionally, components required for a second entity count entry.
 	Components []generic.Comp
 
 	canvas generic.Resource[EbitenImage]

@@ -2,7 +2,7 @@ package common
 
 import "math"
 
-// Grid data structure
+// Grid data structure for 2D uniform grids.
 type Grid[T any] struct {
 	data     []T
 	width    int
@@ -10,7 +10,7 @@ type Grid[T any] struct {
 	cellsize float64
 }
 
-// NewGrid returns a new Grid
+// NewGrid returns a new Grid.
 func NewGrid[T any](width, height int, cellsize ...float64) Grid[T] {
 	cs := 1.0
 	if len(cellsize) > 0 {
@@ -24,7 +24,7 @@ func NewGrid[T any](width, height int, cellsize ...float64) Grid[T] {
 	}
 }
 
-// NewGridExtent returns a new Grid with the given global extent
+// NewGridExtent returns a new Grid with the given global extent.
 func NewGridExtent[T any](width, height float64, cellsize ...float64) Grid[T] {
 	cs := 1.0
 	if len(cellsize) > 0 {
