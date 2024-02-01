@@ -31,11 +31,11 @@ jobs:
 
       - name: Build WebAssembly
         run: |
-          go build -tags tiny -o docs/static/wasm/logo.wasm ./logo/main
-          go build -tags tiny -o docs/static/wasm/box2d.wasm ./box2d/main
-          go build -tags tiny -o docs/static/wasm/bees.wasm ./bees/main
-          go build -tags tiny -o docs/static/wasm/ants.wasm ./ants/main
-          go build -tags tiny -o docs/static/wasm/evolution.wasm ./evolution/main
+          go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/logo.wasm ./logo/main
+          go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/box2d.wasm ./box2d/main
+          go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/bees.wasm ./bees/main
+          go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/ants.wasm ./ants/main
+          go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/evolution.wasm ./evolution/main
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
