@@ -15,7 +15,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             const go = new Go();
             const name = window.location.search.substring(1);
-            let url = `./${name}.wasm`;
+            let url = `./${name}.wasm.gz`;
 
             // Polyfill
             if (!WebAssembly.instantiateStreaming) {
