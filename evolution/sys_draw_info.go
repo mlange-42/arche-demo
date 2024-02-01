@@ -2,6 +2,7 @@ package evolution
 
 import (
 	"fmt"
+	"image"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -14,7 +15,7 @@ import (
 
 // UISysDrawInfo is a system that draws info text.
 type UISysDrawInfo struct {
-	Offset common.Vec2i
+	Offset image.Point
 
 	canvas generic.Resource[common.EbitenImage]
 	time   generic.Resource[resource.Tick]

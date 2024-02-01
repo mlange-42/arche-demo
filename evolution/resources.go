@@ -22,3 +22,17 @@ func NewGrass(width, height, cellsize int, scale int) Grass {
 		Scale:  scale,
 	}
 }
+
+// MouseSelection resource.
+type MouseSelection struct {
+	Selections []*SelectionEntry
+}
+
+// SelectionEntry for [MouseSelection].
+type SelectionEntry struct {
+	XIndex   int
+	YIndex   int
+	Position Position
+	Radius   float32
+	Active   bool
+}

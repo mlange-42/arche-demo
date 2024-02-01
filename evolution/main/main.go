@@ -1,6 +1,7 @@
 package main
 
 import (
+	"image"
 	"log"
 
 	"github.com/mlange-42/arche-demo/common"
@@ -26,6 +27,9 @@ func main() {
 
 	grass := evolution.NewGrass(worldWidth/scale, worldHeight/scale, 4, scale)
 	ecs.AddResource(&game.Model.World, &grass)
+
+	selection := evolution.MouseSelection{}
+	ecs.AddResource(&game.Model.World, &selection)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
@@ -87,34 +91,38 @@ func main() {
 		MaxExponent:     6,
 	})
 	game.Model.AddUISystem(&evolution.UISysManagePause{})
+
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})
 	game.Model.AddUISystem(&evolution.UISysDrawEntities{})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
-		Interval:    60,
-		XIndex:      0,
-		YIndex:      1,
-		Width:       160,
-		Height:      160,
-		ImageOffset: common.Vec2i{X: 640, Y: 0},
+		Interval:       30,
+		IntervalOffset: 0,
+		XIndex:         0,
+		YIndex:         1,
+		Width:          160,
+		Height:         160,
+		ImageOffset:    image.Point{X: 640, Y: 0},
 	})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
-		Interval:    60,
-		XIndex:      2,
-		YIndex:      3,
-		Width:       160,
-		Height:      160,
-		ImageOffset: common.Vec2i{X: 640, Y: 160},
+		Interval:       30,
+		IntervalOffset: 10,
+		XIndex:         2,
+		YIndex:         3,
+		Width:          160,
+		Height:         160,
+		ImageOffset:    image.Point{X: 640, Y: 160},
 	})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
-		Interval:    60,
-		XIndex:      4,
-		YIndex:      5,
-		Width:       160,
-		Height:      160,
-		ImageOffset: common.Vec2i{X: 640, Y: 320},
+		Interval:       30,
+		IntervalOffset: 20,
+		XIndex:         4,
+		YIndex:         5,
+		Width:          160,
+		Height:         160,
+		ImageOffset:    image.Point{X: 640, Y: 320},
 	})
 	game.Model.AddUISystem(&evolution.UISysDrawInfo{
-		Offset: common.Vec2i{X: 800, Y: 0},
+		Offset: image.Point{X: 800, Y: 0},
 	})
 
 	game.Initialize()
