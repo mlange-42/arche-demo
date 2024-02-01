@@ -13,8 +13,10 @@ const (
 	screenWidth  = 880
 	screenHeight = 480
 
-	worldWidth  = 340
-	worldHeight = 240
+	worldWidth  = 640
+	worldHeight = 480
+
+	scale = 2
 )
 
 func main() {
@@ -22,23 +24,24 @@ func main() {
 		model.New(), screenWidth, screenHeight,
 	)
 
-	grass := evolution.NewGrass(worldWidth, worldHeight, 4, 2)
+	grass := evolution.NewGrass(worldWidth/scale, worldHeight/scale, 4, scale)
 	ecs.AddResource(&game.Model.World, &grass)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
 	game.Model.AddSystem(&evolution.SysInitGrass{
-		Frequency: 0.05,
+		Frequency: 0.03,
 		Octaves:   3,
 		Falloff:   0.75,
-		Cutoff:    0.45,
+		Cutoff:    0.4,
 	})
 	game.Model.AddSystem(&evolution.SysInitEntities{
-		InitialCount:    50,
-		ReleaseInterval: 60,
-		ReleaseCount:    1,
-		RandomGenes:     false,
+		InitialBatches:  1000,
+		ReleaseInterval: 240,
+		ReleaseBatches:  1,
+		BatchSize:       5,
+		RandomGenes:     true,
 	})
 
 	game.Model.AddSystem(&evolution.SysGrowGrassLogistic{
@@ -54,11 +57,12 @@ func main() {
 	})
 	game.Model.AddSystem(&evolution.SysDecisions{})
 	game.Model.AddSystem(&evolution.SysReproduction{
-		MatingTrials:        10,
-		MaxMatingDiff:       10,
-		CrossProb:           0.15,
-		MutationProbability: 0.25,
-		MutationMagnitude:   0.025,
+		MatingTrials:        25,
+		MaxMatingDist:       60,
+		MaxMatingDiff:       15,
+		CrossProb:           0.333,
+		MutationProbability: 0.2,
+		MutationMagnitude:   0.01,
 		AllowAsexual:        false,
 		HatchRadius:         2.0,
 	})
@@ -71,7 +75,7 @@ func main() {
 	})
 	game.Model.AddSystem(&evolution.SysDisturbance{
 		Interval:    600,
-		Count:       1,
+		Count:       0,
 		MinRadius:   3,
 		MaxRadius:   5,
 		TargetValue: 0.01,
@@ -91,7 +95,7 @@ func main() {
 		YIndex:      1,
 		Width:       160,
 		Height:      160,
-		ImageOffset: evolution.Position{X: 680, Y: 0},
+		ImageOffset: common.Vec2i{X: 640, Y: 0},
 	})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
 		Interval:    60,
@@ -99,7 +103,7 @@ func main() {
 		YIndex:      3,
 		Width:       160,
 		Height:      160,
-		ImageOffset: evolution.Position{X: 680, Y: 160},
+		ImageOffset: common.Vec2i{X: 640, Y: 160},
 	})
 	game.Model.AddUISystem(&evolution.UISysDrawScatter{
 		Interval:    60,
@@ -107,7 +111,10 @@ func main() {
 		YIndex:      5,
 		Width:       160,
 		Height:      160,
-		ImageOffset: evolution.Position{X: 680, Y: 320},
+		ImageOffset: common.Vec2i{X: 640, Y: 320},
+	})
+	game.Model.AddUISystem(&evolution.UISysDrawInfo{
+		Offset: common.Vec2i{X: 800, Y: 0},
 	})
 
 	game.Initialize()

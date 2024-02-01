@@ -31,7 +31,7 @@ func (s *SysMortality) Update(world *ecs.World) {
 	query := s.filter.Query(world)
 	for query.Next() {
 		en, age := query.Get()
-		if en.Energy < 0 || tick > age.TickOfBirth+s.MaxAge {
+		if en.Energy < 0 || (s.MaxAge > 0 && tick > age.TickOfBirth+s.MaxAge) {
 			s.toRemove = append(s.toRemove, query.Entity())
 		}
 	}

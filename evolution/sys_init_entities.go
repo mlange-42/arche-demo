@@ -11,9 +11,10 @@ import (
 
 // SysInitEntities is a system to initialize entities.
 type SysInitEntities struct {
-	InitialCount    int
+	InitialBatches  int
 	ReleaseInterval int
-	ReleaseCount    int
+	ReleaseBatches  int
+	BatchSize       int
 	RandomGenes     bool
 
 	width  float32
@@ -34,24 +35,28 @@ func (s *SysInitEntities) Initialize(world *ecs.World) {
 	cs := float32(grass.Grass.Cellsize())
 	s.width, s.height = float32(grass.Grass.Width())*cs, float32(grass.Grass.Height())*cs
 
-	s.createEntities(world, s.InitialCount, s.time.Get().Tick)
+	s.createEntities(world, s.InitialBatches, s.time.Get().Tick)
 }
 
 // Update the system
 func (s *SysInitEntities) Update(world *ecs.World) {
 	tick := s.time.Get().Tick
 
-	if s.ReleaseCount <= 0 || (s.ReleaseInterval > 0 && tick%int64(s.ReleaseInterval) != 0) {
+	if s.ReleaseBatches <= 0 || (s.ReleaseInterval > 0 && tick%int64(s.ReleaseInterval) != 0) {
 		return
 	}
-	s.createEntities(world, s.ReleaseCount, tick)
+	s.createEntities(world, s.ReleaseBatches, tick)
 }
 
 // Finalize the system
 func (s *SysInitEntities) Finalize(world *ecs.World) {}
 
-func (s *SysInitEntities) createEntities(world *ecs.World, count int, tick int64) {
-	query := s.builder.NewBatchQ(s.InitialCount)
+func (s *SysInitEntities) createEntities(world *ecs.World, batches int, tick int64) {
+	if s.BatchSize > 1 {
+		s.createEntityBatches(world, batches, tick)
+		return
+	}
+	query := s.builder.NewBatchQ(batches)
 	for query.Next() {
 		pos, age, head, en, genes, pt, cols, _ := query.Get()
 
@@ -69,5 +74,37 @@ func (s *SysInitEntities) createEntities(world *ecs.World, count int, tick int64
 		cols.From(genes)
 
 		en.Energy = 0.2 + rand.Float32()*0.8
+	}
+}
+
+func (s *SysInitEntities) createEntityBatches(world *ecs.World, batches int, tick int64) {
+	genome := Genotype{}
+	phenome := Phenotype{}
+	color := Color{}
+	for i := 0; i < batches; i++ {
+		query := s.builder.NewBatchQ(s.BatchSize)
+		newPos := Position{rand.Float32() * s.width, rand.Float32() * s.height}
+		angle := rand.Float32() * 2 * math.Pi
+
+		if s.RandomGenes {
+			genome.Randomize()
+		} else {
+			genome.Defaults()
+		}
+		phenome.From(&genome)
+		color.From(&genome)
+
+		for query.Next() {
+			pos, age, head, en, genes, pt, cols, _ := query.Get()
+
+			*pos = newPos
+			head.Angle = angle
+			age.TickOfBirth = tick
+			*genes = genome
+			*pt = phenome
+			*cols = color
+
+			en.Energy = 0.5 + rand.Float32()*0.5
+		}
 	}
 }

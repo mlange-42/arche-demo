@@ -55,7 +55,7 @@ type UISysDrawScatter struct {
 	Interval    int
 	XIndex      int
 	YIndex      int
-	ImageOffset Position
+	ImageOffset common.Vec2i
 	Width       int
 	Height      int
 
@@ -78,7 +78,7 @@ func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.filter = *generic.NewFilter2[Genotype, Color]()
 
-	s.image = image.NewRGBA(image.Rect(0, 0, 200, 200))
+	s.image = image.NewRGBA(image.Rect(0, 0, s.Width, s.Height))
 	s.eimage = ebiten.NewImage(s.image.Rect.Dx(), s.image.Rect.Dy())
 
 	geom := ebiten.GeoM{}
@@ -92,8 +92,11 @@ func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 	s.scale = common.Vec2i{X: s.Width - 30, Y: -(s.Height - 30)}
 
 	geomX := ebiten.GeoM{}
-	geomX.Translate(0, 16)
+	geomX.Translate(float64(s.offset.X), float64(s.offset.Y+16))
 	s.yAxisOptions = ebiten.DrawImageOptions{
+		GeoM: geomX,
+	}
+	s.xAxisOptions = ebiten.DrawImageOptions{
 		GeoM: geomX,
 	}
 	geomY := ebiten.GeoM{}
@@ -118,7 +121,6 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 
 	bg := color.RGBA{20, 20, 20, 255}
 	plotBg := color.RGBA{0, 0, 0, 255}
-	white := color.RGBA{255, 255, 255, 255}
 
 	off := s.offset
 	sc := s.scale
@@ -138,7 +140,7 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 	}
 	s.eimage.WritePixels(s.image.Pix)
 
-	text.Draw(s.eimage, GeneNames[s.XIndex], fontNormal, off.X, off.Y+16, white)
+	text.DrawWithOptions(s.eimage, GeneNames[s.XIndex], fontNormal, &s.xAxisOptions)
 	text.DrawWithOptions(s.eimage, GeneNames[s.YIndex], fontNormal, &s.yAxisOptions)
 
 	screen.DrawImage(s.eimage, &s.drawOptions)

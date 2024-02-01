@@ -13,12 +13,14 @@ import (
 
 type repEntry struct {
 	Entity ecs.Entity
-	color  color.RGBA
+	Pos    Position
+	Color  color.RGBA
 }
 
 // SysReproduction is a system that handles reproduction of grazers.
 type SysReproduction struct {
 	MatingTrials        int
+	MaxMatingDist       int
 	MaxMatingDiff       uint8
 	CrossProb           float32
 	MutationProbability float32
@@ -26,9 +28,11 @@ type SysReproduction struct {
 	AllowAsexual        bool
 	HatchRadius         float32
 
+	maxMatingDistSq int
+
 	time      generic.Resource[resource.Tick]
 	grass     generic.Resource[Grass]
-	filter    generic.Filter2[Energy, Color]
+	filter    generic.Filter3[Position, Energy, Color]
 	parentMap generic.Map5[Position, Energy, Genotype, Phenotype, Color]
 	childMap  generic.Map8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Activity]
 	mateMap   generic.Map1[Genotype]
@@ -40,10 +44,12 @@ type SysReproduction struct {
 func (s *SysReproduction) Initialize(world *ecs.World) {
 	s.time = generic.NewResource[resource.Tick](world)
 	s.grass = generic.NewResource[Grass](world)
-	s.filter = *generic.NewFilter2[Energy, Color]()
+	s.filter = *generic.NewFilter3[Position, Energy, Color]()
 	s.parentMap = generic.NewMap5[Position, Energy, Genotype, Phenotype, Color](world)
 	s.childMap = generic.NewMap8[Position, Age, Heading, Energy, Genotype, Phenotype, Color, Activity](world)
 	s.mateMap = generic.NewMap1[Genotype](world)
+
+	s.maxMatingDistSq = s.MaxMatingDist * s.MaxMatingDist
 
 	s.toReproduce = make([]repEntry, 0, 16)
 }
@@ -55,23 +61,27 @@ func (s *SysReproduction) Update(world *ecs.World) {
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		en, col := query.Get()
+		pos, en, col := query.Get()
 		if en.Energy >= 1 {
-			s.toReproduce = append(s.toReproduce, repEntry{Entity: query.Entity(), color: col.Color})
+			s.toReproduce = append(s.toReproduce, repEntry{Entity: query.Entity(), Pos: *pos, Color: col.Color})
 		}
 	}
 
 	for _, e := range s.toReproduce {
 		pos, en, genes, pt, col := s.parentMap.Get(e.Entity)
 
-		enTotal := pt.Invest * en.Energy
-		en.Energy -= enTotal
-		enChild := enTotal / float32(pt.Offspring)
-
-		mate, ok := s.findMate(&col.Color)
+		mate, ok := s.findMate(e.Entity, pos, &col.Color)
+		var genesMate *Genotype
 		if !(ok || s.AllowAsexual) {
 			continue
 		}
+		if ok {
+			genesMate = s.mateMap.Get(mate)
+		}
+
+		enTotal := pt.Invest * en.Energy
+		en.Energy -= enTotal
+		enChild := enTotal / float32(pt.Offspring)
 
 		query := s.childMap.NewBatchQ(int(pt.Offspring))
 		for query.Next() {
@@ -87,7 +97,6 @@ func (s *SysReproduction) Update(world *ecs.World) {
 				}
 			}
 			if ok {
-				genesMate := s.mateMap.Get(mate)
 				s.cross(genes, genesMate, genes2)
 			} else {
 				*genes2 = *genes
@@ -124,11 +133,11 @@ func (s *SysReproduction) mutate(genes *Genotype, color *Color) {
 	}
 }
 
-func (s *SysReproduction) findMate(col *color.RGBA) (ecs.Entity, bool) {
+func (s *SysReproduction) findMate(e ecs.Entity, pos *Position, col *color.RGBA) (ecs.Entity, bool) {
 	ln := len(s.toReproduce)
 	for i := 0; i < s.MatingTrials; i++ {
 		entry := &s.toReproduce[rand.Intn(ln)]
-		if s.canMate(col, &entry.color) {
+		if e != entry.Entity && s.canMate(pos, col, entry) {
 			return entry.Entity, true
 		}
 	}
@@ -136,8 +145,16 @@ func (s *SysReproduction) findMate(col *color.RGBA) (ecs.Entity, bool) {
 	return ecs.Entity{}, false
 }
 
-func (s *SysReproduction) canMate(a, b *color.RGBA) bool {
-	return common.AbsInt(int(a.R)-int(b.R)) <= int(s.MaxMatingDiff) &&
-		common.AbsInt(int(a.G)-int(b.G)) <= int(s.MaxMatingDiff) &&
-		common.AbsInt(int(a.B)-int(b.B)) <= int(s.MaxMatingDiff)
+func (s *SysReproduction) canMate(pos *Position, col *color.RGBA, other *repEntry) bool {
+	if s.MaxMatingDist > 0 {
+		dx := pos.X - other.Pos.X
+		dy := pos.Y - other.Pos.Y
+		if dx*dx+dy*dy > float32(s.maxMatingDistSq) {
+			return false
+		}
+	}
+	md := int(s.MaxMatingDiff)
+	return common.AbsInt(int(col.R)-int(other.Color.R)) <= md &&
+		common.AbsInt(int(col.G)-int(other.Color.G)) <= md &&
+		common.AbsInt(int(col.B)-int(other.Color.B)) <= md
 }
