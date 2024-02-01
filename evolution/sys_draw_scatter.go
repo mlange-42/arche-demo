@@ -192,8 +192,6 @@ func (s *UISysDrawScatter) drawSelection(screen *ebiten.Image) {
 	sy := s.selection.Radius * float32(s.scale.Y)
 
 	vector.StrokeRect(screen, float32(x)-sx, float32(y)-sy, 2*sx, 2*sy, 1, yellow, false)
-
-	//draw2dkit.Rectangle(gc, float64(float32(x)-sx), float64(float32(y)-sy), float64(float32(x)+sx), float64(float32(y)+sy))
 }
 
 func (s *UISysDrawScatter) handleMouse(world *ecs.World) {
@@ -211,7 +209,11 @@ func (s *UISysDrawScatter) handleMouse(world *ecs.World) {
 	if dy == 0 {
 		return
 	}
-	s.selection.Radius = common.Clamp32(s.selection.Radius+float32(dy)*0.01, 0.01, 0.2)
+	var diff float32 = 0.01
+	if dy < 0 {
+		diff = -0.01
+	}
+	s.selection.Radius = common.Clamp32(s.selection.Radius+diff, 0.01, 0.2)
 }
 
 func (s *UISysDrawScatter) mouseCoords(mouse *common.Mouse) (float32, float32, bool) {
