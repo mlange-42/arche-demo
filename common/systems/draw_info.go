@@ -1,4 +1,4 @@
-package common
+package systems
 
 import (
 	"fmt"
@@ -7,38 +7,39 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/resource"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
 )
 
-// UISysDrawInfo is a system that draws info text.
-type UISysDrawInfo struct {
+// DrawInfo is a system that draws info text.
+type DrawInfo struct {
 	// Where to put the text.
 	Offset image.Point
 	// Optionally, components required for a second entity count entry.
 	Components []generic.Comp
 
-	canvas generic.Resource[EbitenImage]
+	canvas generic.Resource[common.EbitenImage]
 	time   generic.Resource[resource.Tick]
-	speed  generic.Resource[SimulationSpeed]
+	speed  generic.Resource[common.SimulationSpeed]
 
 	filterAll generic.Filter0
 	filter    generic.Filter0
 }
 
 // InitializeUI the system
-func (s *UISysDrawInfo) InitializeUI(world *ecs.World) {
-	s.canvas = generic.NewResource[EbitenImage](world)
+func (s *DrawInfo) InitializeUI(world *ecs.World) {
+	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.time = generic.NewResource[resource.Tick](world)
-	s.speed = generic.NewResource[SimulationSpeed](world)
+	s.speed = generic.NewResource[common.SimulationSpeed](world)
 
 	s.filterAll = *generic.NewFilter0()
 	s.filter = *generic.NewFilter0().With(s.Components...)
 }
 
 // UpdateUI the system
-func (s *UISysDrawInfo) UpdateUI(world *ecs.World) {
+func (s *DrawInfo) UpdateUI(world *ecs.World) {
 	tick := s.time.Get().Tick
 	canvas := s.canvas.Get()
 	screen := canvas.Image
@@ -71,7 +72,7 @@ Entities
 }
 
 // PostUpdateUI the system
-func (s *UISysDrawInfo) PostUpdateUI(world *ecs.World) {}
+func (s *DrawInfo) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
-func (s *UISysDrawInfo) FinalizeUI(world *ecs.World) {}
+func (s *DrawInfo) FinalizeUI(world *ecs.World) {}

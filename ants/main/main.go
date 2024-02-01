@@ -6,6 +6,7 @@ import (
 
 	"github.com/mlange-42/arche-demo/ants"
 	"github.com/mlange-42/arche-demo/common"
+	"github.com/mlange-42/arche-demo/common/systems"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -84,12 +85,12 @@ func main() {
 	game.Model.AddUISystem(&ants.UISysDrawNest{})
 	game.Model.AddUISystem(&ants.UISysRepaint{})
 
-	game.Model.AddUISystem(&common.UISysSimSpeed{
+	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 1,
 		MinExponent:     -2,
 		MaxExponent:     6,
 	})
-	game.Model.AddUISystem(&common.UISysDrawInfo{
+	game.Model.AddUISystem(&systems.DrawInfo{
 		Offset:     image.Point{X: 800, Y: 0},
 		Components: generic.T1[ants.Ant](),
 	})

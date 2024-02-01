@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/mlange-42/arche-demo/common"
+	"github.com/mlange-42/arche-demo/common/systems"
 	"github.com/mlange-42/arche-demo/evolution"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
@@ -85,7 +86,7 @@ func main() {
 		TargetValue: 0.01,
 	})
 
-	game.Model.AddUISystem(&common.UISysSimSpeed{
+	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 1,
 		MinExponent:     -2,
 		MaxExponent:     6,
@@ -121,7 +122,7 @@ func main() {
 		Height:         160,
 		ImageOffset:    image.Point{X: 640, Y: 320},
 	})
-	game.Model.AddUISystem(&common.UISysDrawInfo{
+	game.Model.AddUISystem(&systems.DrawInfo{
 		Offset: image.Point{X: 800, Y: 0},
 	})
 
