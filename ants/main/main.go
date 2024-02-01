@@ -67,7 +67,7 @@ func main() {
 		ProbExponent:     1.0,
 		RandomProb:       0.05,
 		TraceDecay:       0.95,
-		MaxSearchTime:    300,
+		MaxSearchTime:    600,
 		ScoutProbability: 0.05,
 	})
 	game.Model.AddSystem(&ants.SysReturning{
