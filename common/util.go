@@ -5,6 +5,18 @@ import (
 	"math/rand"
 )
 
+// DegToRad conversion factor.
+const DegToRad = math.Pi / 180.0
+
+// RadToDeg conversion factor.
+const RadToDeg = 180.0 / math.Pi
+
+// Vec2i is an int vector.
+type Vec2i struct {
+	X int
+	Y int
+}
+
 // Norm normalizes a vector. The third return value is the original vector's length.
 func Norm(dx, dy float64) (float64, float64, float64) {
 	len := math.Sqrt(dx*dx + dy*dy)
@@ -54,4 +66,72 @@ func SelectRoulette(probs []float64) (int, bool) {
 		}
 	}
 	return -1, false
+}
+
+// NormAngle brings an angle into range [0, 2*PI).
+func NormAngle(angle float64) float64 {
+	if angle < 0 {
+		return math.Pi*2 - math.Mod(angle, math.Pi*2)
+	}
+	return math.Mod(angle, math.Pi*2)
+}
+
+// NormAngle32 brings an angle into range [0, 2*PI).
+func NormAngle32(angle float32) float32 {
+	if angle < 0 {
+		return float32(math.Pi*2 + math.Mod(float64(angle), math.Pi*2))
+	}
+	return float32(math.Mod(float64(angle), math.Pi*2))
+}
+
+// ClampInt clamps to [low, high].
+func ClampInt(v, low, high int) int {
+	if v < low {
+		return low
+	}
+	if v > high {
+		return high
+	}
+	return v
+}
+
+// Clamp clamps to [low, high].
+func Clamp(v, low, high float64) float64 {
+	if v < low {
+		return low
+	}
+	if v > high {
+		return high
+	}
+	return v
+}
+
+// Clamp32 clamps to [low, high].
+func Clamp32(v, low, high float32) float32 {
+	if v < low {
+		return low
+	}
+	if v > high {
+		return high
+	}
+	return v
+}
+
+// AbsInt calculates the absolute value og an integer.
+func AbsInt(v int) int {
+	if v < 0 {
+		return -v
+	}
+	return v
+}
+
+// RandBetweenUIn8 returns a random uint8 between the given limits, both inclusive
+func RandBetweenUIn8(lim1, lim2 uint8) uint8 {
+	if lim1 == lim2 {
+		return lim1
+	}
+	if lim2 < lim1 {
+		lim1, lim2 = lim2, lim1
+	}
+	return uint8(rand.Intn(int(1+lim2-lim1))) + lim1
 }

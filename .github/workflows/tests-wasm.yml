@@ -31,6 +31,7 @@ jobs:
           go build -o test/box2d.wasm ./box2d/main
           go build -o test/bees.wasm ./bees/main
           go build -o test/ants.wasm ./ants/main
+          go build -o test/evolution.wasm ./evolution/main
 
   test:
     name: Run tests
