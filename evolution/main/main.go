@@ -34,13 +34,6 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	game.Model.AddSystem(&common.SysSimSpeed{
-		InitialExponent: 1,
-		MinExponent:     -2,
-		MaxExponent:     6,
-	})
-	game.Model.AddSystem(&evolution.SysManagePause{})
-
 	game.Model.AddSystem(&evolution.SysInitGrass{
 		Frequency: 0.03,
 		Octaves:   3,
@@ -91,6 +84,13 @@ func main() {
 		MaxRadius:   5,
 		TargetValue: 0.01,
 	})
+
+	game.Model.AddUISystem(&common.UISysSimSpeed{
+		InitialExponent: 1,
+		MinExponent:     -2,
+		MaxExponent:     6,
+	})
+	game.Model.AddUISystem(&evolution.UISysManagePause{})
 
 	game.Model.AddUISystem(&evolution.UISysDrawGrass{})
 	game.Model.AddUISystem(&evolution.UISysDrawEntities{})

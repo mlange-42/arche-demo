@@ -7,9 +7,9 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysSimSpeed is a simple system that changes the simulation speed
+// UISysSimSpeed is a simple system that changes the simulation speed
 // when the user presses PageUp, PageDown or Home.
-type SysSimSpeed struct {
+type UISysSimSpeed struct {
 	InitialExponent int
 	MinExponent     int
 	MaxExponent     int
@@ -17,8 +17,8 @@ type SysSimSpeed struct {
 	speed generic.Resource[SimulationSpeed]
 }
 
-// Initialize the system
-func (s *SysSimSpeed) Initialize(world *ecs.World) {
+// InitializeUI the system
+func (s *UISysSimSpeed) InitializeUI(world *ecs.World) {
 	if s.MinExponent > s.MaxExponent {
 		panic("min exponent must not be higher than max exponent")
 	}
@@ -34,8 +34,8 @@ func (s *SysSimSpeed) Initialize(world *ecs.World) {
 	}
 }
 
-// Update the system
-func (s *SysSimSpeed) Update(world *ecs.World) {
+// UpdateUI the system
+func (s *UISysSimSpeed) UpdateUI(world *ecs.World) {
 	if inpututil.IsKeyJustPressed(ebiten.KeyPageUp) {
 		speed := s.speed.Get()
 		if speed.Exponent < s.MaxExponent {
@@ -54,5 +54,8 @@ func (s *SysSimSpeed) Update(world *ecs.World) {
 	}
 }
 
-// Finalize the system
-func (s *SysSimSpeed) Finalize(world *ecs.World) {}
+// PostUpdateUI the system
+func (s *UISysSimSpeed) PostUpdateUI(world *ecs.World) {}
+
+// FinalizeUI the system
+func (s *UISysSimSpeed) FinalizeUI(world *ecs.World) {}
