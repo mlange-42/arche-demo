@@ -43,7 +43,7 @@ type Heading struct {
 	Angle float32
 }
 
-// Direction returns the unit vector oh the heading's angle.
+// Direction returns the unit vector corresponding to the heading.
 func (h *Heading) Direction() (float32, float32) {
 	a := float64(h.Angle)
 	return float32(math.Cos(a)), float32(math.Sin(a))

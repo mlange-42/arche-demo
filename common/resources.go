@@ -22,9 +22,8 @@ type EbitenImage struct {
 
 // Mouse resource for events.
 type Mouse struct {
+	image.Point
 	IsInside bool
-	X        int
-	Y        int
 }
 
 // SimulationSpeed resource.

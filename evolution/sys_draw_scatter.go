@@ -10,6 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
 	"github.com/hajimehoshi/ebiten/v2/text"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -52,23 +53,29 @@ func init() {
 
 // UISysDrawScatter is a system that draws a scatter plot of entity [Genes].
 type UISysDrawScatter struct {
-	Interval    int
-	XIndex      int
-	YIndex      int
-	ImageOffset common.Vec2i
-	Width       int
-	Height      int
+	Interval       int
+	IntervalOffset int
+	XIndex         int
+	YIndex         int
+	ImageOffset    image.Point
+	Width          int
+	Height         int
 
 	canvas       generic.Resource[common.EbitenImage]
+	mouse        generic.Resource[common.Mouse]
+	selectionRes generic.Resource[MouseSelection]
+	selection    SelectionEntry
+
 	filter       generic.Filter2[Genotype, Color]
 	image        *image.RGBA
 	eimage       *ebiten.Image
+	bounds       image.Rectangle
 	drawOptions  ebiten.DrawImageOptions
 	xAxisOptions ebiten.DrawImageOptions
 	yAxisOptions ebiten.DrawImageOptions
 
-	offset common.Vec2i
-	scale  common.Vec2i
+	offset image.Point
+	scale  image.Point
 
 	frame int
 }
@@ -76,10 +83,30 @@ type UISysDrawScatter struct {
 // InitializeUI the system
 func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
+	s.mouse = generic.NewResource[common.Mouse](world)
+	s.selectionRes = generic.NewResource[MouseSelection](world)
+	selection := s.selectionRes.Get()
+
+	s.selection = SelectionEntry{
+		Radius: 0.05,
+		XIndex: s.XIndex,
+		YIndex: s.YIndex,
+	}
+	selection.Selections = append(selection.Selections, &s.selection)
+
 	s.filter = *generic.NewFilter2[Genotype, Color]()
 
 	s.image = image.NewRGBA(image.Rect(0, 0, s.Width, s.Height))
 	s.eimage = ebiten.NewImage(s.image.Rect.Dx(), s.image.Rect.Dy())
+
+	s.offset = image.Point{X: 20, Y: s.Height - 20}
+	s.scale = image.Point{X: s.Width - 30, Y: -(s.Height - 30)}
+	s.bounds = image.Rect(
+		s.ImageOffset.X+s.offset.X,
+		s.ImageOffset.Y+s.offset.Y,
+		s.ImageOffset.X+s.offset.X+s.scale.X,
+		s.ImageOffset.Y+s.offset.Y+s.scale.Y,
+	)
 
 	geom := ebiten.GeoM{}
 	geom.Translate(float64(s.ImageOffset.X), float64(s.ImageOffset.Y))
@@ -87,9 +114,6 @@ func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 		GeoM:   geom,
 		Filter: ebiten.FilterNearest,
 	}
-
-	s.offset = common.Vec2i{X: 20, Y: s.Height - 20}
-	s.scale = common.Vec2i{X: s.Width - 30, Y: -(s.Height - 30)}
 
 	geomX := ebiten.GeoM{}
 	geomX.Translate(float64(s.offset.X), float64(s.offset.Y+16))
@@ -109,11 +133,14 @@ func (s *UISysDrawScatter) InitializeUI(world *ecs.World) {
 
 // UpdateUI the system
 func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
+	s.handleMouse(world)
+
 	canvas := s.canvas.Get()
 	screen := canvas.Image
 
-	if s.Interval > 0 && s.frame%s.Interval != 0 {
+	if s.Interval > 0 && (s.frame)%s.Interval != s.IntervalOffset {
 		screen.DrawImage(s.eimage, &s.drawOptions)
+		s.drawSelection(screen)
 		s.frame++
 		return
 	}
@@ -144,6 +171,7 @@ func (s *UISysDrawScatter) UpdateUI(world *ecs.World) {
 	text.DrawWithOptions(s.eimage, GeneNames[s.YIndex], fontNormal, &s.yAxisOptions)
 
 	screen.DrawImage(s.eimage, &s.drawOptions)
+	s.drawSelection(screen)
 }
 
 // PostUpdateUI the system
@@ -151,3 +179,51 @@ func (s *UISysDrawScatter) PostUpdateUI(world *ecs.World) {}
 
 // FinalizeUI the system
 func (s *UISysDrawScatter) FinalizeUI(world *ecs.World) {}
+
+func (s *UISysDrawScatter) drawSelection(screen *ebiten.Image) {
+	if !s.selection.Active {
+		return
+	}
+	yellow := color.RGBA{255, 255, 40, 255}
+
+	p := s.selection.Position
+	x, y := s.toWindowCoords(p.X, p.Y)
+	sx := s.selection.Radius * float32(s.scale.X)
+	sy := s.selection.Radius * float32(s.scale.Y)
+
+	vector.StrokeRect(screen, float32(x)-sx, float32(y)-sy, 2*sx, 2*sy, 1, yellow, false)
+
+	//draw2dkit.Rectangle(gc, float64(float32(x)-sx), float64(float32(y)-sy), float64(float32(x)+sx), float64(float32(y)+sy))
+}
+
+func (s *UISysDrawScatter) handleMouse(world *ecs.World) {
+	mouse := s.mouse.Get()
+	x, y, ok := s.mouseCoords(mouse)
+	if !ok {
+		s.selection.Active = false
+		return
+	}
+	s.selection.Active = true
+	s.selection.Position.X = x
+	s.selection.Position.Y = y
+
+	_, dy := ebiten.Wheel()
+	if dy == 0 {
+		return
+	}
+	s.selection.Radius = common.Clamp32(s.selection.Radius+float32(dy)*0.01, 0.01, 0.2)
+}
+
+func (s *UISysDrawScatter) mouseCoords(mouse *common.Mouse) (float32, float32, bool) {
+	if !mouse.IsInside || !mouse.In(s.bounds) {
+		return 0, 0, false
+	}
+	return float32(mouse.X-s.bounds.Min.X) / float32(s.scale.X),
+		1 + float32(mouse.Y-s.bounds.Min.Y)/float32(s.scale.Y),
+		true
+}
+
+func (s *UISysDrawScatter) toWindowCoords(x, y float32) (int, int) {
+	return int(x*float32(s.scale.X) + float32(s.bounds.Min.X)),
+		int(y*float32(s.scale.Y) + float32(s.bounds.Min.Y-s.scale.Y))
+}

@@ -8,27 +8,24 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// UISysManagePause is a simple system that transfers the pause state
+// SysManagePause is a simple system that transfers the pause state
 // from the [common.PauseMouseListener] resource to the model's [model.Systems].
-type UISysManagePause struct {
+type SysManagePause struct {
 	systems generic.Resource[model.Systems]
 }
 
-// InitializeUI the system
-func (s *UISysManagePause) InitializeUI(world *ecs.World) {
+// Initialize the system
+func (s *SysManagePause) Initialize(world *ecs.World) {
 	s.systems = generic.NewResource[model.Systems](world)
 }
 
-// UpdateUI the system
-func (s *UISysManagePause) UpdateUI(world *ecs.World) {
+// Update the system
+func (s *SysManagePause) Update(world *ecs.World) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButton0) {
 		sys := s.systems.Get()
 		sys.Paused = !sys.Paused
 	}
 }
 
-// PostUpdateUI the system
-func (s *UISysManagePause) PostUpdateUI(world *ecs.World) {}
-
-// FinalizeUI the system
-func (s *UISysManagePause) FinalizeUI(world *ecs.World) {}
+// Finalize the system
+func (s *SysManagePause) Finalize(world *ecs.World) {}
