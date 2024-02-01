@@ -146,6 +146,12 @@ func (s *SysReproduction) findMate(e ecs.Entity, pos *Position, col *color.RGBA)
 }
 
 func (s *SysReproduction) canMate(pos *Position, col *color.RGBA, other *repEntry) bool {
+	md := int(s.MaxMatingDiff)
+	if common.AbsInt(int(col.R)-int(other.Color.R)) > md ||
+		common.AbsInt(int(col.G)-int(other.Color.G)) > md ||
+		common.AbsInt(int(col.B)-int(other.Color.B)) > md {
+		return false
+	}
 	if s.MaxMatingDist > 0 {
 		dx := pos.X - other.Pos.X
 		dy := pos.Y - other.Pos.Y
@@ -153,8 +159,5 @@ func (s *SysReproduction) canMate(pos *Position, col *color.RGBA, other *repEntr
 			return false
 		}
 	}
-	md := int(s.MaxMatingDiff)
-	return common.AbsInt(int(col.R)-int(other.Color.R)) <= md &&
-		common.AbsInt(int(col.G)-int(other.Color.G)) <= md &&
-		common.AbsInt(int(col.B)-int(other.Color.B)) <= md
+	return true
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
+	"github.com/mlange-42/arche/generic"
 )
 
 const (
@@ -23,12 +24,12 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	image := common.Image{
+	img := common.Image{
 		Image:  image.NewRGBA(game.Screen.Image.Bounds()),
 		Width:  game.Screen.Width,
 		Height: game.Screen.Height,
 	}
-	ecs.AddResource(&game.Model.World, &image)
+	ecs.AddResource(&game.Model.World, &img)
 
 	grid := ants.NewPatches(game.Screen.Width, game.Screen.Height, 10)
 	ecs.AddResource(&game.Model.World, &grid)
@@ -42,7 +43,7 @@ func main() {
 	})
 
 	game.Model.AddSystem(&ants.SysResources{
-		Count: 24,
+		Count: 32,
 	})
 	game.Model.AddSystem(&ants.SysDecay{
 		Persistence: 0.99,
@@ -78,9 +79,20 @@ func main() {
 	game.Model.AddUISystem(&ants.UISysManagePause{})
 	game.Model.AddUISystem(&ants.UISysClearFrame{})
 	game.Model.AddUISystem(&ants.UISysDrawResources{})
+	//game.Model.AddUISystem(&ants.UISysDrawGrid{})
 	game.Model.AddUISystem(&ants.UISysDrawAnts{})
 	game.Model.AddUISystem(&ants.UISysDrawNest{})
 	game.Model.AddUISystem(&ants.UISysRepaint{})
+
+	game.Model.AddUISystem(&common.UISysSimSpeed{
+		InitialExponent: 1,
+		MinExponent:     -2,
+		MaxExponent:     6,
+	})
+	game.Model.AddUISystem(&common.UISysDrawInfo{
+		Offset:     image.Point{X: 800, Y: 0},
+		Components: generic.T1[ants.Ant](),
+	})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {

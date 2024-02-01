@@ -8,6 +8,7 @@ import (
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
+	"github.com/mlange-42/arche/generic"
 )
 
 const (
@@ -27,12 +28,12 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	image := common.Image{
+	img := common.Image{
 		Image:  image.NewRGBA(game.Screen.Image.Bounds()),
 		Width:  game.Screen.Width,
 		Height: game.Screen.Height,
 	}
-	ecs.AddResource(&game.Model.World, &image)
+	ecs.AddResource(&game.Model.World, &img)
 
 	patches := bees.NewPatches(game.Screen.Width, game.Screen.Height, 10)
 	ecs.AddResource(&game.Model.World, &patches)
@@ -84,6 +85,16 @@ func main() {
 	game.Model.AddUISystem(&bees.UISysDrawBees{})
 	game.Model.AddUISystem(&bees.UISysDrawHives{})
 	game.Model.AddUISystem(&bees.UISysRepaint{})
+
+	game.Model.AddUISystem(&common.UISysSimSpeed{
+		InitialExponent: 1,
+		MinExponent:     -2,
+		MaxExponent:     6,
+	})
+	game.Model.AddUISystem(&common.UISysDrawInfo{
+		Offset:     image.Point{X: 800, Y: 0},
+		Components: generic.T1[bees.HomeHive](),
+	})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {
