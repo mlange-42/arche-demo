@@ -36,8 +36,6 @@ jobs:
           go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/bees.wasm ./bees/main
           go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/ants.wasm ./ants/main
           go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/evolution.wasm ./evolution/main
-      - name: Compress binaries
-        run: gzip -S .gz docs/static/wasm/*.wasm
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
@@ -51,7 +49,7 @@ jobs:
           name: public
           path: docs/public
       - name: Deploy to GitHub Pages
-        # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: gh-pages
