@@ -1,6 +1,8 @@
 package ants
 
 import (
+	"math/rand"
+
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -19,6 +21,7 @@ type SysInitGrid struct{}
 func (s *SysInitGrid) Initialize(world *ecs.World) {
 	gridRes := generic.NewResource[Patches](world)
 	grid := gridRes.Get()
+	jitter := float64(grid.CellSize) * 0.35
 
 	nodeBuilder := generic.NewMap2[Position, Node](world)
 	edgeBuilder := generic.NewMap3[Edge, EdgeGeometry, Trace](world)
@@ -28,7 +31,8 @@ func (s *SysInitGrid) Initialize(world *ecs.World) {
 	for query.Next() {
 		pos, _ := query.Get()
 		i, j := cnt/grid.Rows, cnt%grid.Rows
-		pos.X, pos.Y = grid.CellCenter(i, j)
+		x, y := grid.CellCenter(i, j)
+		pos.X, pos.Y = x+2*rand.Float64()*jitter-jitter, y+2*rand.Float64()*jitter-jitter
 		grid.Set(i, j, query.Entity())
 		cnt++
 	}
