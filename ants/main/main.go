@@ -46,7 +46,7 @@ func main() {
 	game.Model.AddSystem(&ants.SysResources{
 		Count: 32,
 	})
-	game.Model.AddSystem(&ants.SysDecay{
+	game.Model.AddSystem(&ants.SysTraceDecay{
 		Persistence: 0.99,
 	})
 	game.Model.AddSystem(&ants.SysNestDecisions{
