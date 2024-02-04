@@ -5,20 +5,20 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// SysDecay is a system that decays ant traces.
-type SysDecay struct {
+// SysTraceDecay is a system that decays ant traces.
+type SysTraceDecay struct {
 	Persistence float64
 
 	filter generic.Filter1[Trace]
 }
 
 // Initialize the system
-func (s *SysDecay) Initialize(world *ecs.World) {
+func (s *SysTraceDecay) Initialize(world *ecs.World) {
 	s.filter = *generic.NewFilter1[Trace]()
 }
 
 // Update the system
-func (s *SysDecay) Update(world *ecs.World) {
+func (s *SysTraceDecay) Update(world *ecs.World) {
 	query := s.filter.Query(world)
 
 	for query.Next() {
@@ -29,4 +29,4 @@ func (s *SysDecay) Update(world *ecs.World) {
 }
 
 // Finalize the system
-func (s *SysDecay) Finalize(world *ecs.World) {}
+func (s *SysTraceDecay) Finalize(world *ecs.World) {}
