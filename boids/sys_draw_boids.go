@@ -7,7 +7,7 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// UISysDrawBoids is a system that draws ants.
+// UISysDrawBoids is a system that draws boids.
 type UISysDrawBoids struct {
 	canvas generic.Resource[common.EbitenImage]
 	images generic.Resource[Images]
@@ -27,6 +27,8 @@ func (s *UISysDrawBoids) UpdateUI(world *ecs.World) {
 	canvas := s.canvas.Get()
 	img := canvas.Image
 
+	xOff, yOff := float64(images.Boid.Bounds().Dx())/2, float64(images.Boid.Bounds().Dy())/2
+
 	img.Clear()
 
 	opts := ebiten.DrawImageOptions{
@@ -39,6 +41,7 @@ func (s *UISysDrawBoids) UpdateUI(world *ecs.World) {
 		pos, vel := query.Get()
 
 		opts.GeoM.Reset()
+		opts.GeoM.Translate(-xOff, -yOff)
 		opts.GeoM.Rotate(vel.Angle())
 		opts.GeoM.Translate(pos.X, pos.Y)
 		img.DrawImage(images.Boid, &opts)
