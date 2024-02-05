@@ -33,12 +33,18 @@ func main() {
 	}
 	ecs.AddResource(&game.Model.World, &img)
 
-	game.Model.AddSystem(&boids.SysInitBoids{Count: 1000})
+	images := boids.NewImages()
+	ecs.AddResource(&game.Model.World, &images)
+
+	game.Model.AddSystem(&boids.SysInitBoids{Count: 500})
 
 	game.Model.AddSystem(&boids.SysNeighbors{
 		Neighbors: 8,
-		MaxDist:   100,
+		MaxDist:   30,
 		BuildStep: 10,
+	})
+	game.Model.AddSystem(&boids.SysMoveBoids{
+		Speed: 0.1,
 	})
 
 	game.Model.AddUISystem(&boids.UISysDrawBoids{})

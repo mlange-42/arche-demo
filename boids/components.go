@@ -20,9 +20,12 @@ type Heading struct {
 }
 
 // Direction returns the unit vector corresponding to the heading.
-func (h *Heading) Direction() (float32, float32) {
-	a := float64(h.Angle)
-	return float32(math.Cos(a)), float32(math.Sin(a))
+func (h *Heading) Direction() (float64, float64) {
+	return math.Sin(h.Angle), -math.Cos(h.Angle)
+}
+
+type Rand256 struct {
+	R uint8
 }
 
 // Neighbors holds an entity's neighbours

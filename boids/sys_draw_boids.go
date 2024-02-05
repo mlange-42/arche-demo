@@ -1,10 +1,7 @@
 package boids
 
 import (
-	"image"
-	"image/color"
-	"image/draw"
-
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/mlange-42/arche/generic"
@@ -13,38 +10,39 @@ import (
 // UISysDrawBoids is a system that draws ants.
 type UISysDrawBoids struct {
 	canvas generic.Resource[common.EbitenImage]
-	filter generic.Filter1[Position]
-
-	image *image.RGBA
+	images generic.Resource[Images]
+	filter generic.Filter2[Position, Heading]
 }
 
 // InitializeUI the system
 func (s *UISysDrawBoids) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
-	s.filter = *generic.NewFilter1[Position]()
-
-	screen := s.canvas.Get()
-	s.image = image.NewRGBA(screen.Image.Bounds())
+	s.images = generic.NewResource[Images](world)
+	s.filter = *generic.NewFilter2[Position, Heading]()
 }
 
 // UpdateUI the system
 func (s *UISysDrawBoids) UpdateUI(world *ecs.World) {
+	images := s.images.Get()
 	canvas := s.canvas.Get()
 	img := canvas.Image
 
-	black := color.RGBA{0, 0, 0, 255}
-	white := color.RGBA{255, 255, 255, 255}
+	img.Clear()
 
-	// Clear the image
-	draw.Draw(s.image, s.image.Bounds(), &image.Uniform{black}, image.Point{}, draw.Src)
+	opts := ebiten.DrawImageOptions{
+		GeoM:   ebiten.GeoM{},
+		Filter: ebiten.FilterLinear,
+	}
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		pos := query.Get()
-		s.image.SetRGBA(int(pos.X), int(pos.Y), white)
-	}
+		pos, head := query.Get()
 
-	img.WritePixels(s.image.Pix)
+		opts.GeoM.Reset()
+		opts.GeoM.Rotate(head.Angle)
+		opts.GeoM.Translate(pos.X, pos.Y)
+		img.DrawImage(images.Boid, &opts)
+	}
 }
 
 // PostUpdateUI the system

@@ -19,12 +19,13 @@ func (s *SysInitBoids) Initialize(w *ecs.World) {
 	screen := generic.NewResource[common.EbitenImage](w)
 	scr := screen.Get()
 
-	builder := generic.NewMap3[Position, Heading, Neighbors](w)
+	builder := generic.NewMap4[Position, Heading, Neighbors, Rand256](w)
 	query := builder.NewBatchQ(s.Count)
 	for query.Next() {
-		pos, head, _ := query.Get()
+		pos, head, _, r256 := query.Get()
 		pos.X, pos.Y = rand.Float64()*float64(scr.Width), rand.Float64()*float64(scr.Height)
 		head.Angle = rand.Float64() * 2 * math.Pi
+		r256.R = uint8(rand.Int31n(256))
 	}
 }
 
