@@ -10,7 +10,8 @@ import (
 
 type EntityLocation struct {
 	common.Vec2f
-	Entity ecs.Entity
+	Velocity common.Vec2f
+	Entity   ecs.Entity
 }
 
 // Compare returns the signed distance of p from the plane passing through c and

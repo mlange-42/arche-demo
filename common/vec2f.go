@@ -63,12 +63,13 @@ func (v *Vec2f) IsZero() bool {
 	return v.X == 0 && v.Y == 0
 }
 
-// Norm normalizes a vector to the given length
-func (v *Vec2f) Norm(length float64) {
+// Norm normalizes a vector to the given length and returns the original length.
+func (v *Vec2f) Norm(length float64) float64 {
 	l := math.Hypot(v.X, v.Y)
 	f := length / l
 	v.X *= f
 	v.Y *= f
+	return l
 }
 
 // LenSq returns the squared length of the vector
@@ -79,6 +80,11 @@ func (v Vec2f) LenSq() float64 {
 // Len returns the length of the vector
 func (v Vec2f) Len() float64 {
 	return math.Hypot(v.X, v.Y)
+}
+
+// Len returns the length of the vector
+func (v Vec2f) Angle() float64 {
+	return math.Atan2(v.Y, v.X)
 }
 
 // Copy copies the vector

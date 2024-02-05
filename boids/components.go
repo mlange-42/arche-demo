@@ -1,10 +1,8 @@
 package boids
 
 import (
-	"math"
-
 	"github.com/mlange-42/arche-demo/common"
-	"github.com/mlange-42/arche/ecs"
+	"github.com/mlange-42/arche-demo/common/kd"
 )
 
 const MaxNeighbors = 8
@@ -14,14 +12,9 @@ type Position struct {
 	common.Vec2f
 }
 
-// Heading component.
-type Heading struct {
-	Angle float64
-}
-
-// Direction returns the unit vector corresponding to the heading.
-func (h *Heading) Direction() (float64, float64) {
-	return math.Sin(h.Angle), -math.Cos(h.Angle)
+// Velocity component.
+type Velocity struct {
+	common.Vec2f
 }
 
 type Rand256 struct {
@@ -30,6 +23,6 @@ type Rand256 struct {
 
 // Neighbors holds an entity's neighbours
 type Neighbors struct {
-	Entities [MaxNeighbors]ecs.Entity
+	Entities [MaxNeighbors]kd.EntityLocation
 	Count    int
 }

@@ -11,10 +11,10 @@ import (
 // SysNeighbors system.
 type SysNeighbors struct {
 	Neighbors      int
-	MaxDist        float64
+	Radius         float64
 	BuildStep      int
 	posFilter      generic.Filter1[Position]
-	posNeighFilter generic.Filter2[Position, Neighbors]
+	posNeighFilter generic.Filter3[Position, Velocity, Neighbors]
 	tickRes        generic.Resource[resource.Tick]
 
 	points []kd.EntityLocation
@@ -26,7 +26,7 @@ func (s *SysNeighbors) Initialize(w *ecs.World) {
 		panic("maximum number of neighbors exceeded. See constant MaxNeighbors")
 	}
 	s.posFilter = *generic.NewFilter1[Position]()
-	s.posNeighFilter = *generic.NewFilter2[Position, Neighbors]()
+	s.posNeighFilter = *generic.NewFilter3[Position, Velocity, Neighbors]()
 
 	s.posFilter.Register(w)
 	s.posNeighFilter.Register(w)
@@ -45,10 +45,10 @@ func (s *SysNeighbors) Update(w *ecs.World) {
 
 	for query.Next() {
 		entity := query.Entity()
-		pos, neigh := query.Get()
+		pos, vel, neigh := query.Get()
 
-		p := kd.EntityLocation{Vec2f: pos.Vec2f, Entity: entity}
-		keep := kd.NewNDistKeeper(s.Neighbors+1, s.MaxDist)
+		p := kd.EntityLocation{Vec2f: pos.Vec2f, Velocity: vel.Vec2f, Entity: entity}
+		keep := kd.NewNDistKeeper(s.Neighbors+1, s.Radius)
 		tree.NearestSet(keep, p)
 
 		neigh.Count = 0
@@ -59,7 +59,7 @@ func (s *SysNeighbors) Update(w *ecs.World) {
 				if n.Entity == entity {
 					continue
 				}
-				neigh.Entities[neigh.Count] = n.Entity
+				neigh.Entities[neigh.Count] = n
 				neigh.Count++
 			}
 		}

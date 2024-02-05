@@ -40,11 +40,18 @@ func main() {
 
 	game.Model.AddSystem(&boids.SysNeighbors{
 		Neighbors: 8,
-		MaxDist:   30,
-		BuildStep: 10,
+		Radius:    50,
+		BuildStep: 8,
 	})
 	game.Model.AddSystem(&boids.SysMoveBoids{
-		Speed: 0.1,
+		Speed:          0.5,
+		UpdateInterval: 4,
+
+		SeparationDist:   20,
+		SeparationWeight: 0.02,
+		CohesionWeight:   0.01,
+		AlignmentWeight:  0.01,
+		SpeedWeight:      0.025,
 	})
 
 	game.Model.AddUISystem(&boids.UISysDrawBoids{})
