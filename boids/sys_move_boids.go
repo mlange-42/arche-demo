@@ -10,6 +10,7 @@ import (
 // UISysDrawBoids is a system that draws ants.
 type SysMoveBoids struct {
 	Speed          float64
+	MaxAcc         float64
 	UpdateInterval int
 
 	SeparationDist   float64
@@ -54,9 +55,13 @@ func (s *SysMoveBoids) Update(world *ecs.World) {
 			acc.Add(s.alignment(vel, neigh))
 			acc.Add(s.avoidance(pos, float64(screen.Width), float64(screen.Height)))
 
+			ln := acc.Len()
+			if ln > s.MaxAcc {
+				acc.Norm(s.MaxAcc)
+			}
 			vel.Add(acc)
 
-			ln := vel.Len()
+			ln = vel.Len()
 			lnNew := (1-s.SpeedWeight)*ln + s.Speed*s.SpeedWeight
 			vel.Norm(lnNew)
 		}
