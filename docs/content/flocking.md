@@ -1,6 +1,6 @@
 ---
 title: Flocking
-wasm: boids
+wasm: flocking
 description: |
     Classical boids model,
     mimicking the behaviour of bird flocks or fish schools.

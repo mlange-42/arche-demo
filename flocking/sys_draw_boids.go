@@ -1,4 +1,4 @@
-package boids
+package flocking
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"

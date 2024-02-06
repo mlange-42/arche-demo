@@ -1,4 +1,4 @@
-package boids
+package flocking
 
 import (
 	"math"
