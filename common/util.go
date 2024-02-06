@@ -129,3 +129,22 @@ func RandBetweenUIn8(lim1, lim2 uint8) uint8 {
 	}
 	return uint8(rand.Intn(int(1+lim2-lim1))) + lim1
 }
+
+// SubtractHeadings calculates the rotation required to come from h2 to h1.
+func SubtractHeadings(h1, h2 float64) float64 {
+	a360 := 2 * math.Pi
+	if h1 < 0 || h1 >= a360 {
+		h1 = math.Mod((math.Mod(h1, a360) + a360), a360)
+	}
+	if h2 < 0 || h2 >= a360 {
+		h2 = math.Mod((math.Mod(h2, a360) + a360), a360)
+	}
+	diff := h1 - h2
+	if diff > -math.Pi && diff <= math.Pi {
+		return diff
+	} else if diff > 0 {
+		return diff - a360
+	} else {
+		return diff + a360
+	}
+}
