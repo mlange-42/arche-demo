@@ -1,0 +1,14 @@
+---
+title: Matrix
+wasm: matrix
+description: |
+    Well... matrix.
+---
+
+{{< rawhtml >}}
+{{< canvas 880 480 >}}
+
+<p id="instructions">Use <span class="tt">PageUp</span> and <span class="tt">PageDown</span> to adjust simulation speed. Click to pause and resume.</p>
+<p><tt style="font-size: 120%">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a></tt>
+</p>
+{{< /rawhtml >}}

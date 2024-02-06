@@ -33,6 +33,7 @@ jobs:
           go build -o test/ants.wasm ./ants/main
           go build -o test/evolution.wasm ./evolution/main
           go build -o test/flocking.wasm ./flocking/main
+          go build -o test/matrix.wasm ./matrix/main
 
   test:
     name: Run tests
