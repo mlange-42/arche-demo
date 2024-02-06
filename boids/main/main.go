@@ -36,7 +36,7 @@ func main() {
 	images := boids.NewImages()
 	ecs.AddResource(&game.Model.World, &images)
 
-	game.Model.AddSystem(&boids.SysInitBoids{Count: 1000})
+	game.Model.AddSystem(&boids.SysInitBoids{Count: 500})
 
 	game.Model.AddSystem(&boids.SysNeighbors{
 		Neighbors: 8,
@@ -48,12 +48,15 @@ func main() {
 		UpdateInterval: 4,
 
 		SeparationDist:  8,
-		SeparationAngle: 5,
+		SeparationAngle: 3,
 		CohesionAngle:   1.5,
-		AlignmentAngle:  1,
+		AlignmentAngle:  2,
 
 		WallDist:  80,
-		WallAngle: 8,
+		WallAngle: 12,
+
+		MouseDist:  100,
+		MouseAngle: 5,
 	})
 
 	//game.Model.AddUISystem(&boids.UISysDrawBoids{})
@@ -66,7 +69,7 @@ func main() {
 	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 0,
 		MinExponent:     -2,
-		MaxExponent:     6,
+		MaxExponent:     3,
 	})
 	game.Model.AddUISystem(&systems.DrawInfo{
 		Offset:     image.Point{X: 800, Y: 0},
