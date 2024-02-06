@@ -24,7 +24,7 @@ func (s *SysInitBoids) Initialize(w *ecs.World) {
 	for query.Next() {
 		pos, head, _, r256 := query.Get()
 		pos.X, pos.Y = rand.Float64()*float64(scr.Width), rand.Float64()*float64(scr.Height)
-		head.Angle = rand.Float64() * math.Pi*2
+		head.Angle = rand.Float64() * math.Pi * 2
 		r256.R = uint8(rand.Int31n(256))
 	}
 }
