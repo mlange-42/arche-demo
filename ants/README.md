@@ -9,3 +9,5 @@ Using these trails, workers find their way to resources and back to the nest.
 To find new resources, scouts swarm out and do a random walk until they find something.
 
 In this example, the landscape is a network with nodes and edges represented by ECS entities.
+
+See the [live demo](https://mlange-42.github.io/arche-demo/ants/) for this example.
