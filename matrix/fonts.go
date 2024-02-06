@@ -15,11 +15,12 @@ var (
 )
 
 var (
-	fontSizes = []float64{10, 12, 14, 16}
+	fontSizes = []float64{14}
 	fontFaces = []font.Face{}
 )
 
-const characters = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "1234567890" + "!?#+"
+const characters = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+	"1234567890" + "!?#+~=§$&%" + "()[]{}/\\"
 
 func init() {
 	println("init fonts")

@@ -11,30 +11,41 @@ import (
 
 // UISysDrawLetters is a system that draws boids.
 type UISysDrawLetters struct {
-	canvas generic.Resource[common.EbitenImage]
-	filter generic.Filter2[Position, Letter]
+	canvas      generic.Resource[common.EbitenImage]
+	grid        generic.Resource[LetterGrid]
+	filterMover generic.Filter2[Position, Letter]
+	filterFader generic.Filter3[Position, Letter, Fader]
 }
 
 // InitializeUI the system
 func (s *UISysDrawLetters) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
-	s.filter = *generic.NewFilter2[Position, Letter]()
+	s.grid = generic.NewResource[LetterGrid](world)
+	s.filterMover = *generic.NewFilter2[Position, Letter]().With(generic.T[Mover]())
+	s.filterFader = *generic.NewFilter3[Position, Letter, Fader]()
 }
 
 // UpdateUI the system
 func (s *UISysDrawLetters) UpdateUI(world *ecs.World) {
-	//images := s.images.Get()
+	grid := s.grid.Get()
 	canvas := s.canvas.Get()
 	img := canvas.Image
 
-	col := color.RGBA{R: 0, G: 255, B: 0, A: 255}
-
+	col := color.RGBA{R: 100, G: 255, B: 120, A: 255}
 	img.Clear()
 
-	query := s.filter.Query(world)
-	for query.Next() {
-		pos, let := query.Get()
-		text.Draw(img, string(let.Letter), fontFaces[let.Size], int(pos.X), int(pos.Y), col)
+	queryFader := s.filterFader.Query(world)
+	for queryFader.Next() {
+		pos, let, fad := queryFader.Get()
+		v := uint8(160 * fad.Intensity)
+		color := color.RGBA{R: 0, G: v, B: 0, A: 255}
+		text.Draw(img, string(let.Letter), fontFaces[let.Size], (pos.X+1)*grid.ColumnWidth, pos.Y*grid.LineHeight, color)
+	}
+
+	queryMover := s.filterMover.Query(world)
+	for queryMover.Next() {
+		pos, let := queryMover.Get()
+		text.Draw(img, string(let.Letter), fontFaces[let.Size], (pos.X+1)*grid.ColumnWidth, pos.Y*grid.LineHeight, col)
 	}
 }
 
