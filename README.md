@@ -31,7 +31,7 @@ cd arche-demo
 Then, run individual examples like this:
 
 ```
-go run ./<example>/main
+go run . <example>
 ```
 
 ## Dependencies

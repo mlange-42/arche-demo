@@ -1,11 +1,10 @@
-package main
+package logo
 
 import (
 	"image/png"
 	"log"
 
 	"github.com/mlange-42/arche-demo/common"
-	"github.com/mlange-42/arche-demo/logo"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
@@ -15,7 +14,7 @@ const (
 	screenHeight = 480
 )
 
-func main() {
+func Run() {
 	game := common.NewGame(
 		model.New(), screenWidth, screenHeight,
 	)
@@ -30,17 +29,17 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	game.Model.AddSystem(&logo.SysInitEntities{})
+	game.Model.AddSystem(&SysInitEntities{})
 
-	game.Model.AddSystem(&logo.SysMoveEntities{
+	game.Model.AddSystem(&SysMoveEntities{
 		MaxSpeed: 10,
 		MaxAcc:   0.08, MaxAccFlee: 0.1,
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		Damp:            0.975})
 
-	game.Model.AddUISystem(&logo.UISysManagePause{})
-	game.Model.AddUISystem(&logo.UISysDrawEntities{})
+	game.Model.AddUISystem(&UISysManagePause{})
+	game.Model.AddUISystem(&UISysDrawEntities{})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {
@@ -48,15 +47,15 @@ func main() {
 	}
 }
 
-func createImageResource() (logo.Grid, error) {
-	f, err := logo.Logo.Open("arche-logo-text.png")
+func createImageResource() (Grid, error) {
+	f, err := Logo.Open("arche-logo-text.png")
 	if err != nil {
-		return logo.Grid{}, err
+		return Grid{}, err
 	}
 	defer f.Close()
 	img, err := png.Decode(f)
 	if err != nil {
-		return logo.Grid{}, err
+		return Grid{}, err
 	}
 	w := img.Bounds().Dx()
 	h := img.Bounds().Dy()
@@ -70,7 +69,7 @@ func createImageResource() (logo.Grid, error) {
 		}
 	}
 
-	return logo.Grid{
+	return Grid{
 		Data:   data,
 		Width:  w,
 		Height: h,

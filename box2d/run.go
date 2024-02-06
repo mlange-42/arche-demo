@@ -1,10 +1,9 @@
-package main
+package box2d
 
 import (
 	"log"
 
 	"github.com/ByteArena/box2d"
-	b2d "github.com/mlange-42/arche-demo/box2d"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
@@ -15,14 +14,14 @@ const (
 	screenHeight = 480
 )
 
-func main() {
+func Run() {
 	game := common.NewGame(
 		model.New(), screenWidth, screenHeight,
 	)
 
 	grav := box2d.MakeB2Vec2(0.0, 50.0)
 	world := box2d.MakeB2World(grav)
-	boxWorld := b2d.BoxWorld{
+	boxWorld := BoxWorld{
 		World: &world,
 	}
 	ecs.AddResource(&game.Model.World, &boxWorld)
@@ -30,26 +29,26 @@ func main() {
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	images, err := b2d.NewImages()
+	images, err := NewImages()
 	if err != nil {
 		println("unable to load image: ", err.Error())
 		panic(err)
 	}
 	ecs.AddResource(&game.Model.World, &images)
 
-	game.Model.AddSystem(&b2d.SysInitEntities{
+	game.Model.AddSystem(&SysInitEntities{
 		Count:       120,
 		Restitution: 0.8,
 	})
-	game.Model.AddSystem(&b2d.SysPhysics{
+	game.Model.AddSystem(&SysPhysics{
 		MinFleeDistance: 50,
 		MaxFleeDistance: 200,
 		ForceScale:      10,
 	})
-	game.Model.AddSystem(&b2d.SysB2Physics{})
+	game.Model.AddSystem(&SysB2Physics{})
 
-	game.Model.AddUISystem(&b2d.UISysManagePause{})
-	game.Model.AddUISystem(&b2d.UISysDrawEntities{})
+	game.Model.AddUISystem(&UISysManagePause{})
+	game.Model.AddUISystem(&UISysDrawEntities{})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {

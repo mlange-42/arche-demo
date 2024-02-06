@@ -1,4 +1,4 @@
-package main
+package flocking
 
 import (
 	"image"
@@ -6,7 +6,6 @@ import (
 
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/common/systems"
-	"github.com/mlange-42/arche-demo/flocking"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
@@ -16,7 +15,7 @@ const (
 	screenHeight = 480
 )
 
-func main() {
+func Run() {
 	game := common.NewGame(
 		model.New(), screenWidth, screenHeight,
 	)
@@ -31,17 +30,17 @@ func main() {
 	}
 	ecs.AddResource(&game.Model.World, &img)
 
-	images := flocking.NewImages()
+	images := NewImages()
 	ecs.AddResource(&game.Model.World, &images)
 
-	game.Model.AddSystem(&flocking.SysInitBoids{Count: 300})
+	game.Model.AddSystem(&SysInitBoids{Count: 300})
 
-	game.Model.AddSystem(&flocking.SysNeighbors{
+	game.Model.AddSystem(&SysNeighbors{
 		Neighbors: 8,
 		Radius:    50,
 		BuildStep: 4,
 	})
-	game.Model.AddSystem(&flocking.SysMoveBoids{
+	game.Model.AddSystem(&SysMoveBoids{
 		Speed:          1,
 		UpdateInterval: 4,
 
@@ -58,12 +57,12 @@ func main() {
 	})
 
 	//game.Model.AddUISystem(&boids.UISysDrawBoids{})
-	game.Model.AddUISystem(&flocking.UISysDrawBoidsLines{})
+	game.Model.AddUISystem(&UISysDrawBoidsLines{})
 	/*game.Model.AddUISystem(&boids.UISysDrawBoid{
 		Radius: 60,
 	})*/
 
-	game.Model.AddUISystem(&flocking.UISysManagePause{})
+	game.Model.AddUISystem(&UISysManagePause{})
 	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 0,
 		MinExponent:     -2,

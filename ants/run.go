@@ -1,10 +1,9 @@
-package main
+package ants
 
 import (
 	"image"
 	"log"
 
-	"github.com/mlange-42/arche-demo/ants"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/common/systems"
 	"github.com/mlange-42/arche-model/model"
@@ -17,7 +16,7 @@ const (
 	screenHeight = 480
 )
 
-func main() {
+func Run() {
 	game := common.NewGame(
 		model.New(), screenWidth, screenHeight,
 	)
@@ -32,38 +31,38 @@ func main() {
 	}
 	ecs.AddResource(&game.Model.World, &img)
 
-	grid := ants.NewPatches(game.Screen.Width, game.Screen.Height, 10)
+	grid := NewPatches(game.Screen.Width, game.Screen.Height, 10)
 	ecs.AddResource(&game.Model.World, &grid)
 
-	colors := ants.NewColors()
+	colors := NewColors()
 	ecs.AddResource(&game.Model.World, &colors)
 
-	game.Model.AddSystem(&ants.SysInitGrid{})
-	game.Model.AddSystem(&ants.SysInitNest{
+	game.Model.AddSystem(&SysInitGrid{})
+	game.Model.AddSystem(&SysInitNest{
 		AntsPerNest: 1000,
 	})
 
-	game.Model.AddSystem(&ants.SysResources{
+	game.Model.AddSystem(&SysResources{
 		Count: 32,
 	})
-	game.Model.AddSystem(&ants.SysTraceDecay{
+	game.Model.AddSystem(&SysTraceDecay{
 		Persistence: 0.99,
 	})
-	game.Model.AddSystem(&ants.SysNestDecisions{
+	game.Model.AddSystem(&SysNestDecisions{
 		ReleaseInterval:  8,
 		ReleaseCount:     1,
 		ScoutProbability: 0.1,
 		ProbExponent:     0.6,
 	})
-	game.Model.AddSystem(&ants.SysMoveAnts{
+	game.Model.AddSystem(&SysMoveAnts{
 		MaxSpeed: 1.0,
 	})
-	game.Model.AddSystem(&ants.SysScouting{
+	game.Model.AddSystem(&SysScouting{
 		MaxCollect:    0.001,
 		TraceDecay:    0.95,
 		MaxSearchTime: 1200,
 	})
-	game.Model.AddSystem(&ants.SysForaging{
+	game.Model.AddSystem(&SysForaging{
 		MaxCollect:       0.001,
 		ProbExponent:     1.0,
 		RandomProb:       0.05,
@@ -71,19 +70,19 @@ func main() {
 		MaxSearchTime:    600,
 		ScoutProbability: 0.05,
 	})
-	game.Model.AddSystem(&ants.SysReturning{
+	game.Model.AddSystem(&SysReturning{
 		ProbExponent: 1.0,
 		RandomProb:   0.05,
 		TraceDecay:   0.95,
 	})
 
-	game.Model.AddUISystem(&ants.UISysManagePause{})
-	game.Model.AddUISystem(&ants.UISysClearFrame{})
-	game.Model.AddUISystem(&ants.UISysDrawResources{})
-	//game.Model.AddUISystem(&ants.UISysDrawGrid{})
-	game.Model.AddUISystem(&ants.UISysDrawAnts{})
-	game.Model.AddUISystem(&ants.UISysDrawNest{})
-	game.Model.AddUISystem(&ants.UISysRepaint{})
+	game.Model.AddUISystem(&UISysManagePause{})
+	game.Model.AddUISystem(&UISysClearFrame{})
+	game.Model.AddUISystem(&UISysDrawResources{})
+	//game.Model.AddUISystem(&UISysDrawGrid{})
+	game.Model.AddUISystem(&UISysDrawAnts{})
+	game.Model.AddUISystem(&UISysDrawNest{})
+	game.Model.AddUISystem(&UISysRepaint{})
 
 	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 0,
@@ -92,7 +91,7 @@ func main() {
 	})
 	game.Model.AddUISystem(&systems.DrawInfo{
 		Offset:     image.Point{X: 800, Y: 0},
-		Components: generic.T1[ants.Ant](),
+		Components: generic.T1[Ant](),
 	})
 
 	game.Initialize()
