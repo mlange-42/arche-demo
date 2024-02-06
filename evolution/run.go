@@ -1,4 +1,4 @@
-package main
+package evolution
 
 import (
 	"image"
@@ -6,7 +6,6 @@ import (
 
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/common/systems"
-	"github.com/mlange-42/arche-demo/evolution"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
@@ -21,27 +20,27 @@ const (
 	scale = 2
 )
 
-func main() {
+func Run() {
 	game := common.NewGame(
 		model.New(), screenWidth, screenHeight,
 	)
 
-	grass := evolution.NewGrass(worldWidth/scale, worldHeight/scale, 4, scale)
+	grass := NewGrass(worldWidth/scale, worldHeight/scale, 4, scale)
 	ecs.AddResource(&game.Model.World, &grass)
 
-	selection := evolution.MouseSelection{}
+	selection := MouseSelection{}
 	ecs.AddResource(&game.Model.World, &selection)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
 
-	game.Model.AddSystem(&evolution.SysInitGrass{
+	game.Model.AddSystem(&SysInitGrass{
 		Frequency: 0.03,
 		Octaves:   3,
 		Falloff:   0.75,
 		Cutoff:    0.4,
 	})
-	game.Model.AddSystem(&evolution.SysInitEntities{
+	game.Model.AddSystem(&SysInitEntities{
 		InitialBatches:  1000,
 		ReleaseInterval: 240,
 		ReleaseBatches:  1,
@@ -49,19 +48,19 @@ func main() {
 		RandomGenes:     true,
 	})
 
-	game.Model.AddSystem(&evolution.SysGrowGrassLogistic{
+	game.Model.AddSystem(&SysGrowGrassLogistic{
 		Interval: 4,
 		BaseRate: 0.15,
 	})
-	game.Model.AddSystem(&evolution.SysGrazing{
+	game.Model.AddSystem(&SysGrazing{
 		MaxUptake:    0.005,
 		UptakeFactor: 1.0,
 	})
-	game.Model.AddSystem(&evolution.SysSearching{
+	game.Model.AddSystem(&SysSearching{
 		MaxSpeed: 0.5,
 	})
-	game.Model.AddSystem(&evolution.SysDecisions{})
-	game.Model.AddSystem(&evolution.SysReproduction{
+	game.Model.AddSystem(&SysDecisions{})
+	game.Model.AddSystem(&SysReproduction{
 		MatingTrials:        10,
 		MaxMatingDist:       60,
 		MaxMatingDiff:       15,
@@ -71,14 +70,14 @@ func main() {
 		AllowAsexual:        false,
 		HatchRadius:         2.0,
 	})
-	game.Model.AddSystem(&evolution.SysMetabolism{
+	game.Model.AddSystem(&SysMetabolism{
 		RateGrazing:   0.002,
 		RateSearching: 0.008,
 	})
-	game.Model.AddSystem(&evolution.SysMortality{
+	game.Model.AddSystem(&SysMortality{
 		MaxAge: 6000,
 	})
-	game.Model.AddSystem(&evolution.SysDisturbance{
+	game.Model.AddSystem(&SysDisturbance{
 		Interval:    600,
 		Count:       0,
 		MinRadius:   3,
@@ -91,11 +90,11 @@ func main() {
 		MinExponent:     -2,
 		MaxExponent:     6,
 	})
-	game.Model.AddUISystem(&evolution.UISysManagePause{})
+	game.Model.AddUISystem(&UISysManagePause{})
 
-	game.Model.AddUISystem(&evolution.UISysDrawGrass{})
-	game.Model.AddUISystem(&evolution.UISysDrawEntities{})
-	game.Model.AddUISystem(&evolution.UISysDrawScatter{
+	game.Model.AddUISystem(&UISysDrawGrass{})
+	game.Model.AddUISystem(&UISysDrawEntities{})
+	game.Model.AddUISystem(&UISysDrawScatter{
 		Interval:       30,
 		IntervalOffset: 0,
 		XIndex:         0,
@@ -104,7 +103,7 @@ func main() {
 		Height:         160,
 		ImageOffset:    image.Point{X: 640, Y: 0},
 	})
-	game.Model.AddUISystem(&evolution.UISysDrawScatter{
+	game.Model.AddUISystem(&UISysDrawScatter{
 		Interval:       30,
 		IntervalOffset: 10,
 		XIndex:         2,
@@ -113,7 +112,7 @@ func main() {
 		Height:         160,
 		ImageOffset:    image.Point{X: 640, Y: 160},
 	})
-	game.Model.AddUISystem(&evolution.UISysDrawScatter{
+	game.Model.AddUISystem(&UISysDrawScatter{
 		Interval:       30,
 		IntervalOffset: 20,
 		XIndex:         4,

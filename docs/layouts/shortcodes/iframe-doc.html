@@ -12,10 +12,20 @@
     <script src="{{ .Site.BaseURL }}/js/wasm_exec.js"></script>
     <link rel="stylesheet" href="{{ .Site.BaseURL }}/css/iframe.css">
     <script>
+        async function init(url, name) {
+            const go = new Go();
+            const result = await WebAssembly.instantiateStreaming(fetch(url), go.importObject).catch((err) => {
+                console.error(err);
+            });
+            document.getElementById('loading').remove();
+            window.wasm_demo = name;
+            go.run(result.instance);
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             const go = new Go();
             const name = window.location.search.substring(1);
-            let url = `./${name}.wasm`;
+            let url = `./main.wasm`;
 
             // Polyfill
             if (!WebAssembly.instantiateStreaming) {
@@ -24,12 +34,7 @@
                     return await WebAssembly.instantiate(source, importObject);
                 };
             }
-
-            const result = await WebAssembly.instantiateStreaming(await fetch(url), go.importObject).catch((err) => {
-                console.error(err);
-            });
-            document.getElementById('loading').remove();
-            go.run(result.instance);
+            await init(url, name);
         });
     </script>
     <p id="loading">Loading...</p>

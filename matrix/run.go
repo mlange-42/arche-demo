@@ -1,11 +1,10 @@
-package main
+package matrix
 
 import (
 	"log"
 
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/common/systems"
-	"github.com/mlange-42/arche-demo/matrix"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
 )
@@ -18,33 +17,33 @@ const (
 	lineHeight  = 14
 )
 
-func main() {
+func Run() {
 	game := common.NewGame(
 		model.New(), screenWidth, screenHeight,
 	)
 
 	ecs.AddResource(&game.Model.World, &game.Screen)
 	ecs.AddResource(&game.Model.World, &game.Mouse)
-	letters := matrix.NewLetters()
+	letters := NewLetters()
 	ecs.AddResource(&game.Model.World, &letters)
-	grid := matrix.NewLetterGrid(screenWidth, screenHeight, columnWidth, lineHeight)
+	grid := NewLetterGrid(screenWidth, screenHeight, columnWidth, lineHeight)
 	ecs.AddResource(&game.Model.World, &grid)
 
-	gridManager := matrix.NewGridManager(&game.Model.World)
+	gridManager := NewGridManager(&game.Model.World)
 	game.Model.World.SetListener(&gridManager)
 
-	game.Model.AddSystem(&matrix.SysInitLetters{
+	game.Model.AddSystem(&SysInitLetters{
 		SpawnProb:       0.8,
 		MinMoveInterval: 5,
 		MaxMoveInterval: 7,
 		MinGap:          60,
 	})
-	game.Model.AddSystem(&matrix.SysMoveLetters{})
-	game.Model.AddSystem(&matrix.SysFadeLetters{
+	game.Model.AddSystem(&SysMoveLetters{})
+	game.Model.AddSystem(&SysFadeLetters{
 		FadeDuration: 120,
 	})
 
-	game.Model.AddUISystem(&matrix.UISysDrawLetters{})
+	game.Model.AddUISystem(&UISysDrawLetters{})
 	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 0,
 		MinExponent:     -2,
@@ -53,7 +52,7 @@ func main() {
 	/*game.Model.AddUISystem(&systems.DrawInfo{
 		Offset: image.Point{X: 800, Y: 0},
 	})*/
-	game.Model.AddUISystem(&matrix.UISysManagePause{})
+	game.Model.AddUISystem(&UISysManagePause{})
 
 	game.Initialize()
 	if err := game.Run(); err != nil {
