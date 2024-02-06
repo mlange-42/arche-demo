@@ -1,4 +1,4 @@
-package boids
+package flocking
 
 import (
 	"github.com/mlange-42/arche-demo/common/kd"

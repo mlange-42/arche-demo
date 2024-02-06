@@ -88,7 +88,7 @@ func main() {
 	game.Model.AddUISystem(&bees.UISysRepaint{})
 
 	game.Model.AddUISystem(&systems.SimSpeed{
-		InitialExponent: 1,
+		InitialExponent: 0,
 		MinExponent:     -2,
 		MaxExponent:     6,
 	})

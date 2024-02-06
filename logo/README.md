@@ -7,3 +7,5 @@ A simple simulation with 30.000 entities.
 Each entity has a target pixel in the logo.
 It accelerates towards this target, as well as away from the mouse pointer
 in case it is within a certain distance.
+
+See the [live demo](https://mlange-42.github.io/arche-demo/) for this example.

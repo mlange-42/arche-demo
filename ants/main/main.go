@@ -86,7 +86,7 @@ func main() {
 	game.Model.AddUISystem(&ants.UISysRepaint{})
 
 	game.Model.AddUISystem(&systems.SimSpeed{
-		InitialExponent: 1,
+		InitialExponent: 0,
 		MinExponent:     -2,
 		MaxExponent:     6,
 	})

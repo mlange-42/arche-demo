@@ -8,3 +8,5 @@ or go scouting on their own.
 
 Uses different components to indicate the different activities.
 Hive internal decision making uses Arche's entity relations feature.
+
+See the [live demo](https://mlange-42.github.io/arche-demo/bees/) for this example.
