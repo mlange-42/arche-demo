@@ -20,10 +20,15 @@ var (
 )
 
 const characters = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+	"abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+	"abcdefghijklmnopqrstuvwxyz" +
 	"1234567890" + "!?#+~=§$&%" + "()[]{}/\\"
 
+/*const characters = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"*/
+
+/*const characters = "0123456789abcdef"*/
+
 func init() {
-	println("init fonts")
 	tt, err := opentype.Parse(jupiteroidRegular_ttf)
 	if err != nil {
 		log.Fatal(err)
