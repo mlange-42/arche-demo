@@ -11,14 +11,14 @@ import (
 type UISysDrawBoids struct {
 	canvas generic.Resource[common.EbitenImage]
 	images generic.Resource[Images]
-	filter generic.Filter2[Position, Velocity]
+	filter generic.Filter2[Position, Heading]
 }
 
 // InitializeUI the system
 func (s *UISysDrawBoids) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.images = generic.NewResource[Images](world)
-	s.filter = *generic.NewFilter2[Position, Velocity]()
+	s.filter = *generic.NewFilter2[Position, Heading]()
 }
 
 // UpdateUI the system
@@ -38,11 +38,11 @@ func (s *UISysDrawBoids) UpdateUI(world *ecs.World) {
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		pos, vel := query.Get()
+		pos, head := query.Get()
 
 		opts.GeoM.Reset()
 		opts.GeoM.Translate(-xOff, -yOff)
-		opts.GeoM.Rotate(vel.Angle())
+		opts.GeoM.Rotate(head.Angle)
 		opts.GeoM.Translate(pos.X, pos.Y)
 		img.DrawImage(images.Boid, &opts)
 	}

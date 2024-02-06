@@ -13,14 +13,14 @@ import (
 type UISysDrawBoidsLines struct {
 	canvas generic.Resource[common.EbitenImage]
 	images generic.Resource[Images]
-	filter generic.Filter2[Position, Velocity]
+	filter generic.Filter2[Position, Heading]
 }
 
 // InitializeUI the system
 func (s *UISysDrawBoidsLines) InitializeUI(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.images = generic.NewResource[Images](world)
-	s.filter = *generic.NewFilter2[Position, Velocity]()
+	s.filter = *generic.NewFilter2[Position, Heading]()
 }
 
 // UpdateUI the system
@@ -35,9 +35,12 @@ func (s *UISysDrawBoidsLines) UpdateUI(world *ecs.World) {
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		pos, vel := query.Get()
-		dx, dy, _ := common.Norm(vel.X, vel.Y)
-		vector.StrokeLine(img, float32(pos.X), float32(pos.Y), float32(pos.X+3*dx), float32(pos.Y+3*dy), 1, col, false)
+		pos, head := query.Get()
+		vel := head.Direction()
+		vector.StrokeLine(img,
+			float32(pos.X), float32(pos.Y), float32(pos.X+4*vel.X), float32(pos.Y+4*vel.Y),
+			2, col, false,
+		)
 	}
 }
 

@@ -1,6 +1,7 @@
 package boids
 
 import (
+	"math"
 	"math/rand"
 
 	"github.com/mlange-42/arche-demo/common"
@@ -18,13 +19,12 @@ func (s *SysInitBoids) Initialize(w *ecs.World) {
 	screen := generic.NewResource[common.EbitenImage](w)
 	scr := screen.Get()
 
-	builder := generic.NewMap4[Position, Velocity, Neighbors, Rand256](w)
+	builder := generic.NewMap4[Position, Heading, Neighbors, Rand256](w)
 	query := builder.NewBatchQ(s.Count)
 	for query.Next() {
-		pos, vel, _, r256 := query.Get()
+		pos, head, _, r256 := query.Get()
 		pos.X, pos.Y = rand.Float64()*float64(scr.Width), rand.Float64()*float64(scr.Height)
-		vel.X = rand.Float64() - 0.5
-		vel.Y = rand.Float64() - 0.5
+		head.Angle = rand.Float64() * math.Pi*2
 		r256.R = uint8(rand.Int31n(256))
 	}
 }

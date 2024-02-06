@@ -36,37 +36,35 @@ func main() {
 	images := boids.NewImages()
 	ecs.AddResource(&game.Model.World, &images)
 
-	game.Model.AddSystem(&boids.SysInitBoids{Count: 100})
+	game.Model.AddSystem(&boids.SysInitBoids{Count: 1000})
 
 	game.Model.AddSystem(&boids.SysNeighbors{
-		Neighbors: 7,
-		Radius:    80,
+		Neighbors: 8,
+		Radius:    50,
 		BuildStep: 4,
 	})
 	game.Model.AddSystem(&boids.SysMoveBoids{
 		Speed:          1,
-		MaxAcc:         0.5,
-		UpdateInterval: 1,
+		UpdateInterval: 4,
 
-		SeparationDist:   10,
-		SeparationWeight: 0.01,
-		CohesionWeight:   0.005,
-		AlignmentWeight:  0.9,
-		SpeedWeight:      0.01,
+		SeparationDist:  8,
+		SeparationAngle: 5,
+		CohesionAngle:   1.5,
+		AlignmentAngle:  1,
 
-		WallDist:   80,
-		WallWeight: 0.05,
+		WallDist:  80,
+		WallAngle: 8,
 	})
 
-	game.Model.AddUISystem(&boids.UISysDrawBoids{})
-	//game.Model.AddUISystem(&boids.UISysDrawBoidsLines{})
+	//game.Model.AddUISystem(&boids.UISysDrawBoids{})
+	game.Model.AddUISystem(&boids.UISysDrawBoidsLines{})
 	/*game.Model.AddUISystem(&boids.UISysDrawBoid{
 		Radius: 60,
 	})*/
 
 	game.Model.AddUISystem(&boids.UISysManagePause{})
 	game.Model.AddUISystem(&systems.SimSpeed{
-		InitialExponent: 1,
+		InitialExponent: 0,
 		MinExponent:     -2,
 		MaxExponent:     6,
 	})

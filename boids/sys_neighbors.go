@@ -13,8 +13,8 @@ type SysNeighbors struct {
 	Neighbors      int
 	Radius         float64
 	BuildStep      int
-	posFilter      generic.Filter1[Position]
-	posNeighFilter generic.Filter3[Position, Velocity, Neighbors]
+	posHeadFilter  generic.Filter2[Position, Heading]
+	posNeighFilter generic.Filter3[Position, Heading, Neighbors]
 	tickRes        generic.Resource[resource.Tick]
 
 	points []kd.EntityLocation
@@ -25,10 +25,10 @@ func (s *SysNeighbors) Initialize(w *ecs.World) {
 	if s.Neighbors > MaxNeighbors {
 		panic("maximum number of neighbors exceeded. See constant MaxNeighbors")
 	}
-	s.posFilter = *generic.NewFilter1[Position]()
-	s.posNeighFilter = *generic.NewFilter3[Position, Velocity, Neighbors]()
+	s.posHeadFilter = *generic.NewFilter2[Position, Heading]()
+	s.posNeighFilter = *generic.NewFilter3[Position, Heading, Neighbors]()
 
-	s.posFilter.Register(w)
+	s.posHeadFilter.Register(w)
 	s.posNeighFilter.Register(w)
 
 	s.tickRes = generic.NewResource[resource.Tick](w)
@@ -45,9 +45,9 @@ func (s *SysNeighbors) Update(w *ecs.World) {
 
 	for query.Next() {
 		entity := query.Entity()
-		pos, vel, neigh := query.Get()
+		pos, head, neigh := query.Get()
 
-		p := kd.EntityLocation{Vec2f: pos.Vec2f, Velocity: vel.Vec2f, Entity: entity}
+		p := kd.EntityLocation{Vec2f: pos.Vec2f, Heading: head.Angle, Entity: entity}
 		keep := kd.NewNDistKeeper(s.Neighbors+1, s.Radius)
 		tree.NearestSet(keep, p)
 
@@ -70,11 +70,11 @@ func (s *SysNeighbors) Update(w *ecs.World) {
 func (s *SysNeighbors) Finalize(w *ecs.World) {}
 
 func (s *SysNeighbors) createTree(w *ecs.World) *kdtree.Tree {
-	query := s.posFilter.Query(w)
+	query := s.posHeadFilter.Query(w)
 	for query.Next() {
 		e := query.Entity()
-		pos := query.Get()
-		s.points = append(s.points, kd.EntityLocation{Vec2f: pos.Vec2f, Entity: e})
+		pos, head := query.Get()
+		s.points = append(s.points, kd.EntityLocation{Vec2f: pos.Vec2f, Heading: head.Angle, Entity: e})
 	}
 	treePoints := kd.EntityLocations(s.points)
 	tree := kdtree.New(treePoints, false)
