@@ -36,6 +36,7 @@ jobs:
           go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/bees.wasm ./bees/main
           go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/ants.wasm ./ants/main
           go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/evolution.wasm ./evolution/main
+          go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/boids.wasm ./boids/main
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
