@@ -4,13 +4,11 @@ import (
 	"image"
 	"log"
 
-	"github.com/mlange-42/arche-demo/bees"
 	"github.com/mlange-42/arche-demo/boids"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/common/systems"
 	"github.com/mlange-42/arche-model/model"
 	"github.com/mlange-42/arche/ecs"
-	"github.com/mlange-42/arche/generic"
 )
 
 const (
@@ -36,7 +34,7 @@ func main() {
 	images := boids.NewImages()
 	ecs.AddResource(&game.Model.World, &images)
 
-	game.Model.AddSystem(&boids.SysInitBoids{Count: 500})
+	game.Model.AddSystem(&boids.SysInitBoids{Count: 300})
 
 	game.Model.AddSystem(&boids.SysNeighbors{
 		Neighbors: 8,
@@ -69,11 +67,10 @@ func main() {
 	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 0,
 		MinExponent:     -2,
-		MaxExponent:     3,
+		MaxExponent:     2,
 	})
 	game.Model.AddUISystem(&systems.DrawInfo{
-		Offset:     image.Point{X: 800, Y: 0},
-		Components: generic.T1[bees.HomeHive](),
+		Offset: image.Point{X: 800, Y: 0},
 	})
 
 	game.Initialize()
