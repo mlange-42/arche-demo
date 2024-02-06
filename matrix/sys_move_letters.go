@@ -51,13 +51,12 @@ func (s *SysMoveLetters) Update(world *ecs.World) {
 		if tick-mov.LastMove < int64(mov.Interval) {
 			continue
 		}
+		s.toSpawn = append(s.toSpawn, spawnEntry{*pos, let.Letter})
 
 		if pos.Y+1 >= grid.Faders.Height() || pos.Y+1 >= mov.PathLength {
 			s.toRemove = append(s.toRemove, query.Entity())
 			continue
 		}
-		s.toSpawn = append(s.toSpawn, spawnEntry{*pos, let.Letter})
-
 		pos.Y += 1
 		let.Letter = letters[rand.Intn(len(letters))]
 		mov.LastMove = tick

@@ -38,6 +38,7 @@ func main() {
 		SpawnProb:       0.8,
 		MinMoveInterval: 5,
 		MaxMoveInterval: 7,
+		MinGap:          60,
 	})
 	game.Model.AddSystem(&matrix.SysMoveLetters{})
 	game.Model.AddSystem(&matrix.SysFadeLetters{
