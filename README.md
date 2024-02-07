@@ -34,6 +34,9 @@ Then, run individual examples like this:
 go run . <example>
 ```
 
+In each example directory, file `run.go` is the entrypoint for an overview of the ECS systems
+that make up the model.
+
 ## Dependencies
 
 Due to the use of [Ebitengine](https://github.com/hajimehoshi/ebiten) for rendering, the dependencies of [go-gl/gl](https://github.com/go-gl/gl) and [go-gl/glfw](https://github.com/go-gl/glfw) apply. For Ubuntu/Debian-based systems, these are:

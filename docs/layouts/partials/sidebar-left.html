@@ -1,0 +1,15 @@
+<div tabindex="0" class="sidebar sidebar-left">
+    <div class="vertical-text">More demos</div>
+    <div>
+        {{ $visuals := slice "matrix" }}
+        {{ $ecology := slice "flocking" "evolution" "bees" "ants" }}
+        {{ $misc := slice "box2d" }}
+        <div><b><a href="{{ .Site.Home.RelPermalink }}">Home</a></b></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Visuals</b></div>
+        {{ range $visuals }}{{ with $.GetPage . }}{{ partial "navlink.html" . }}{{ end }}{{ end }}
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Ecology</b></div>
+        {{ range $ecology }}{{ with $.GetPage . }}{{ partial "navlink.html" . }}{{ end }}{{ end }}
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Misc</b></div>
+        {{ range $misc }}{{ with $.GetPage . }}{{ partial "navlink.html" . }}{{ end }}{{ end }}
+    </div>
+</div>
