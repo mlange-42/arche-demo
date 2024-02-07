@@ -6,21 +6,21 @@ type Position struct {
 	Y int
 }
 
-// Position component
+// Position component.
 type Letter struct {
 	Letter rune
 	Size   int
 }
 
-// Mover component
+// Mover component for the bright letters that move downwards.
 type Mover struct {
 	Interval   uint16
 	LastMove   int64
 	PathLength int
 }
 
-// Fader component
+// Fader component for the fading stationary letters.
 type Fader struct {
-	Start     int64
-	Intensity float64
+	Intensity  float64
+	NextChange int64
 }
