@@ -12,7 +12,7 @@ description: |
 {{< rawhtml >}}
 {{< canvas 880 480 >}}
 
-<p id="instructions">Move the mouse over the logo! Click to pause and resume!</p>
+<p id="instructions">Move the mouse over the logo! Click to pause and resume! {{< fullscreen >}}</p>
 <p><tt style="font-size: 120%">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a></tt>
 </p>
 {{< /rawhtml >}}
