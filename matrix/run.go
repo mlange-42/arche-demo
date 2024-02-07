@@ -1,7 +1,6 @@
 package matrix
 
 import (
-	"image"
 	"log"
 
 	"github.com/mlange-42/arche-demo/common"
@@ -51,9 +50,9 @@ func Run() {
 		MinExponent:     -2,
 		MaxExponent:     4,
 	})
-	game.Model.AddUISystem(&systems.DrawInfo{
+	/*game.Model.AddUISystem(&systems.DrawInfo{
 		Offset: image.Point{X: 800, Y: 0},
-	})
+	})*/
 	game.Model.AddUISystem(&UISysManagePause{})
 
 	game.Initialize()
