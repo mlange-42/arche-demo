@@ -13,7 +13,7 @@ description: |
 {{< rawhtml >}}
 {{< canvas 880 480 >}}
 
-<p id="instructions">Move the mouse over the canvas! Use <span class="tt">PageUp</span> and <span class="tt">PageDown</span> to adjust simulation speed. Click to pause and resume.</p>
+<p id="instructions">Move the mouse over the canvas! Use <span class="tt">PageUp</span> and <span class="tt">PageDown</span> to adjust simulation speed. Click to pause and resume. {{< fullscreen >}}</p>
 <p class="tt">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a>
 </p>
 {{< /rawhtml >}}
