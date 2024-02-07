@@ -44,6 +44,10 @@ a:visited {
     transform: translate(-50%, -50%);
 }
 
+.indent {
+    margin-left: 16px;
+}
+
 #canvas-container {
     display: inline-block;
     border: solid white 2px;
@@ -54,11 +58,4 @@ a:visited {
 
 #canvas {
     max-width: 100%;
-}
-
-#loading {
-    width: 880px;
-    height: 480px;
-    background-color: #000000;
-    color: #ffffff;
 }
