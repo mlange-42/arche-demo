@@ -1,0 +1,11 @@
+<div tabindex="0" class="sidebar sidebar-left">
+    <div class="vertical-text">More demos</div>
+    <div>
+        <a href="{{ .Site.Home.RelPermalink }}">Home</a><br />
+        {{ range .Site.RegularPages }}
+        {{ if ne .Type "helper" }}
+        <a href="{{ .RelPermalink }}">{{ or .Title .RelPermalink }}</a><br />
+        {{ end }}
+        {{ end }}
+    </div>
+</div>

@@ -1,30 +1,7 @@
 {{ define "page" }}
 <article class="container">
-    <div tabindex="0" class="sidebar sidebar-left">
-        <div class="vertical-text">More demos</div>
-        <div>
-            <a href="{{ .Site.Home.RelPermalink }}">Home</a><br />
-            {{ range .Site.RegularPages }}
-            {{ if ne .Type "helper" }}
-            <a href="{{ .RelPermalink }}">{{ or .Title .RelPermalink }}</a><br />
-            {{ end }}
-            {{ end }}
-        </div>
-    </div>
-    <div tabindex="0" class="sidebar sidebar-right">
-        <div class="vertical-text">Description</div>
-        <div class="description">
-            {{ .Description | markdownify }}
-        </div>
-        {{ if .Page.Param "wasm" }}
-        <div class="description">
-            <a href="{{ .Site.Params.repository }}/tree/main/{{ .Page.Params.wasm }}/" target="_blank">
-                <i class="fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this demo
-            </a>
-        </div>
-        {{- end }}
-        <div class="about">{{ .Site.Params.about | markdownify }}</div>
-    </div>
+    {{ partial "sidebar-left.html" . }}
+    {{ partial "sidebar-right.html" . }}
 
     <div align="center">
         <h1>Arche Demo &ndash; {{ .Page.Title }}</h1>
