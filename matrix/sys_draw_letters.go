@@ -9,7 +9,7 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
-// UISysDrawLetters is a system that draws boids.
+// UISysDrawLetters is a system that draws letters.
 type UISysDrawLetters struct {
 	canvas      generic.Resource[common.EbitenImage]
 	grid        generic.Resource[LetterGrid]
@@ -37,6 +37,9 @@ func (s *UISysDrawLetters) UpdateUI(world *ecs.World) {
 	queryFader := s.filterFader.Query(world)
 	for queryFader.Next() {
 		pos, let, fad := queryFader.Get()
+		if fad.Intensity <= 0 {
+			continue
+		}
 		v := uint8(160 * fad.Intensity)
 		color := color.RGBA{R: 0, G: v, B: 0, A: 255}
 		text.Draw(img, string(let.Letter), fontFaces[let.Size], (pos.X+1)*grid.ColumnWidth, (pos.Y+1)*grid.LineHeight, color)

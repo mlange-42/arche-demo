@@ -1,6 +1,7 @@
 package matrix
 
 import (
+	"image"
 	"log"
 
 	"github.com/mlange-42/arche-demo/common"
@@ -29,9 +30,6 @@ func Run() {
 	grid := NewLetterGrid(screenWidth, screenHeight, columnWidth, lineHeight)
 	ecs.AddResource(&game.Model.World, &grid)
 
-	gridManager := NewGridManager(&game.Model.World)
-	game.Model.World.SetListener(&gridManager)
-
 	game.Model.AddSystem(&SysInitLetters{
 		SpawnProb:       0.8,
 		MinMoveInterval: 5,
@@ -49,9 +47,9 @@ func Run() {
 		MinExponent:     -2,
 		MaxExponent:     4,
 	})
-	/*game.Model.AddUISystem(&systems.DrawInfo{
+	game.Model.AddUISystem(&systems.DrawInfo{
 		Offset: image.Point{X: 800, Y: 0},
-	})*/
+	})
 	game.Model.AddUISystem(&UISysManagePause{})
 
 	game.Initialize()

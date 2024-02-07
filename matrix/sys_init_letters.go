@@ -34,6 +34,21 @@ func (s *SysInitLetters) Initialize(world *ecs.World) {
 	s.builder = generic.NewMap3[Position, Letter, Mover](world)
 
 	s.releases = make([]int64, s.grid.Get().Faders.Width())
+
+	faders := s.grid.Get().Faders
+	fBuilder := generic.NewMap3[Position, Letter, Fader](world)
+	query := fBuilder.NewBatchQ(faders.Width() * faders.Height())
+	cnt := 0
+	for query.Next() {
+		pos, _, fad := query.Get()
+		x, y := cnt/faders.Height(), cnt%faders.Height()
+
+		pos.X, pos.Y = x, y
+		fad.Intensity = 0
+
+		faders.Set(x, y, query.Entity())
+		cnt++
+	}
 }
 
 // Update the system
