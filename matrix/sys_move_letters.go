@@ -49,6 +49,7 @@ func (s *SysMoveLetters) Update(world *ecs.World) {
 		fLet, fad := s.faderMap.Get(eFader)
 		fLet.Letter = let.Letter
 		fad.Intensity = 1.0
+		fad.NextChange = 0
 
 		// Remove this mover
 		if pos.Y+1 >= grid.Faders.Height() || pos.Y+1 >= mov.PathLength {

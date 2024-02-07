@@ -21,5 +21,6 @@ type Mover struct {
 
 // Fader component for the fading stationary letters.
 type Fader struct {
-	Intensity float64
+	Intensity  float64
+	NextChange int64
 }

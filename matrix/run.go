@@ -40,6 +40,10 @@ func Run() {
 	game.Model.AddSystem(&SysFadeLetters{
 		FadeDuration: 120,
 	})
+	game.Model.AddSystem(&SysSwitchFaders{
+		MinChangeInterval: 30,
+		MaxChangeInterval: 180,
+	})
 
 	game.Model.AddUISystem(&UISysDrawLetters{})
 	game.Model.AddUISystem(&systems.SimSpeed{
