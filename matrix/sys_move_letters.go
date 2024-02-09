@@ -13,13 +13,14 @@ import (
 type SysMoveLetters struct {
 	MessageProb float64
 
-	time     generic.Resource[resource.Tick]
-	grid     generic.Resource[LetterGrid]
-	messages generic.Resource[Messages]
-	canvas   generic.Resource[common.EbitenImage]
-	letters  generic.Resource[Letters]
-	filter   generic.Filter4[Position, Letter, Mover, Message]
-	faderMap generic.Map2[Letter, Fader]
+	time      generic.Resource[resource.Tick]
+	grid      generic.Resource[LetterGrid]
+	messages  generic.Resource[Messages]
+	canvas    generic.Resource[common.EbitenImage]
+	letters   generic.Resource[Letters]
+	filter    generic.Filter4[Position, Letter, Mover, Message]
+	faderMap  generic.Map2[Letter, Fader]
+	forcedMap generic.Map2[Fader, ForcedLetter]
 
 	toRemove []ecs.Entity
 }
@@ -33,6 +34,7 @@ func (s *SysMoveLetters) Initialize(world *ecs.World) {
 	s.letters = generic.NewResource[Letters](world)
 	s.filter = *generic.NewFilter4[Position, Letter, Mover, Message]()
 	s.faderMap = generic.NewMap2[Letter, Fader](world)
+	s.forcedMap = generic.NewMap2[Fader, ForcedLetter](world)
 }
 
 // Update the system
@@ -79,12 +81,18 @@ func (s *SysMoveLetters) Update(world *ecs.World) {
 				msg.Message = -1
 			}
 		}
+
 		mov.LastMove = tick
 
 		// De-activate the fader below
 		eFaderNew := grid.Faders.Get(pos.X, pos.Y)
-		_, fad = s.faderMap.Get(eFaderNew)
+		fad, forced := s.forcedMap.Get(eFaderNew)
 		fad.Intensity = 0
+
+		if forced.Active {
+			let.Letter = forced.Letter
+			forced.Traversed = true
+		}
 	}
 
 	for _, e := range s.toRemove {

@@ -30,3 +30,16 @@ type Message struct {
 	Message int
 	Index   int
 }
+
+// ForcedLetter component.
+type ForcedLetter struct {
+	Letter    rune
+	Active    bool
+	Traversed bool
+}
+
+type LetterForcer struct {
+	Position
+	Message  int
+	TickDone int64
+}

@@ -15,14 +15,14 @@ type SysSwitchFaders struct {
 
 	time    generic.Resource[resource.Tick]
 	letters generic.Resource[Letters]
-	filter  generic.Filter2[Letter, Fader]
+	filter  generic.Filter3[Letter, Fader, ForcedLetter]
 }
 
 // Initialize the system
 func (s *SysSwitchFaders) Initialize(world *ecs.World) {
 	s.time = generic.NewResource[resource.Tick](world)
 	s.letters = generic.NewResource[Letters](world)
-	s.filter = *generic.NewFilter2[Letter, Fader]()
+	s.filter = *generic.NewFilter3[Letter, Fader, ForcedLetter]()
 }
 
 // Update the system
@@ -32,8 +32,8 @@ func (s *SysSwitchFaders) Update(world *ecs.World) {
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		let, fad := query.Get()
-		if fad.Intensity < 0 || tick < fad.NextChange {
+		let, fad, forced := query.Get()
+		if forced.Active || fad.Intensity < 0 || tick < fad.NextChange {
 			continue
 		}
 		if fad.NextChange > 0 {
