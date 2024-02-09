@@ -11,7 +11,8 @@ import (
 
 var messages = []string{
 	"Arche", "Arche", "Arche",
-	"World", "Entity", "Mask", "Filter", "Query",
+	"World", "World", "Entity", "Entity", "Query", "Query",
+	"Mask", "Filter",
 	"Next", "Get", "Alive", "Add", "Remove", "Exchange", "Relation",
 }
 
