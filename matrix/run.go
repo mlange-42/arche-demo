@@ -3,6 +3,7 @@ package matrix
 import (
 	"log"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/common/systems"
 	"github.com/mlange-42/arche-model/model"
@@ -54,6 +55,9 @@ func Run() {
 	})
 
 	game.Model.AddUISystem(&UISysDrawLetters{})
+	game.Model.AddUISystem(&UISysDrawMessages{
+		SecretKey: ebiten.KeySpace,
+	})
 	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 0,
 		MinExponent:     -2,

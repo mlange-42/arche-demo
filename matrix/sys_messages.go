@@ -24,8 +24,8 @@ type SysMessages struct {
 	messages generic.Resource[Messages]
 	grid     generic.Resource[LetterGrid]
 
-	filter    generic.Filter1[LetterForcer]
-	forcerMap generic.Map1[LetterForcer]
+	filter    generic.Filter2[Position, LetterForcer]
+	forcerMap generic.Map2[Position, LetterForcer]
 	letterMap generic.Map1[ForcedLetter]
 
 	toRemove []ecs.Entity
@@ -37,8 +37,8 @@ func (s *SysMessages) Initialize(world *ecs.World) {
 	s.messages = generic.NewResource[Messages](world)
 	s.grid = generic.NewResource[LetterGrid](world)
 
-	s.filter = *generic.NewFilter1[LetterForcer]()
-	s.forcerMap = generic.NewMap1[LetterForcer](world)
+	s.filter = *generic.NewFilter2[Position, LetterForcer]()
+	s.forcerMap = generic.NewMap2[Position, LetterForcer](world)
 	s.letterMap = generic.NewMap1[ForcedLetter](world)
 }
 
@@ -50,15 +50,15 @@ func (s *SysMessages) Update(world *ecs.World) {
 
 	query := s.filter.Query(world)
 	for query.Next() {
-		forcer := query.Get()
+		pos, forcer := query.Get()
 		msg := messages.messages[forcer.Message]
 		ln := len(msg)
 
 		if forcer.TickDone >= 0 {
 			if tick >= forcer.TickDone {
 				for j := 0; j < ln; j++ {
-					x := j + forcer.X
-					let := s.letterMap.Get(grid.Faders.Get(x, forcer.Y))
+					x := j + pos.X
+					let := s.letterMap.Get(grid.Faders.Get(x, pos.Y))
 					let.Active = false
 				}
 				s.toRemove = append(s.toRemove, query.Entity())
@@ -68,8 +68,8 @@ func (s *SysMessages) Update(world *ecs.World) {
 
 		done := true
 		for j := 0; j < ln; j++ {
-			x := j + forcer.X
-			let := s.letterMap.Get(grid.Faders.Get(x, forcer.Y))
+			x := j + pos.X
+			let := s.letterMap.Get(grid.Faders.Get(x, pos.Y))
 			if !let.Traversed {
 				done = false
 				break
@@ -95,7 +95,7 @@ func (s *SysMessages) Finalize(world *ecs.World) {}
 
 func (s *SysMessages) createMessage(grid *common.Grid[ecs.Entity], messages *Messages) {
 	e := s.forcerMap.New()
-	forcer := s.forcerMap.Get(e)
+	pos, forcer := s.forcerMap.Get(e)
 
 	forcer.TickDone = -1
 	forcer.Message = rand.Intn(len(messages.messages))
@@ -104,12 +104,12 @@ func (s *SysMessages) createMessage(grid *common.Grid[ecs.Entity], messages *Mes
 
 	sx, sy := grid.Width(), grid.Height()
 	for i := 0; i < 10; i++ {
-		forcer.X, forcer.Y = rand.Intn(sx-ln), rand.Intn(sy)
+		pos.X, pos.Y = rand.Intn(sx-ln), rand.Intn(sy)
 
 		ok := true
 		for j := 0; j < ln; j++ {
-			x := j + forcer.X
-			let := s.letterMap.Get(grid.Get(x, forcer.Y))
+			x := j + pos.X
+			let := s.letterMap.Get(grid.Get(x, pos.Y))
 			if let.Active {
 				ok = false
 				break
@@ -120,8 +120,8 @@ func (s *SysMessages) createMessage(grid *common.Grid[ecs.Entity], messages *Mes
 		}
 
 		for j := 0; j < ln; j++ {
-			x := j + forcer.X
-			let := s.letterMap.Get(grid.Get(x, forcer.Y))
+			x := j + pos.X
+			let := s.letterMap.Get(grid.Get(x, pos.Y))
 			let.Letter = msg[j]
 			let.Active = true
 			let.Traversed = false

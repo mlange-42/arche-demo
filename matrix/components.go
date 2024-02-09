@@ -39,7 +39,6 @@ type ForcedLetter struct {
 }
 
 type LetterForcer struct {
-	Position
 	Message  int
 	TickDone int64
 }
