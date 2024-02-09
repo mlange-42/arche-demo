@@ -28,7 +28,7 @@ func Run() {
 	ecs.AddResource(&game.Model.World, &letters)
 	grid := NewLetterGrid(screenWidth, screenHeight, columnWidth, lineHeight)
 	ecs.AddResource(&game.Model.World, &grid)
-	messages := NewMessages("Arche", "Arche", "go get github.com/mlange-42/arche")
+	messages := NewMessages(messages...)
 	ecs.AddResource(&game.Model.World, &messages)
 
 	game.Model.AddSystem(&SysInitLetters{
@@ -42,15 +42,15 @@ func Run() {
 	})
 	game.Model.AddSystem(&SysFadeLetters{
 		FadeDuration:        120,
-		MessageFadeDuration: 240,
+		MessageFadeDuration: 180,
 	})
 	game.Model.AddSystem(&SysSwitchFaders{
 		MinChangeInterval: 30,
 		MaxChangeInterval: 180,
 	})
 	game.Model.AddSystem(&SysMessages{
-		Probability: 0.01,
-		Duration:    180,
+		Probability: 0.1,
+		Duration:    300,
 	})
 
 	game.Model.AddUISystem(&UISysDrawLetters{})

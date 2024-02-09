@@ -9,6 +9,12 @@ import (
 	"github.com/mlange-42/arche/generic"
 )
 
+var messages = []string{
+	"Arche", "Arche", "Arche",
+	"World", "Entity", "Mask", "Filter", "Query",
+	"Next", "Get", "Alive", "Add", "Remove", "Exchange", "Relation",
+}
+
 // SysMessages is a system that places suplimal messages.
 type SysMessages struct {
 	Probability float64
