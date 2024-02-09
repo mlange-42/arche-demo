@@ -39,15 +39,22 @@ func (s *UISysDrawMessages) UpdateUI(world *ecs.World) {
 	canvas := s.canvas.Get()
 	img := canvas.Image
 
-	col := color.RGBA{R: 50, G: 127, B: 60, A: 255}
+	col := color.RGBA{R: 50, G: 120, B: 60, A: 255}
 
 	query := s.filter.Query(world)
 	for query.Next() {
 		pos, force := query.Get()
 		ln := len(messages[force.Message])
-		vector.StrokeRect(img,
-			float32((pos.X+1)*grid.ColumnWidth-2), float32(pos.Y*grid.LineHeight+grid.LineHeight/4),
-			float32(ln*grid.ColumnWidth+2), float32(grid.LineHeight), 1, col, false,
+		var w float32 = 1.0
+		if force.TickDone >= 0 {
+			w = 2
+		}
+		x := float32((pos.X+1)*grid.ColumnWidth - 1)
+		y := float32((pos.Y+1)*grid.LineHeight + grid.LineHeight/4)
+		vector.StrokeLine(img,
+			x, y,
+			x+float32(ln*grid.ColumnWidth+1), y,
+			w, col, false,
 		)
 	}
 }
