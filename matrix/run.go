@@ -28,6 +28,8 @@ func Run() {
 	ecs.AddResource(&game.Model.World, &letters)
 	grid := NewLetterGrid(screenWidth, screenHeight, columnWidth, lineHeight)
 	ecs.AddResource(&game.Model.World, &grid)
+	messages := NewMessages("Arche")
+	ecs.AddResource(&game.Model.World, &messages)
 
 	game.Model.AddSystem(&SysInitLetters{
 		SpawnProb:       0.8,
@@ -35,7 +37,9 @@ func Run() {
 		MaxMoveInterval: 7,
 		MinGap:          60,
 	})
-	game.Model.AddSystem(&SysMoveLetters{})
+	game.Model.AddSystem(&SysMoveLetters{
+		MessageProb: 0.005,
+	})
 	game.Model.AddSystem(&SysFadeLetters{
 		FadeDuration: 120,
 	})
