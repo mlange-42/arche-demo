@@ -33,7 +33,7 @@ func Run() {
 	ecs.AddResource(&game.Model.World, &messages)
 
 	game.Model.AddSystem(&SysInitLetters{
-		SpawnProb:       0.8,
+		SpawnProb:       0.9,
 		MinMoveInterval: 5,
 		MaxMoveInterval: 7,
 		MinGap:          60,
@@ -50,7 +50,7 @@ func Run() {
 		MaxChangeInterval: 180,
 	})
 	game.Model.AddSystem(&SysMessages{
-		Probability: 0.1,
+		Probability: 0.2,
 		Duration:    300,
 	})
 
