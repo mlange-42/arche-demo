@@ -3,6 +3,7 @@ package matrix
 import (
 	"log"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/mlange-42/arche-demo/common"
 	"github.com/mlange-42/arche-demo/common/systems"
 	"github.com/mlange-42/arche-model/model"
@@ -28,23 +29,35 @@ func Run() {
 	ecs.AddResource(&game.Model.World, &letters)
 	grid := NewLetterGrid(screenWidth, screenHeight, columnWidth, lineHeight)
 	ecs.AddResource(&game.Model.World, &grid)
+	messages := NewMessages(messages...)
+	ecs.AddResource(&game.Model.World, &messages)
 
 	game.Model.AddSystem(&SysInitLetters{
-		SpawnProb:       0.8,
+		SpawnProb:       0.9,
 		MinMoveInterval: 5,
 		MaxMoveInterval: 7,
 		MinGap:          60,
 	})
-	game.Model.AddSystem(&SysMoveLetters{})
+	game.Model.AddSystem(&SysMoveLetters{
+		MessageProb: 0.005,
+	})
 	game.Model.AddSystem(&SysFadeLetters{
-		FadeDuration: 120,
+		FadeDuration:        120,
+		MessageFadeDuration: 180,
 	})
 	game.Model.AddSystem(&SysSwitchFaders{
 		MinChangeInterval: 30,
 		MaxChangeInterval: 180,
 	})
+	game.Model.AddSystem(&SysMessages{
+		Count:    150,
+		Duration: 300,
+	})
 
 	game.Model.AddUISystem(&UISysDrawLetters{})
+	game.Model.AddUISystem(&UISysDrawMessages{
+		SecretKey: ebiten.KeySpace,
+	})
 	game.Model.AddUISystem(&systems.SimSpeed{
 		InitialExponent: 0,
 		MinExponent:     -2,

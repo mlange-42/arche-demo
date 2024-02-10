@@ -20,7 +20,7 @@ type SysInitLetters struct {
 	grid    generic.Resource[LetterGrid]
 	canvas  generic.Resource[common.EbitenImage]
 	letters generic.Resource[Letters]
-	builder generic.Map3[Position, Letter, Mover]
+	builder generic.Map4[Position, Letter, Mover, Message]
 
 	releases []int64
 }
@@ -31,16 +31,16 @@ func (s *SysInitLetters) Initialize(world *ecs.World) {
 	s.grid = generic.NewResource[LetterGrid](world)
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.letters = generic.NewResource[Letters](world)
-	s.builder = generic.NewMap3[Position, Letter, Mover](world)
+	s.builder = generic.NewMap4[Position, Letter, Mover, Message](world)
 
 	s.releases = make([]int64, s.grid.Get().Faders.Width())
 
 	faders := s.grid.Get().Faders
-	fBuilder := generic.NewMap3[Position, Letter, Fader](world)
+	fBuilder := generic.NewMap4[Position, Letter, Fader, ForcedLetter](world)
 	query := fBuilder.NewBatchQ(faders.Width() * faders.Height())
 	cnt := 0
 	for query.Next() {
-		pos, _, fad := query.Get()
+		pos, _, fad, _ := query.Get()
 		x, y := cnt/faders.Height(), cnt%faders.Height()
 
 		pos.X, pos.Y = x, y
@@ -62,7 +62,7 @@ func (s *SysInitLetters) Update(world *ecs.World) {
 	letters := s.letters.Get().Letters
 
 	e := s.builder.New()
-	pos, let, mov := s.builder.Get(e)
+	pos, let, mov, msg := s.builder.Get(e)
 
 	var py int
 	for {
@@ -79,6 +79,7 @@ func (s *SysInitLetters) Update(world *ecs.World) {
 	mov.LastMove = tick
 	mov.Interval = uint16(rand.Intn(s.MaxMoveInterval-s.MinMoveInterval) + s.MinMoveInterval)
 	mov.PathLength = rand.Intn(grid.Faders.Height())
+	msg.Message = -1
 
 	s.releases[pos.X] = tick
 }

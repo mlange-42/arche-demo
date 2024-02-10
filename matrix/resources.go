@@ -32,3 +32,18 @@ func NewLetterGrid(width, height, colWidth, lineHeight int) LetterGrid {
 		LineHeight:  lineHeight,
 	}
 }
+
+// Messages resource.
+type Messages struct {
+	messages [][]rune
+}
+
+func NewMessages(messages ...string) Messages {
+	msg := make([][]rune, len(messages))
+	for i, m := range messages {
+		msg[i] = []rune(m)
+	}
+	return Messages{
+		messages: msg,
+	}
+}
