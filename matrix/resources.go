@@ -27,7 +27,7 @@ type LetterGrid struct {
 // NewLetterGrid creates a new [LetterGrid].
 func NewLetterGrid(width, height, colWidth, lineHeight int) LetterGrid {
 	return LetterGrid{
-		Faders:      common.NewGrid[ecs.Entity]((width/colWidth)-2, (height/lineHeight)+2),
+		Faders:      common.NewGrid[ecs.Entity]((width/colWidth)-2, (height/lineHeight)+1),
 		ColumnWidth: colWidth,
 		LineHeight:  lineHeight,
 	}

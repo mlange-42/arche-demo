@@ -16,11 +16,12 @@ type SysInitLetters struct {
 	MaxMoveInterval int
 	MinGap          int
 
-	time    generic.Resource[resource.Tick]
-	grid    generic.Resource[LetterGrid]
-	canvas  generic.Resource[common.EbitenImage]
-	letters generic.Resource[Letters]
-	builder generic.Map4[Position, Letter, Mover, Message]
+	time      generic.Resource[resource.Tick]
+	grid      generic.Resource[LetterGrid]
+	canvas    generic.Resource[common.EbitenImage]
+	letters   generic.Resource[Letters]
+	builder   generic.Map4[Position, Letter, Mover, Message]
+	forcedMap generic.Map1[ForcedLetter]
 
 	releases []int64
 }
@@ -32,6 +33,7 @@ func (s *SysInitLetters) Initialize(world *ecs.World) {
 	s.canvas = generic.NewResource[common.EbitenImage](world)
 	s.letters = generic.NewResource[Letters](world)
 	s.builder = generic.NewMap4[Position, Letter, Mover, Message](world)
+	s.forcedMap = generic.NewMap1[ForcedLetter](world)
 
 	s.releases = make([]int64, s.grid.Get().Faders.Width())
 
@@ -74,8 +76,17 @@ func (s *SysInitLetters) Update(world *ecs.World) {
 	}
 	pos.X = py
 	pos.Y = 0
-	let.Letter = letters[rand.Intn(len(letters))]
-	let.Size = rand.Intn(len(fontSizes))
+
+	eFader := grid.Faders.Get(pos.X, pos.Y)
+	forced := s.forcedMap.Get(eFader)
+
+	if forced.Active {
+		let.Letter = forced.Letter
+		forced.Traversed = true
+	} else {
+		let.Letter = letters[rand.Intn(len(letters))]
+	}
+
 	mov.LastMove = tick
 	mov.Interval = uint16(rand.Intn(s.MaxMoveInterval-s.MinMoveInterval) + s.MinMoveInterval)
 	mov.PathLength = rand.Intn(grid.Faders.Height())

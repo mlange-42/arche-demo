@@ -15,8 +15,8 @@ var (
 )
 
 var (
-	fontSizes = []float64{14}
-	fontFaces = []font.Face{}
+	fontSize = 14
+	fontFace font.Face
 )
 
 const characters = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
@@ -35,18 +35,14 @@ func init() {
 	}
 
 	const dpi = 72
-	for _, size := range fontSizes {
-		font, err := opentype.NewFace(tt, &opentype.FaceOptions{
-			Size:    size,
-			DPI:     dpi,
-			Hinting: font.HintingFull, // Use quantization to save glyph cache images.
-		})
-		if err != nil {
-			log.Fatal(err)
-		}
-		// Adjust the line height.
-		font = text.FaceWithLineHeight(font, 30)
-
-		fontFaces = append(fontFaces, font)
+	fontFace, err = opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    float64(fontSize),
+		DPI:     dpi,
+		Hinting: font.HintingFull, // Use quantization to save glyph cache images.
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
+	// Adjust the line height.
+	fontFace = text.FaceWithLineHeight(fontFace, 30)
 }

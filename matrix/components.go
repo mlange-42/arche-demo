@@ -9,7 +9,6 @@ type Position struct {
 // Position component.
 type Letter struct {
 	Letter rune
-	Size   int
 }
 
 // Mover component for the bright letters that move downwards.
