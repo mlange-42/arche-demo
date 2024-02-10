@@ -28,10 +28,14 @@ jobs:
           go-version: '1.21.x'
       - name: Install dependencies
         run: go get ./...
-
+      - name: Install Binaryen
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y binaryen
       - name: Build WebAssembly
         run: |
-          go build -ldflags="-s -w" -tags tiny -o docs/static/wasm/main.wasm .
+          go build -ldflags="-s -w" -tags tiny -o ./build/main.wasm .
+          wasm-opt -Oz -o ./docs/static/wasm/main.wasm ./build/main.wasm
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
