@@ -50,8 +50,8 @@ func Run() {
 		MaxChangeInterval: 180,
 	})
 	game.Model.AddSystem(&SysMessages{
-		Probability: 0.2,
-		Duration:    300,
+		Count:    150,
+		Duration: 300,
 	})
 
 	game.Model.AddUISystem(&UISysDrawLetters{})

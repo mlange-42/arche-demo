@@ -18,8 +18,8 @@ var messages = []string{
 
 // SysMessages is a system that places suplimal messages.
 type SysMessages struct {
-	Probability float64
-	Duration    int
+	Count    int
+	Duration int
 
 	time     generic.Resource[resource.Tick]
 	messages generic.Resource[Messages]
@@ -50,6 +50,7 @@ func (s *SysMessages) Update(world *ecs.World) {
 	messages := s.messages.Get()
 
 	query := s.filter.Query(world)
+	count := query.Count()
 	for query.Next() {
 		pos, forcer := query.Get()
 		msg := messages.messages[forcer.Message]
@@ -81,52 +82,55 @@ func (s *SysMessages) Update(world *ecs.World) {
 		}
 	}
 
+	count -= len(s.toRemove)
 	for _, e := range s.toRemove {
 		world.RemoveEntity(e)
 	}
 	s.toRemove = s.toRemove[:0]
 
-	if rand.Float64() < s.Probability {
-		s.createMessage(&grid.Faders, messages)
+	if count < s.Count {
+		s.createMessage(s.Count-count, &grid.Faders, messages)
 	}
 }
 
 // Finalize the system
 func (s *SysMessages) Finalize(world *ecs.World) {}
 
-func (s *SysMessages) createMessage(grid *common.Grid[ecs.Entity], messages *Messages) {
-	e := s.forcerMap.New()
-	pos, forcer := s.forcerMap.Get(e)
+func (s *SysMessages) createMessage(count int, grid *common.Grid[ecs.Entity], messages *Messages) {
+	query := s.forcerMap.NewBatchQ(count)
+	for query.Next() {
+		pos, forcer := query.Get()
 
-	forcer.TickDone = -1
-	forcer.Message = rand.Intn(len(messages.messages))
-	msg := messages.messages[forcer.Message]
-	ln := len(msg)
+		forcer.TickDone = -1
+		forcer.Message = rand.Intn(len(messages.messages))
+		msg := messages.messages[forcer.Message]
+		ln := len(msg)
 
-	sx, sy := grid.Width(), grid.Height()
-	for i := 0; i < 10; i++ {
-		pos.X, pos.Y = rand.Intn(sx-ln), rand.Intn(sy)
+		sx, sy := grid.Width(), grid.Height()
+		for i := 0; i < 10; i++ {
+			pos.X, pos.Y = rand.Intn(sx-ln), rand.Intn(sy)
 
-		ok := true
-		for j := 0; j < ln; j++ {
-			x := j + pos.X
-			let := s.letterMap.Get(grid.Get(x, pos.Y))
-			if let.Active {
-				ok = false
-				break
+			ok := true
+			for j := 0; j < ln; j++ {
+				x := j + pos.X
+				let := s.letterMap.Get(grid.Get(x, pos.Y))
+				if let.Active {
+					ok = false
+					break
+				}
 			}
-		}
-		if !ok {
-			continue
-		}
+			if !ok {
+				continue
+			}
 
-		for j := 0; j < ln; j++ {
-			x := j + pos.X
-			let := s.letterMap.Get(grid.Get(x, pos.Y))
-			let.Letter = msg[j]
-			let.Active = true
-			let.Traversed = false
+			for j := 0; j < ln; j++ {
+				x := j + pos.X
+				let := s.letterMap.Get(grid.Get(x, pos.Y))
+				let.Letter = msg[j]
+				let.Active = true
+				let.Traversed = false
+			}
+			break
 		}
-		break
 	}
 }
