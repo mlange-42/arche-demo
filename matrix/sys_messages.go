@@ -108,7 +108,7 @@ func (s *SysMessages) createMessage(count int, grid *common.Grid[ecs.Entity], me
 
 		sx, sy := grid.Width(), grid.Height()
 		for i := 0; i < 10; i++ {
-			pos.X, pos.Y = rand.Intn(sx-ln), rand.Intn(sy)
+			pos.X, pos.Y = 1+rand.Intn(sx-ln-2), 1+rand.Intn(sy-3)
 
 			ok := true
 			for j := 0; j < ln; j++ {
