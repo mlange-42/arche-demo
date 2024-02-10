@@ -2,7 +2,9 @@
 title: Matrix
 wasm: matrix
 description: |
-    Well... matrix.
+    The Matrix...
+
+    Don't look too closely, or you might see the truth...
 ---
 
 {{< rawhtml >}}
