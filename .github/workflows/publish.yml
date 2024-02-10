@@ -35,7 +35,7 @@ jobs:
       - name: Build WebAssembly
         run: |
           go build -ldflags="-s -w" -tags tiny -o ./build/main.wasm .
-          wasm-opt -Oz -o ./docs/static/wasm/main.wasm ./build/main.wasm
+          wasm-opt -Oz --enable-bulk-memory -o ./docs/static/wasm/main.wasm ./build/main.wasm
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
