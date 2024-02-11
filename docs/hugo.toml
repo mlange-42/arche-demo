@@ -3,6 +3,8 @@ languageCode = 'en-us'
 title = 'Arche Demo'
 
 [params]
+description = 'Demo for the Arche Entity Component System (ECS).'
+social_preview = 'https://github.com/mlange-42/arche-demo/assets/44003176/2f3cebb2-c4c2-46e0-b806-eb46dff01e58'
 custom_css = ["css/style.css", "css/sidebar.css"]
 custom_js = ["js/wasm_exec.js"]
 

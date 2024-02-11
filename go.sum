@@ -16,8 +16,8 @@ github.com/llgcode/draw2d v0.0.0-20231212091825-f55e0c776b44 h1:1ad70i0s40IpMtRm
 github.com/llgcode/draw2d v0.0.0-20231212091825-f55e0c776b44/go.mod h1:muweRyJCZ1mZSMiCgYbAicfnwZFoeHpNr6A6QBu+rBg=
 github.com/llgcode/ps v0.0.0-20210114104736-f4b0c5d1e02e h1:ZAvbj5hI/G/EbAYAcj4yCXUNiFKefEhH0qfImDDD0/8=
 github.com/llgcode/ps v0.0.0-20210114104736-f4b0c5d1e02e/go.mod h1:1l8ky+Ew27CMX29uG+a2hNOKpeNYEQjjtiALiBlFQbY=
-github.com/mlange-42/arche v0.10.2-0.20240204170305-1135d157dcac h1:kfHw0EiFRv4jYADHQhQE5TW2yEyPkslrSXmHX20xJPY=
-github.com/mlange-42/arche v0.10.2-0.20240204170305-1135d157dcac/go.mod h1:gJ5J8vBreqrf4TcBomBFPGnWdE5P3qa4LtxYHn1gDcg=
+github.com/mlange-42/arche v0.10.2-0.20240211173635-ca0db04666a7 h1:6xMbgNdFkel5u81chK+G2ioavW3cgkLRgfl6mnnl9V8=
+github.com/mlange-42/arche v0.10.2-0.20240211173635-ca0db04666a7/go.mod h1:gJ5J8vBreqrf4TcBomBFPGnWdE5P3qa4LtxYHn1gDcg=
 github.com/mlange-42/arche-model v0.7.0 h1:l8hcZXpENZBBGyrE5Ndczg7PXkvyzPlAGQ0iTjBziB4=
 github.com/mlange-42/arche-model v0.7.0/go.mod h1:Di0S5w5ljyZbD4NmcYV7otZ52mm+X71j35VKkf4FC/A=
 github.com/ojrac/opensimplex-go v1.0.2 h1:l4vs0D+JCakcu5OV0kJ99oEaWJfggSc9jiLpxaWvSzs=
