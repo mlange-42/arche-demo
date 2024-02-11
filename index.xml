@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Home on Arche Demo</title>
+    <link>https://mlange-42.github.io/arche-demo/</link>
+    <description>Recent content in Home on Arche Demo</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://mlange-42.github.io/arche-demo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://mlange-42.github.io/arche-demo/wasm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mlange-42.github.io/arche-demo/wasm/</guid>
+      <description>&lt;!doctype html&gt; This website requires JavaScript to run properly! </description>
+    </item>
+    <item>
+      <title>Ant Colony</title>
+      <link>https://mlange-42.github.io/arche-demo/ants/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mlange-42.github.io/arche-demo/ants/</guid>
+      <description> Click to pause and resume. go get github.com/mlange-42/arche </description>
+    </item>
+    <item>
+      <title>Bee Hives</title>
+      <link>https://mlange-42.github.io/arche-demo/bees/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mlange-42.github.io/arche-demo/bees/</guid>
+      <description> Move the mouse over the canvas! Click to pause and resume! go get github.com/mlange-42/arche </description>
+    </item>
+    <item>
+      <title>Box2D</title>
+      <link>https://mlange-42.github.io/arche-demo/box2d/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mlange-42.github.io/arche-demo/box2d/</guid>
+      <description> Move the mouse over the canvas! Click to pause and resume! go get github.com/mlange-42/arche </description>
+    </item>
+    <item>
+      <title>Evolution</title>
+      <link>https://mlange-42.github.io/arche-demo/evolution/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mlange-42.github.io/arche-demo/evolution/</guid>
+      <description> Try hovering the plots! Use PageUp and PageDown to adjust simulation speed. Click to pause and resume. go get github.com/mlange-42/arche </description>
+    </item>
+    <item>
+      <title>Flocking</title>
+      <link>https://mlange-42.github.io/arche-demo/flocking/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mlange-42.github.io/arche-demo/flocking/</guid>
+      <description> Move the mouse over the canvas! Use PageUp and PageDown to adjust simulation speed. Click to pause and resume. go get github.com/mlange-42/arche </description>
+    </item>
+    <item>
+      <title>Matrix</title>
+      <link>https://mlange-42.github.io/arche-demo/matrix/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://mlange-42.github.io/arche-demo/matrix/</guid>
+      <description> Use PageUp and PageDown to adjust simulation speed. Click to pause and resume. go get github.com/mlange-42/arche </description>
+    </item>
+  </channel>
+</rss>

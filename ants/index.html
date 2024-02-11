@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arche Demo | Ant Colony</title>
+    <meta name="title" content="Arche Demo | Ant Colony">
+    <meta name="description" content="Demo for the Arche Entity Component System (ECS).">
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mlange-42.github.io/arche-demo/" />
+    <meta property="og:title" content="Arche Demo | Ant Colony" />
+    <meta property="og:description" content="Demo for the Arche Entity Component System (ECS)." />
+    <meta property="og:image" content="https://github.com/mlange-42/arche-demo/assets/44003176/2f3cebb2-c4c2-46e0-b806-eb46dff01e58" />
+    
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://mlange-42.github.io/arche-demo/" />
+    <meta property="twitter:title" content="Arche Demo | Ant Colony" />
+    <meta property="twitter:description" content="Demo for the Arche Entity Component System (ECS)." />
+    <meta property="twitter:image" content="https://github.com/mlange-42/arche-demo/assets/44003176/2f3cebb2-c4c2-46e0-b806-eb46dff01e58" />
+
+    <link rel="stylesheet" href="https://mlange-42.github.io/arche-demo/css/style.css"><link rel="stylesheet" href="https://mlange-42.github.io/arche-demo/css/sidebar.css">
+
+    <script src="https://mlange-42.github.io/arche-demo/js/wasm_exec.js"></script>
+
+    <script src="https://kit.fontawesome.com/f4816f3363.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+<article class="container">
+    <div tabindex="0" class="sidebar sidebar-left">
+    <div class="vertical-text">More demos</div>
+    <div>
+        
+        
+        
+        <div><b><a href="/arche-demo/">Home</a></b></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Visuals</b></div>
+        <div><a class="indent" href="/arche-demo/matrix/">Matrix</a></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Ecology</b></div>
+        <div><a class="indent" href="/arche-demo/flocking/">Flocking</a></div><div><a class="indent" href="/arche-demo/evolution/">Evolution</a></div><div><a class="indent" href="/arche-demo/bees/">Bee Hives</a></div><div><a class="indent" href="/arche-demo/ants/">Ant Colony</a></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Misc</b></div>
+        <div><a class="indent" href="/arche-demo/box2d/">Box2D</a></div>
+    </div>
+</div>
+    <div tabindex="0" class="sidebar sidebar-right">
+    <div class="vertical-text">Description</div>
+    <div class="description">
+        <p>A stylized model of ants foraging and scouting,
+using trail pheromones.</p>
+<p>Ants lay trails of two types of pheromones:
+one when coming from the nest,
+and another one when coming from a resource.</p>
+<p>Using these trails, workers find their way to resources (white) and back to the nest (<span style="color: cyan">cyan</span>).
+To find new resources, scouts (<span style="color: yellow">yellow</span>) swarm out and do a random walk until they find something.</p>
+<p>In this example, the landscape is a network with nodes and edges represented by ECS entities.</p>
+
+    </div>
+    
+    <div class="description">
+        <a href="https://github.com/mlange-42/arche-demo/tree/main/ants/" target="_blank">
+            <i class="fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this demo
+        </a>
+    </div>
+    <div class="about"><u>About</u><br>
+<a href="https://github.com/mlange-42/arche">Arche</a> is an archetype-based
+Entity Component System (ECS) for Go.</div>
+</div>
+
+    <div align="center">
+        <h1>Arche Demo &ndash; Ant Colony</h1>
+        
+
+<div id="canvas-container">
+    <iframe id="iframe" src="https://mlange-42.github.io/arche-demo//wasm/index.html?ants" width="880"
+        height="480" allow="autoplay" frameBorder="0" scrolling="no"></iframe>
+</div>
+
+<p id="instructions">Click to pause and resume. <a title="open as fullscreen" href="https://mlange-42.github.io/arche-demo/wasm/?ants">
+    <i class="fa fa-maximize" aria-hidden="true"></i></a></p>
+<p class="tt">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a>
+</p>
+
+
+    </div>
+</article>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arche Demo | Evolution</title>
+    <meta name="title" content="Arche Demo | Evolution">
+    <meta name="description" content="Demo for the Arche Entity Component System (ECS).">
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mlange-42.github.io/arche-demo/" />
+    <meta property="og:title" content="Arche Demo | Evolution" />
+    <meta property="og:description" content="Demo for the Arche Entity Component System (ECS)." />
+    <meta property="og:image" content="https://github.com/mlange-42/arche-demo/assets/44003176/2f3cebb2-c4c2-46e0-b806-eb46dff01e58" />
+    
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://mlange-42.github.io/arche-demo/" />
+    <meta property="twitter:title" content="Arche Demo | Evolution" />
+    <meta property="twitter:description" content="Demo for the Arche Entity Component System (ECS)." />
+    <meta property="twitter:image" content="https://github.com/mlange-42/arche-demo/assets/44003176/2f3cebb2-c4c2-46e0-b806-eb46dff01e58" />
+
+    <link rel="stylesheet" href="https://mlange-42.github.io/arche-demo/css/style.css"><link rel="stylesheet" href="https://mlange-42.github.io/arche-demo/css/sidebar.css">
+
+    <script src="https://mlange-42.github.io/arche-demo/js/wasm_exec.js"></script>
+
+    <script src="https://kit.fontawesome.com/f4816f3363.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+<article class="container">
+    <div tabindex="0" class="sidebar sidebar-left">
+    <div class="vertical-text">More demos</div>
+    <div>
+        
+        
+        
+        <div><b><a href="/arche-demo/">Home</a></b></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Visuals</b></div>
+        <div><a class="indent" href="/arche-demo/matrix/">Matrix</a></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Ecology</b></div>
+        <div><a class="indent" href="/arche-demo/flocking/">Flocking</a></div><div><a class="indent" href="/arche-demo/evolution/">Evolution</a></div><div><a class="indent" href="/arche-demo/bees/">Bee Hives</a></div><div><a class="indent" href="/arche-demo/ants/">Ant Colony</a></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Misc</b></div>
+        <div><a class="indent" href="/arche-demo/box2d/">Box2D</a></div>
+    </div>
+</div>
+    <div tabindex="0" class="sidebar sidebar-right">
+    <div class="vertical-text">Description</div>
+    <div class="description">
+        <p>An evolutionary model of grazer behavior.</p>
+<p>Grazers have genes for 4 traits:<br>
+
+<span class="tt">MaxAngle</span> is the maximum turning angle,
+
+<span class="tt">MinGrass</span> is the grass threshold to stop grazing and start searching,
+
+<span class="tt">Investment</span> is the energy invested in offspring,
+
+<span class="tt">Offspring</span> is the number of offspring.</p>
+<p>Colors of grazers are also inherited and mutated, but have no influence on fitness.
+Grazers can only mate with other grazers with a similar color.</p>
+
+    </div>
+    
+    <div class="description">
+        <a href="https://github.com/mlange-42/arche-demo/tree/main/evolution/" target="_blank">
+            <i class="fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this demo
+        </a>
+    </div>
+    <div class="about"><u>About</u><br>
+<a href="https://github.com/mlange-42/arche">Arche</a> is an archetype-based
+Entity Component System (ECS) for Go.</div>
+</div>
+
+    <div align="center">
+        <h1>Arche Demo &ndash; Evolution</h1>
+        
+
+<div id="canvas-container">
+    <iframe id="iframe" src="https://mlange-42.github.io/arche-demo//wasm/index.html?evolution" width="880"
+        height="480" allow="autoplay" frameBorder="0" scrolling="no"></iframe>
+</div>
+
+<p id="instructions">Try hovering the plots! Use <span class="tt">PageUp</span> and <span class="tt">PageDown</span> to adjust simulation speed. Click to pause and resume. <a title="open as fullscreen" href="https://mlange-42.github.io/arche-demo/wasm/?evolution">
+    <i class="fa fa-maximize" aria-hidden="true"></i></a></p>
+<p class="tt">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a>
+</p>
+
+
+    </div>
+</article>
+
+</body>
+</html>
