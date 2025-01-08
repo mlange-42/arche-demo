@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arche Demo | Bee Hives</title>
+    <meta name="title" content="Arche Demo | Bee Hives">
+    <meta name="description" content="Demo for the Arche Entity Component System (ECS).">
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mlange-42.github.io/arche-demo/" />
+    <meta property="og:title" content="Arche Demo | Bee Hives" />
+    <meta property="og:description" content="Demo for the Arche Entity Component System (ECS)." />
+    <meta property="og:image" content="https://github.com/mlange-42/arche-demo/assets/44003176/2f3cebb2-c4c2-46e0-b806-eb46dff01e58" />
+    
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://mlange-42.github.io/arche-demo/" />
+    <meta property="twitter:title" content="Arche Demo | Bee Hives" />
+    <meta property="twitter:description" content="Demo for the Arche Entity Component System (ECS)." />
+    <meta property="twitter:image" content="https://github.com/mlange-42/arche-demo/assets/44003176/2f3cebb2-c4c2-46e0-b806-eb46dff01e58" />
+
+    <link rel="stylesheet" href="https://mlange-42.github.io/arche-demo/css/style.css"><link rel="stylesheet" href="https://mlange-42.github.io/arche-demo/css/sidebar.css">
+
+    <script src="https://mlange-42.github.io/arche-demo/js/wasm_exec.js"></script>
+
+    <script src="https://kit.fontawesome.com/f4816f3363.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+<article class="container">
+    <div tabindex="0" class="sidebar sidebar-left">
+    <div class="vertical-text">More demos</div>
+    <div>
+        
+        
+        
+        <div><b><a href="/arche-demo/">Home</a></b></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Visuals</b></div>
+        <div><a class="indent" href="/arche-demo/matrix/">Matrix</a></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Ecology</b></div>
+        <div><a class="indent" href="/arche-demo/flocking/">Flocking</a></div><div><a class="indent" href="/arche-demo/evolution/">Evolution</a></div><div><a class="indent" href="/arche-demo/bees/">Bee Hives</a></div><div><a class="indent" href="/arche-demo/ants/">Ant Colony</a></div>
+        <div style="margin: 0.6em 0 0.3em 0;"><b>Misc</b></div>
+        <div><a class="indent" href="/arche-demo/box2d/">Box2D</a></div>
+    </div>
+</div>
+    <div tabindex="0" class="sidebar sidebar-right">
+    <div class="vertical-text">Description</div>
+    <div class="description">
+        <p>A stylized model of bee foraging and scouting.</p>
+<p>Bees scout (<span style="color: yellow">yellow</span>),
+forage (<span style="color: #e0e0e0">light grey</span>),
+return to the hive (<span style="color: cyan">cyan</span>)
+and potentially do the waggle dance (<span style="color: #ff7070">red</span>).
+Other bees in the hive (<span style="color: #b0b0b0">dark grey</span>) may fly to a patch indicated by a waggle dance (white),
+or go scouting on their own.</p>
+<p>Uses different components to indicate the different activities.
+Hive internal decision making uses Arche&rsquo;s entity relations feature.</p>
+
+    </div>
+    
+    <div class="description">
+        <a href="https://github.com/mlange-42/arche-demo/tree/main/bees/" target="_blank">
+            <i class="fa fa-github" aria-hidden="true" style="font-size: 120%;"></i>&nbsp;Code for this demo
+        </a>
+    </div>
+    <div class="about"><u>About</u><br>
+<a href="https://github.com/mlange-42/arche">Arche</a> is an archetype-based
+Entity Component System (ECS) for Go.</div>
+</div>
+
+    <div align="center">
+        <h1>Arche Demo &ndash; Bee Hives</h1>
+        
+
+<div id="canvas-container">
+    <iframe id="iframe" src="https://mlange-42.github.io/arche-demo//wasm/index.html?bees" width="880"
+        height="480" allow="autoplay" frameBorder="0" scrolling="no"></iframe>
+</div>
+
+<p id="instructions">Move the mouse over the canvas! Click to pause and resume! <a title="open as fullscreen" href="https://mlange-42.github.io/arche-demo/wasm/?bees">
+    <i class="fa fa-maximize" aria-hidden="true"></i></a></p>
+<p class="tt">go get <a href="https://github.com/mlange-42/arche">github.com/mlange-42/arche</a>
+</p>
+
+
+    </div>
+</article>
+
+</body>
+</html>
