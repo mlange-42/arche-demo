@@ -8,8 +8,8 @@ require (
 	github.com/ByteArena/box2d v1.0.2
 	github.com/hajimehoshi/ebiten/v2 v2.6.4
 	github.com/llgcode/draw2d v0.0.0-20231212091825-f55e0c776b44
-	github.com/mlange-42/arche v0.10.2-0.20240211173635-ca0db04666a7
-	github.com/mlange-42/arche-model v0.7.0
+	github.com/mlange-42/arche v0.15.0
+	github.com/mlange-42/arche-model v0.10.0
 	github.com/ojrac/opensimplex-go v1.0.2
 	golang.org/x/image v0.15.0
 	gonum.org/v1/gonum v0.14.0
